@@ -381,16 +381,3 @@ yarn-debug.log*
 yarn-error.log*
 #Nuget packages folder
 packages/
-/Math_with_D_D/MathProject.Host.Domain/obj/
-/Math_with_D_D/.idea/.idea.Math_with_D_D/.idea
-/Math_with_D_D/MathProject.Client/MathProject.Client.Client/bin
-/Math_with_D_D/MathProject.Host.API/bin/
-/Math_with_D_D/MathProject.Host.Application/obj
-/Math_with_D_D/MathProject.Host.Infrastructure/obj
-/Math_with_D_D/MathProject.Host.Application/bin
-/Math_with_D_D/MathProject.Client/MathProject.Client/obj
-/Math_with_D_D/MathProject.Client/MathProject.Client.Client/bin
-/Math_with_D_D/.idea/.idea.Math_with_D_D/.idea
-/Math_with_D_D/Math_with_D_D.sln.DotSettings.user
-/Math_with_D_D/MathProject.Client/MathProject.Client.Client/obj
-/Math_with_D_D/MathProject.Client/MathProject.Client/obj
