@@ -1,0 +1,6 @@
+@BusinessCardProject.Server.Core.Api_HostAddress = http://localhost:5054
+
+GET {{BusinessCardProject.Server.Core.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
