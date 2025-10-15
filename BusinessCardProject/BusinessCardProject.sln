@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36221.1 d17.14
+VisualStudioVersion = 17.14.36221.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{2A5E4899-3EA6-46E6-B79D-ADEDE7EA5348}"
 EndProject
@@ -17,19 +17,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessCardProject.Server.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessCardProject.Server.Core.Api", "BusinessCardProject.Server.Core.Api\BusinessCardProject.Server.Core.Api.csproj", "{01B98FE6-B02A-49B6-8D22-239ADBE75A5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessCardProject.Client", "Client\BusinessCardProject.Client\BusinessCardProject.Client.csproj", "{8A755DDE-8D1F-4177-9438-F9DD82CAB081}"
+EndProject
 Global
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {20B77252-D979-4169-AB40-93EF2533A116}
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{4B8A9DA2-4068-45AF-BB43-AC954D4B8E6C} = {2A5E4899-3EA6-46E6-B79D-ADEDE7EA5348}
-		{97E8D076-70C6-420B-B0C3-174926D9A768} = {4B8A9DA2-4068-45AF-BB43-AC954D4B8E6C}
-		{EFCC3658-F2E5-4095-A0BF-ACA63113CDA9} = {4B8A9DA2-4068-45AF-BB43-AC954D4B8E6C}
-		{A45E424C-5F3D-43B0-81E4-9E718930DCFF} = {4B8A9DA2-4068-45AF-BB43-AC954D4B8E6C}
-		{01B98FE6-B02A-49B6-8D22-239ADBE75A5F} = {4B8A9DA2-4068-45AF-BB43-AC954D4B8E6C}
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{97E8D076-70C6-420B-B0C3-174926D9A768}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -48,9 +41,23 @@ Global
 		{01B98FE6-B02A-49B6-8D22-239ADBE75A5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01B98FE6-B02A-49B6-8D22-239ADBE75A5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01B98FE6-B02A-49B6-8D22-239ADBE75A5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A755DDE-8D1F-4177-9438-F9DD82CAB081}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A755DDE-8D1F-4177-9438-F9DD82CAB081}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A755DDE-8D1F-4177-9438-F9DD82CAB081}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A755DDE-8D1F-4177-9438-F9DD82CAB081}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4B8A9DA2-4068-45AF-BB43-AC954D4B8E6C} = {2A5E4899-3EA6-46E6-B79D-ADEDE7EA5348}
+		{97E8D076-70C6-420B-B0C3-174926D9A768} = {4B8A9DA2-4068-45AF-BB43-AC954D4B8E6C}
+		{EFCC3658-F2E5-4095-A0BF-ACA63113CDA9} = {4B8A9DA2-4068-45AF-BB43-AC954D4B8E6C}
+		{A45E424C-5F3D-43B0-81E4-9E718930DCFF} = {4B8A9DA2-4068-45AF-BB43-AC954D4B8E6C}
+		{01B98FE6-B02A-49B6-8D22-239ADBE75A5F} = {4B8A9DA2-4068-45AF-BB43-AC954D4B8E6C}
+		{8A755DDE-8D1F-4177-9438-F9DD82CAB081} = {02217D61-9364-4118-989A-D19AAA270FEF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {20B77252-D979-4169-AB40-93EF2533A116}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,57 @@
+﻿@page "/"
+@using BusinessCardProject.Client.Services.ProjectInfoService
+@inject ProjectInfoGlobalClass ProjectInfoGlobal
+
+<PageTitle>Главная страница</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium">
+    <MudText Typo="Typo.h4" GutterBottom="true" Class="mt-4 mb-4" Style="font-weight: bold">
+        Приветствую Вас на проекте @ProjectInfoGlobal.ProjectName!
+    </MudText>
+    
+    <MudAlert Severity="Severity.Info" Variant="Variant.Filled"
+              Class="my-2" Align="Align.Justify" Elevation="6">
+        На данном ресурсе представлены учебные материалы по C#, разработке приложений и WEB-приложений.
+        Предлагаемые материалы будут полезны как начинающим, так и тем, кто стремится к расширению своих знаний!
+    </MudAlert>
+    
+    <MudText Typo="Typo.body1" Align="Align.Justify" Class="mt-4 mb-4">
+        На сайте будет представлен контент как в видеоформате, так и в текстовом. 
+        Текстовый формат будет доступен не для всех блоков.
+        Вводный блок будет подробно и доступно изложен в текстовом формате, 
+        что позволит новичкам в программировании удобно конспектировать необходимую информацию.
+    </MudText>
+    
+    <MudAlert Severity="Severity.Error" Variant="Variant.Filled" 
+              Class="my-2" Align="Align.Justify" Elevation="6">
+        Для полноценного использования функционала сайта потребуется пройти процедуру регистрации и авторизации.
+    </MudAlert>
+    
+    <MudText Typo="Typo.body1" Align="Align.Justify" Class="mt-4 mb-4">
+        При обнаружении неточностей в текстовых материалах уроков или возникновении вопросов,
+        пожалуйста, направляйте запросы на электронную почту 
+        &laquo;<MudLink Color="Color.Info" Href="@_mailLink">@ProjectInfoGlobal.ProjectOwnerEmail</MudLink>&raquo;.
+    </MudText>
+    
+    <MudText Typo="Typo.body1" Align="Align.Justify" Class="mt-4 mb-4">
+        Прошу Вас, если вы остались довольны уроками, 
+        поделиться своим отзывом в разделе &laquo;<MudLink Color="Color.Info" Href="/rate" Target="blank">Отзывы</MudLink>&raquo;. 
+        Ваша обратная связь будет крайне полезна как для меня, так и для новых пользователей, 
+        посещающих сайт. Спасибо!
+    </MudText>
+    
+    @*В будующем можно рассказать о достижениях*@
+    @*В будующем можно рассказать о себе*@
+</MudContainer>
+
+@code
+{
+    private string _mailLink;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _mailLink = $"mailto:{ProjectInfoGlobal.ProjectOwnerEmail}";
+    }
+}

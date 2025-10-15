@@ -1,0 +1,178 @@
+﻿@using BusinessCardProject.Client.Services.ProjectInfoService
+@inherits LayoutComponentBase
+@inject ProjectInfoGlobalClass ProjectInfoGlobal
+@inject HttpClient HttpClient
+@inject NavigationManager NavManager
+
+<MudThemeProvider Theme="_theme" IsDarkMode="_isDarkMode" />
+<MudPopoverProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
+        <MudLink Href="" Underline="Underline.None">
+            <MudText Typo="Typo.h5" Class="ml-3" Style="font-weight: bold" Color="@_color">
+                @ProjectInfoGlobal.ProjectName
+            </MudText>
+        </MudLink>
+        <MudSpacer/>
+        <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
+        <MudMenu Dense
+                 Variant="Variant.Text"
+                 Size="Size.Medium"
+                 Color="Color.Inherit"
+                 Icon="@Icons.Material.TwoTone.MoreVert">
+
+            <MudMenu StartIcon="@Icons.Material.TwoTone.Settings"
+                     IconColor="Color.Info"
+                     Label="Настройки">
+            </MudMenu>
+
+            <MudDivider/>
+            
+            <MudMenuItem Href="/user-agreement"
+                         Icon="@Icons.Material.Rounded.Group"
+                         IconColor="Color.Error"
+                         ForceLoad
+                         Label="Пользовательское соглашение"/>
+            
+            <MudMenuItem Href="/privacy-policy"
+                         Icon="@Icons.Material.Rounded.SafetyDivider"
+                         IconColor="Color.Error"
+                         ForceLoad
+                         Label="Политика конфиденциальности"/>
+            
+            <MudDivider/>
+
+            <MudMenuItem Href="/"
+                         ForceLoad
+                         Icon="@Icons.Material.TwoTone.Login"
+                         IconColor="Color.Info"
+                         Label="Вход"/>
+
+            <MudMenuItem Href="/"
+                         ForceLoad
+                         Icon="@Icons.Material.TwoTone.Logout"
+                         IconColor="Color.Info"
+                         Label="Выход"/>
+        </MudMenu>
+    </MudAppBar>
+    <MudDrawer id="nav-drawer" @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+        <NavMenu/>
+    </MudDrawer>
+    <MudMainContent Class="pt-16 pa-4">
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    //Для работы локального хранилища
+    [Inject] IJSRuntime JSRuntime { get; set; }
+    
+    //Переменные фреймворка по умолчанию
+    private bool _drawerOpen = false;
+    private bool _isDarkMode;
+    private Color _color;
+    private MudTheme? _theme = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        
+        var storageResult = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "isDarkMode");
+        if (bool.TryParse(storageResult, out var isDarkMode))
+        {
+            _isDarkMode = isDarkMode;
+        }
+        
+        _drawerOpen = false;
+        _color = isDarkMode ? Color.Info : Color.Dark;
+        
+        _theme = new()
+        {
+            PaletteLight = _lightPalette,
+            PaletteDark = _darkPalette,
+            LayoutProperties = new LayoutProperties()
+        };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    { 
+        await base.OnAfterRenderAsync(firstRender);
+        
+        if (firstRender)
+        {
+            StateHasChanged();
+        }
+    }
+
+    #region Код фреймворка по умолчанию
+    
+    /// <summary>
+    /// Открыть/Закрыть меню навигации
+    /// </summary>
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    /// <summary>
+    /// Светлая/Темная тема
+    /// </summary>
+    private async Task DarkModeToggle()
+    {
+        _isDarkMode = !_isDarkMode;
+        _color = _isDarkMode ? Color.Info : Color.Dark;
+
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "isDarkMode", _isDarkMode.ToString());
+    }
+
+    private readonly PaletteLight _lightPalette = new()
+    {
+        Black = "#110e2d",
+        AppbarText = "#424242",
+        AppbarBackground = "rgba(255,255,255,0.8)",
+        DrawerBackground = "#ffffff",
+        GrayLight = "#e8e8e8",
+        GrayLighter = "#f9f9f9",
+    };
+
+    private readonly PaletteDark _darkPalette = new()
+    {
+        Primary = "#7e6fff",
+        Surface = "#1e1e2d",
+        Background = "#1a1a27",
+        BackgroundGray = "#151521",
+        AppbarText = "#92929f",
+        AppbarBackground = "rgba(26,26,39,0.8)",
+        DrawerBackground = "#1a1a27",
+        ActionDefault = "#74718e",
+        ActionDisabled = "#9999994d",
+        ActionDisabledBackground = "#605f6d4d",
+        TextPrimary = "#b2b0bf",
+        TextSecondary = "#92929f",
+        TextDisabled = "#ffffff33",
+        DrawerIcon = "#92929f",
+        DrawerText = "#92929f",
+        GrayLight = "#2a2833",
+        GrayLighter = "#1e1e2d",
+        Info = "#4a86ff",
+        Success = "#3dcb6c",
+        Warning = "#ffb545",
+        Error = "#ff3f5f",
+        LinesDefault = "#33323e",
+        TableLines = "#33323e",
+        Divider = "#292838",
+        OverlayLight = "#1e1e2d80",
+    };
+
+    public string DarkLightModeButtonIcon => _isDarkMode switch
+    {
+        true => Icons.Material.Filled.WbSunny,
+        false => Icons.Material.Outlined.DarkMode,
+    };
+    
+    #endregion
+    
+}

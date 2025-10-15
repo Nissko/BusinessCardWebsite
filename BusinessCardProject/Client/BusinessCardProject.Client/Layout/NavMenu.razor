@@ -1,0 +1,62 @@
+﻿@using BusinessCardProject.Client.Services.ProjectInfoService
+@inject HttpClient HttpClient
+@inject NavigationManager NavManager
+
+<MudNavMenu>
+    <MudListItem T="string" Icon="@Icons.Material.Rounded.Home" Text="Главная" @onclick="NavToHomePage"></MudListItem>
+    
+    <MudListItem T="string" Icon="@Icons.Material.Rounded.ShowChart" Text="Уроки">
+        <NestedList>
+            <MudListItem T="string" Icon="@Icons.Material.Rounded.Article" Text="Лекции">
+                <NestedList>
+                    <MudListItem T="string">
+                        Блок А
+                    </MudListItem>
+                    <MudListItem T="string">
+                        Блок Б
+                    </MudListItem>
+                </NestedList>
+            </MudListItem>
+            
+            <MudListItem T="string" Icon="@Icons.Material.TwoTone.PersonalVideo" Text="Видео">
+                <NestedList>
+                    <MudListItem T="string">
+                        Блок А
+                    </MudListItem>
+                    <MudListItem T="string">
+                        Блок Б
+                    </MudListItem>
+                </NestedList>
+            </MudListItem>
+        </NestedList>
+    </MudListItem>
+    
+    <MudListItem T="string" Icon="@Icons.Material.Rounded.StarRate" Text="Отзывы" @onclick="NavToRate"></MudListItem>
+</MudNavMenu>
+
+@code
+{
+    //Для работы локального хранилища
+    [Inject] IJSRuntime JSRuntime { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    /// <summary>
+    /// Переход на главную страницу
+    /// </summary>
+    private void NavToHomePage()
+    {
+        NavManager.NavigateTo("/");
+    }
+
+    /// <summary>
+    /// Переход на страницу отзывов
+    /// </summary>
+    private void NavToRate()
+    {
+        NavManager.NavigateTo("/rate");
+    }
+}
