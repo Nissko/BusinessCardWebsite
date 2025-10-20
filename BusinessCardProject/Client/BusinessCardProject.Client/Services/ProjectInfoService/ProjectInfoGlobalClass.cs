@@ -9,6 +9,11 @@ public class ProjectInfoGlobalClass
     /// Название проекта
     /// </summary>
     public string ProjectName => "EasyCSharpStart";
+
+    /// <summary>
+    /// Ссылка на сайт
+    /// </summary>
+    public string ProjectLink => "DomainName.Ru";
     
     /// <summary>
     /// Мое имя
@@ -19,6 +24,11 @@ public class ProjectInfoGlobalClass
     /// Моя фамилия
     /// </summary>
     public string ProjectOwnerSurname => "Скибко";
+    
+    /// <summary>
+    /// Мое отчество
+    /// </summary>
+    public string ProjectOwnerPatronymic => "Вячеславович";
     
     /// <summary>
     /// Контактная почта

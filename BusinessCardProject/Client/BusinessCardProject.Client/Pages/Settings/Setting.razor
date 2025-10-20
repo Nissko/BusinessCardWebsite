@@ -1,0 +1,101 @@
+﻿@page "/user-setting"
+
+<PageTitle>Настройки</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium">
+    <MudText Typo="Typo.h4" Align="Align.Justify" GutterBottom="true" Class="mt-4">
+        <b>Ваши настройки</b>
+    </MudText>
+
+    @*Switch для соц.сетей*@
+    <MudPaper Class="d-flex flex-wrap align-center gap-2 pl-4 pr-4 py-2 mb-4">
+        <MudText Typo="Typo.h5" Class="m-0">
+            Платформа для видеоуроков:
+        </MudText>
+        
+        <div class="d-flex flex-wrap align-center gap-6 w-100" style="width: 100%">
+            <MudSwitch T="bool"
+                       Style="user-select: none;"
+                       Value="@SocialPageSwitch1"
+                       ValueChanged="@(v => OnSwitchSocialPageChanged(nameof(SocialPageSwitch1), v))"
+                       LabelPlacement="@Placement"
+                       Color="Color.Success"
+                       UncheckedColor="Color.Error">
+                YouTube
+            </MudSwitch>
+
+            <MudSwitch T="bool"
+                       Style="user-select: none;"
+                       Value="@SocialPageSwitch2"
+                       ValueChanged="@(v => OnSwitchSocialPageChanged(nameof(SocialPageSwitch2), v))"
+                       LabelPlacement="@Placement"
+                       Color="Color.Success"
+                       UncheckedColor="Color.Error">
+                RuTube
+            </MudSwitch>
+
+            <MudSwitch T="bool"
+                       Style="user-select: none;"
+                       Value="@SocialPageSwitch3"
+                       ValueChanged="@(v => OnSwitchSocialPageChanged(nameof(SocialPageSwitch3), v))"
+                       LabelPlacement="@Placement"
+                       Color="Color.Success"
+                       UncheckedColor="Color.Error">
+                VK Видео
+            </MudSwitch>
+        </div>
+    </MudPaper>
+    
+    @*Switch для соц.сетей*@
+    <MudPaper Class="d-flex flex-wrap align-center gap-2 pl-4 pr-4 py-2">
+        <MudText Typo="Typo.h5" Class="m-0">
+            Что-то еще...
+        </MudText>
+    </MudPaper>
+</MudContainer>
+
+@code {
+
+    #region Инициализация переменных для Switch соц.сетей
+
+    /*Switch для социальных сетей */
+    public bool SocialPageSwitch1 { get; private set; } = false;
+    public bool SocialPageSwitch2 { get; private set; } = false;
+    public bool SocialPageSwitch3 { get; private set; } = false;
+
+    #endregion
+
+    /// <summary>
+    /// Положение текста
+    /// </summary>
+    public Placement Placement { get; } = Placement.Bottom;
+    
+    /// <summary>
+    /// Переключение Switch(-ей) для соц.сетей
+    /// </summary>
+    /// <param name="propertyName">switch name</param>
+    /// <param name="value">switch value</param>
+    private void OnSwitchSocialPageChanged(string propertyName, bool value)
+    {
+        //Если пытаемся установить единственный Switch на false
+        if (!value)
+            return;
+        
+        SocialPageSwitch1 = false;
+        SocialPageSwitch2 = false;
+        SocialPageSwitch3 = false;
+
+        //Включение Switch, который был установлен на True
+        if (value)
+        {
+            switch (propertyName)
+            {
+                case nameof(SocialPageSwitch1): SocialPageSwitch1 = true; break;
+                case nameof(SocialPageSwitch2): SocialPageSwitch2 = true; break;
+                case nameof(SocialPageSwitch3): SocialPageSwitch3 = true; break;
+            }
+            
+            /*Отправить запрос на изменение настроек у пользователя в бд*/
+        }
+    }
+}

@@ -2,6 +2,7 @@
 @inherits LayoutComponentBase
 @inject ProjectInfoGlobalClass ProjectInfoGlobal
 @inject HttpClient HttpClient
+@inject IJSRuntime JsRuntime
 @inject NavigationManager NavManager
 
 <MudThemeProvider Theme="_theme" IsDarkMode="_isDarkMode" />
@@ -10,7 +11,7 @@
 <MudSnackbarProvider/>
 <MudLayout>
     <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(_ => DrawerToggle())"/>
         <MudLink Href="" Underline="Underline.None">
             <MudText Typo="Typo.h5" Class="ml-3" Style="font-weight: bold" Color="@_color">
                 @ProjectInfoGlobal.ProjectName
@@ -24,10 +25,11 @@
                  Color="Color.Inherit"
                  Icon="@Icons.Material.TwoTone.MoreVert">
 
-            <MudMenu StartIcon="@Icons.Material.TwoTone.Settings"
+            <MudMenuItem Icon="@Icons.Material.TwoTone.Settings"
                      IconColor="Color.Info"
-                     Label="Настройки">
-            </MudMenu>
+                     Label="Настройки"
+                     @onclick="NavToSettings">
+            </MudMenuItem>
 
             <MudDivider/>
             
@@ -67,20 +69,17 @@
 </MudLayout>
 
 @code {
-    //Для работы локального хранилища
-    [Inject] IJSRuntime JSRuntime { get; set; }
-    
     //Переменные фреймворка по умолчанию
-    private bool _drawerOpen = false;
+    private bool _drawerOpen;
     private bool _isDarkMode;
     private Color _color;
-    private MudTheme? _theme = null;
+    private MudTheme? _theme;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         
-        var storageResult = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "isDarkMode");
+        var storageResult = await JsRuntime.InvokeAsync<string>("localStorage.getItem", "isDarkMode");
         if (bool.TryParse(storageResult, out var isDarkMode))
         {
             _isDarkMode = isDarkMode;
@@ -96,21 +95,11 @@
             LayoutProperties = new LayoutProperties()
         };
     }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    { 
-        await base.OnAfterRenderAsync(firstRender);
-        
-        if (firstRender)
-        {
-            StateHasChanged();
-        }
-    }
-
+    
     #region Код фреймворка по умолчанию
     
     /// <summary>
-    /// Открыть/Закрыть меню навигации
+    /// Открыть/закрыть меню навигации
     /// </summary>
     private void DrawerToggle()
     {
@@ -125,7 +114,7 @@
         _isDarkMode = !_isDarkMode;
         _color = _isDarkMode ? Color.Info : Color.Dark;
 
-        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "isDarkMode", _isDarkMode.ToString());
+        await JsRuntime.InvokeVoidAsync("localStorage.setItem", "isDarkMode", _isDarkMode.ToString());
     }
 
     private readonly PaletteLight _lightPalette = new()
@@ -175,4 +164,12 @@
     
     #endregion
     
+    #region Nav
+
+    private void NavToSettings()
+    {
+        NavManager.NavigateTo("/user-setting");
+    }
+    
+    #endregion
 }
