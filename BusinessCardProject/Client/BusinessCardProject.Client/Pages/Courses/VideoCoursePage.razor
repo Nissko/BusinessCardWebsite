@@ -1,0 +1,79 @@
+﻿@page "/video-courses"
+
+<PageTitle>Видео-курсы</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    <MudGrid Class="mt-2">
+        <MudItem xs="12" sm="5" md="4">
+            <MudHidden Breakpoint="Breakpoint.SmAndUp">
+                <MudButton Color="Color.Secondary" Class="mud-width-full">Фильтры</MudButton>
+            </MudHidden>
+            <MudPaper Elevation="0" Class="pa-4">
+                <MudForm @ref="_form">
+                    <MudSelect T="string"
+                               Placeholder="Курс"
+                               Variant="Variant.Text"
+                               Clearable="true"
+                               Required="true"
+                               Class="mb-4"
+                               RequiredError="Выбор курса обязателен!"
+                               ShrinkLabel>
+                        @foreach (var test in _testValues)
+                        {
+                            <MudSelectItem Value="@test">@test</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="string"
+                               Placeholder="Модуль"
+                               Variant="Variant.Text"
+                               Clearable="true"
+                               Required="true"
+                               RequiredError="Выбор модуля обязателен!"
+                               ShrinkLabel>
+                        @foreach (var test in _testValues)
+                        {
+                            <MudSelectItem Value="@test">@test</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Class="mud-width-full mt-4"
+                               OnClick="@(async () => await Submit())">
+                        Найти
+                    </MudButton>
+                </MudForm>
+            </MudPaper>
+        </MudItem>
+
+        <!-- Правая колонка: объекты (курсы) -->
+        <MudItem xs="12" sm="7" md="8">
+            <MudPaper Elevation="0" Class="pa-4">
+                <!-- Список карточек курсов, таблица и т.д. -->
+                <MudCard Elevation="0">Курс 1</MudCard>
+                <MudCard Elevation="0">Курс 2</MudCard>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private MudForm? _form;
+
+    private List<string> _testValues = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _testValues.Add("База");
+        _testValues.Add("Основы ООП.");
+        _testValues.Add("Разработка микросервиса. С использованием RabbitMQ.");
+        _testValues.Add("Разработка микросервиса. С использованием Grpc.");
+    }
+
+    private async Task Submit()
+    {
+        await _form.Validate();
+    }
+}

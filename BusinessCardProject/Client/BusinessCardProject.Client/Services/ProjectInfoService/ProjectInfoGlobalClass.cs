@@ -34,6 +34,11 @@ public class ProjectInfoGlobalClass
     /// Контактная почта
     /// </summary>
     public string ProjectOwnerEmail => "skibko.nik@mail.ru";
+
+    /// <summary>
+    /// ИНН
+    /// </summary>
+    public string ProjectOwnerINN => "744513644901";
     
     /// <summary>
     /// Ссылка на ВК

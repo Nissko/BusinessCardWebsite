@@ -4,45 +4,29 @@
 
 <MudNavMenu>
     <MudListItem T="string" Icon="@Icons.Material.Rounded.Home" Text="Главная" @onclick="NavToHomePage"></MudListItem>
-    
+
     <MudListItem T="string" Icon="@Icons.Material.Rounded.ShowChart" Text="Уроки">
         <NestedList>
-            <MudListItem T="string" Icon="@Icons.Material.Rounded.Article" Text="Лекции">
-                <NestedList>
-                    <MudListItem T="string">
-                        Блок А
-                    </MudListItem>
-                    <MudListItem T="string">
-                        Блок Б
-                    </MudListItem>
-                </NestedList>
-            </MudListItem>
-            
-            <MudListItem T="string" Icon="@Icons.Material.TwoTone.PersonalVideo" Text="Видео">
-                <NestedList>
-                    <MudListItem T="string">
-                        Блок А
-                    </MudListItem>
-                    <MudListItem T="string">
-                        Блок Б
-                    </MudListItem>
-                </NestedList>
-            </MudListItem>
+            <MudListItem T="string" Icon="@Icons.Material.Rounded.Article" Text="Лекции"/>
+            <MudListItem T="string" Icon="@Icons.Material.TwoTone.PersonalVideo" Text="Видео"
+                         @onclick="NavToVideoCourses"/>
         </NestedList>
     </MudListItem>
-    
+
     <MudListItem T="string" Icon="@Icons.Material.Rounded.StarRate" Text="Отзывы" @onclick="NavToRate"></MudListItem>
 </MudNavMenu>
 
 @code
 {
     //Для работы локального хранилища
-    [Inject] IJSRuntime JSRuntime { get; set; }
-    
+    [Inject] IJSRuntime JsRuntime { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
     }
+
+    #region Links
 
     /// <summary>
     /// Переход на главную страницу
@@ -59,4 +43,14 @@
     {
         NavManager.NavigateTo("/rate");
     }
+
+    /// <summary>
+    /// Переход на страницу выбора видео-курсов
+    /// </summary>
+    private void NavToVideoCourses()
+    {
+        NavManager.NavigateTo("/video-courses");
+    }
+
+    #endregion
 }

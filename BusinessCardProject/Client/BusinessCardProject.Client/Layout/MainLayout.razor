@@ -28,22 +28,23 @@
             <MudMenuItem Icon="@Icons.Material.TwoTone.Settings"
                      IconColor="Color.Info"
                      Label="Настройки"
-                     @onclick="NavToSettings">
+                     Href="/user-setting"
+                     ForceLoad="false">
             </MudMenuItem>
 
             <MudDivider/>
             
-            <MudMenuItem Href="/user-agreement"
-                         Icon="@Icons.Material.Rounded.Group"
+            <MudMenuItem Icon="@Icons.Material.Rounded.Group"
                          IconColor="Color.Error"
-                         ForceLoad
-                         Label="Пользовательское соглашение"/>
+                         Label="Пользовательское соглашение"
+                         Href="/user-agreement"
+                         ForceLoad="false"/>
             
-            <MudMenuItem Href="/privacy-policy"
-                         Icon="@Icons.Material.Rounded.SafetyDivider"
+            <MudMenuItem Icon="@Icons.Material.Rounded.SafetyDivider"
                          IconColor="Color.Error"
-                         ForceLoad
-                         Label="Политика конфиденциальности"/>
+                         Label="Политика конфиденциальности"
+                         Href="/privacy-policy"
+                         ForceLoad="false"/>
             
             <MudDivider/>
 
