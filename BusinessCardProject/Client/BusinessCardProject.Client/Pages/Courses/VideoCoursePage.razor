@@ -1,4 +1,6 @@
-﻿@page "/video-courses"
+﻿@inject IBrowserViewportService BrowserViewportService
+
+@page "/video-courses"
 
 <PageTitle>Видео-курсы</PageTitle>
 
@@ -6,74 +8,122 @@
     <MudGrid Class="mt-2">
         <MudItem xs="12" sm="5" md="4">
             <MudHidden Breakpoint="Breakpoint.SmAndUp">
-                <MudButton Color="Color.Secondary" Class="mud-width-full">Фильтры</MudButton>
+                <MudButton @onclick="ToggleShowFilters" Variant="Variant.Outlined" Color="Color.Default"
+                           Class="mud-width-full mb-2">
+                    @(_isShowFiltersCourses ? "Скрыть фильтры" : "Показать фильтры")
+                </MudButton>
             </MudHidden>
-            <MudPaper Elevation="0" Class="pa-4">
-                <MudForm @ref="_form">
-                    <MudSelect T="string"
-                               Placeholder="Курс"
-                               Variant="Variant.Text"
-                               Clearable="true"
-                               Required="true"
-                               Class="mb-4"
-                               RequiredError="Выбор курса обязателен!"
-                               ShrinkLabel>
-                        @foreach (var test in _testValues)
-                        {
-                            <MudSelectItem Value="@test">@test</MudSelectItem>
-                        }
-                    </MudSelect>
+            @if (_isShowFiltersCourses || _currentBreakpoint != Breakpoint.Xs)
+            {
+                <MudPaper Elevation="0" Class="pa-4">
+                    <MudForm @ref="_formFiltersFindCourses">
+                        <MudSelect T="string"
+                                   Placeholder="Курс"
+                                   Variant="Variant.Text"
+                                   Clearable="true"
+                                   Required="true"
+                                   Class="mb-4"
+                                   RequiredError="Выбор курса обязателен!"
+                                   ShrinkLabel>
+                            @foreach (var test in _testValues)
+                            {
+                                <MudSelectItem Value="@test">@test</MudSelectItem>
+                            }
+                        </MudSelect>
 
-                    <MudSelect T="string"
-                               Placeholder="Модуль"
-                               Variant="Variant.Text"
-                               Clearable="true"
-                               Required="true"
-                               RequiredError="Выбор модуля обязателен!"
-                               ShrinkLabel>
-                        @foreach (var test in _testValues)
-                        {
-                            <MudSelectItem Value="@test">@test</MudSelectItem>
-                        }
-                    </MudSelect>
+                        <MudSelect T="string"
+                                   Placeholder="Модуль"
+                                   Variant="Variant.Text"
+                                   Clearable="true"
+                                   Required="true"
+                                   RequiredError="Выбор модуля обязателен!"
+                                   ShrinkLabel>
+                            @foreach (var test in _testValues)
+                            {
+                                <MudSelectItem Value="@test">@test</MudSelectItem>
+                            }
+                        </MudSelect>
 
-                    <MudButton Variant="Variant.Filled"
-                               Color="Color.Primary"
-                               Class="mud-width-full mt-4"
-                               OnClick="@(async () => await Submit())">
-                        Найти
-                    </MudButton>
-                </MudForm>
-            </MudPaper>
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Info"
+                                   Class="mud-width-full mt-4"
+                                   OnClick="@(async () => await Submit())">
+                            Найти
+                        </MudButton>
+                    </MudForm>
+                </MudPaper>
+            }
         </MudItem>
 
         <!-- Правая колонка: объекты (курсы) -->
         <MudItem xs="12" sm="7" md="8">
             <MudPaper Elevation="0" Class="pa-4">
-                <!-- Список карточек курсов, таблица и т.д. -->
-                <MudCard Elevation="0">Курс 1</MudCard>
-                <MudCard Elevation="0">Курс 2</MudCard>
+                1) @_currentBreakpoint
             </MudPaper>
         </MudItem>
     </MudGrid>
 </MudContainer>
 
 @code {
-    private MudForm? _form;
 
+    /// <summary>
+    /// Форма для фильтров
+    /// </summary>
+    private MudForm? _formFiltersFindCourses;
+
+    /// <summary>
+    /// Признак показа окна фильтров
+    /// </summary>
+    private bool _isShowFiltersCourses { get; set; } = true;
+
+    /// <summary>
+    /// Размер окна типа Xs, Sm и тд
+    /// </summary>
+    private Breakpoint _currentBreakpoint;
+
+    /// <summary>
+    /// TODO:Тест значения, удалить
+    /// </summary>
     private List<string> _testValues = new();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        //TODO:Тестовые данные (удалить после)
         _testValues.Add("База");
         _testValues.Add("Основы ООП.");
         _testValues.Add("Разработка микросервиса. С использованием RabbitMQ.");
         _testValues.Add("Разработка микросервиса. С использованием Grpc.");
+
+        // Подписываемся на изменения размера окна
+        await BrowserViewportService.SubscribeAsync(Guid.NewGuid(), OnViewportChanged, fireImmediately: true);
     }
 
+    /// <summary>
+    /// Форма для поиска курсов по фильтрам
+    /// </summary>
     private async Task Submit()
     {
-        await _form.Validate();
+        await _formFiltersFindCourses.Validate();
     }
+
+    /// <summary>
+    /// Переключение показа фильтров
+    /// </summary>
+    private void ToggleShowFilters()
+    {
+        _isShowFiltersCourses = !_isShowFiltersCourses;
+    }
+
+    /// <summary>
+    /// Событие на изменение точки ширины окна
+    /// </summary>
+    /// <param name="args">Размер окна (Xs, Sm, Md)</param>
+    private async Task OnViewportChanged(BrowserViewportEventArgs args)
+    {
+        _currentBreakpoint = args.Breakpoint;
+
+        await InvokeAsync(StateHasChanged);
+    }
+
 }
