@@ -10,10 +10,10 @@
             <MudHidden Breakpoint="Breakpoint.SmAndUp">
                 <MudButton @onclick="ToggleShowFilters" Variant="Variant.Outlined" Color="Color.Default"
                            Class="mud-width-full mb-2">
-                    @(_isShowFiltersCourses ? "Скрыть фильтры" : "Показать фильтры")
+                    @(IsShowFiltersCourses ? "Скрыть фильтры" : "Показать фильтры")
                 </MudButton>
             </MudHidden>
-            @if (_isShowFiltersCourses || _currentBreakpoint != Breakpoint.Xs)
+            @if (IsShowFiltersCourses || _currentBreakpoint != Breakpoint.Xs)
             {
                 <MudPaper Elevation="0" Class="pa-4">
                     <MudForm @ref="_formFiltersFindCourses">
@@ -74,7 +74,7 @@
     /// <summary>
     /// Признак показа окна фильтров
     /// </summary>
-    private bool _isShowFiltersCourses { get; set; } = true;
+    private bool IsShowFiltersCourses { get; set; } = true;
 
     /// <summary>
     /// Размер окна типа Xs, Sm и тд
@@ -84,7 +84,7 @@
     /// <summary>
     /// TODO:Тест значения, удалить
     /// </summary>
-    private List<string> _testValues = new();
+    private readonly List<string> _testValues = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -104,7 +104,7 @@
     /// </summary>
     private async Task Submit()
     {
-        await _formFiltersFindCourses.Validate();
+        if (_formFiltersFindCourses != null) await _formFiltersFindCourses.Validate();
     }
 
     /// <summary>
@@ -112,7 +112,7 @@
     /// </summary>
     private void ToggleShowFilters()
     {
-        _isShowFiltersCourses = !_isShowFiltersCourses;
+        IsShowFiltersCourses = !IsShowFiltersCourses;
     }
 
     /// <summary>

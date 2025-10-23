@@ -19,7 +19,7 @@
 @code
 {
     //Для работы локального хранилища
-    [Inject] IJSRuntime JsRuntime { get; set; }
+    [Inject] IJSRuntime? JsRuntime { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
