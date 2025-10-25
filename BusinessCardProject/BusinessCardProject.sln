@@ -19,6 +19,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessCardProject.Server.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessCardProject.Client", "Client\BusinessCardProject.Client\BusinessCardProject.Client.csproj", "{8A755DDE-8D1F-4177-9438-F9DD82CAB081}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{9D52F980-2D9C-4BE6-AF0A-259887208C76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessCardProject.Services.MailService", "Services\BusinessCardProject.Services.MailService\BusinessCardProject.Services.MailService.csproj", "{D8740761-FF41-42A2-AABA-17D3E1BC5156}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessCardProject.Services.PaymentService", "Services\BusinessCardProject.Services.PaymentService\BusinessCardProject.Services.PaymentService.csproj", "{8B46E7BE-C3FE-4E88-AE90-0155482F6AA6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ContractualDTOs", "ContractualDTOs", "{4B4D83F9-A9A1-4C38-8C52-31F8A35F8754}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContractualDtos", "ContractualDTOs\ContractualDtos\ContractualDtos.csproj", "{C550C10F-C7DB-4C09-96C3-F22DFE79249D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +55,18 @@ Global
 		{8A755DDE-8D1F-4177-9438-F9DD82CAB081}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A755DDE-8D1F-4177-9438-F9DD82CAB081}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A755DDE-8D1F-4177-9438-F9DD82CAB081}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8740761-FF41-42A2-AABA-17D3E1BC5156}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8740761-FF41-42A2-AABA-17D3E1BC5156}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8740761-FF41-42A2-AABA-17D3E1BC5156}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8740761-FF41-42A2-AABA-17D3E1BC5156}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B46E7BE-C3FE-4E88-AE90-0155482F6AA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B46E7BE-C3FE-4E88-AE90-0155482F6AA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B46E7BE-C3FE-4E88-AE90-0155482F6AA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B46E7BE-C3FE-4E88-AE90-0155482F6AA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C550C10F-C7DB-4C09-96C3-F22DFE79249D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C550C10F-C7DB-4C09-96C3-F22DFE79249D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C550C10F-C7DB-4C09-96C3-F22DFE79249D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C550C10F-C7DB-4C09-96C3-F22DFE79249D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +78,10 @@ Global
 		{A45E424C-5F3D-43B0-81E4-9E718930DCFF} = {4B8A9DA2-4068-45AF-BB43-AC954D4B8E6C}
 		{01B98FE6-B02A-49B6-8D22-239ADBE75A5F} = {4B8A9DA2-4068-45AF-BB43-AC954D4B8E6C}
 		{8A755DDE-8D1F-4177-9438-F9DD82CAB081} = {02217D61-9364-4118-989A-D19AAA270FEF}
+		{9D52F980-2D9C-4BE6-AF0A-259887208C76} = {2A5E4899-3EA6-46E6-B79D-ADEDE7EA5348}
+		{D8740761-FF41-42A2-AABA-17D3E1BC5156} = {9D52F980-2D9C-4BE6-AF0A-259887208C76}
+		{8B46E7BE-C3FE-4E88-AE90-0155482F6AA6} = {9D52F980-2D9C-4BE6-AF0A-259887208C76}
+		{C550C10F-C7DB-4C09-96C3-F22DFE79249D} = {4B4D83F9-A9A1-4C38-8C52-31F8A35F8754}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {20B77252-D979-4169-AB40-93EF2533A116}
