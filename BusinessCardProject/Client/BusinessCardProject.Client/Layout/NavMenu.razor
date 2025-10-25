@@ -1,56 +1,24 @@
-﻿@using BusinessCardProject.Client.Services.ProjectInfoService
-@inject HttpClient HttpClient
-@inject NavigationManager NavManager
-
-<MudNavMenu>
-    <MudListItem T="string" Icon="@Icons.Material.Rounded.Home" Text="Главная" @onclick="NavToHomePage"></MudListItem>
-
-    <MudListItem T="string" Icon="@Icons.Material.Rounded.ShowChart" Text="Уроки">
-        <NestedList>
-            <MudListItem T="string" Icon="@Icons.Material.Rounded.Article" Text="Лекции"/>
-            <MudListItem T="string" Icon="@Icons.Material.TwoTone.PersonalVideo" Text="Видео"
-                         @onclick="NavToVideoCourses"/>
-        </NestedList>
-    </MudListItem>
-
-    <MudListItem T="string" Icon="@Icons.Material.Rounded.StarRate" Text="Отзывы" @onclick="NavToRate"></MudListItem>
+﻿<MudNavMenu>
+    <MudNavMenu Class="mud-width-full mud-navmenu mud-navmenu-margin-none">
+        <MudNavLink Href="/home" Class="mud-nav-item mt-1" Icon="@Icons.Material.Rounded.Home">
+            Главная
+        </MudNavLink>
+        <MudDivider Class="my-1"/>
+        <MudNavGroup Title="Уроки" Icon="@Icons.Material.Rounded.ShowChart" Expanded="false">
+            <MudNavLink Href="/video-courses" Class="mud-nav-item" Icon="@Icons.Material.Rounded.Article">
+                Лекции
+            </MudNavLink>
+            <MudNavLink Href="/video-courses" Class="mud-nav-item" Icon="@Icons.Material.TwoTone.PersonalVideo">
+                Видео
+            </MudNavLink>
+        </MudNavGroup>
+        <MudNavLink Href="/rate" Class="mud-nav-item" Icon="@Icons.Material.Rounded.StarRate">
+            Отзывы
+        </MudNavLink>
+    </MudNavMenu>
 </MudNavMenu>
 
 @code
 {
-    //Для работы локального хранилища
-    [Inject] IJSRuntime? JsRuntime { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-    }
-
-    #region Links
-
-    /// <summary>
-    /// Переход на главную страницу
-    /// </summary>
-    private void NavToHomePage()
-    {
-        NavManager.NavigateTo("/");
-    }
-
-    /// <summary>
-    /// Переход на страницу отзывов
-    /// </summary>
-    private void NavToRate()
-    {
-        NavManager.NavigateTo("/rate");
-    }
-
-    /// <summary>
-    /// Переход на страницу выбора видео-курсов
-    /// </summary>
-    private void NavToVideoCourses()
-    {
-        NavManager.NavigateTo("/video-courses");
-    }
-
-    #endregion
+    
 }

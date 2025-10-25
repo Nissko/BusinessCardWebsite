@@ -32,6 +32,18 @@ html, body {
     align-items: center !important;
 }
 
+.mud-navmenu.mud-navmenu-default .mud-nav-link.active:not(.mud-nav-link-disabled) {
+    color: rgb(74 134 255) !important;
+}
+
+.mud-navmenu.mud-navmenu-default .mud-nav-link-expand-icon.mud-transform {
+    fill: rgb(74 134 255) !important;
+}
+
+.mud-primary-text{
+    color: rgb(74 134 255) !important;
+}
+
 /*
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;

@@ -1,0 +1,66 @@
+﻿@*Переделать после таблицу из шаблона под себя, как будет готов Backen-часть*@
+<MudGrid Class="justify-space-between mt-1" Spacing="2">
+    <MudItem xs="12" sm="6" lg="6">
+        <MudPaper Elevation="1" Class="pa-2 mud-width-full">
+            @*<MudTable Items="@Elements" Dense="@dense" Hover="@hover" Bordered="@bordered" Striped="@striped"
+                      Filter="new Func<Element, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">*@
+            <MudTable Dense="dense" Hover="hover" Bordered="bordered" T="object">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Заказы</MudText>
+                    <MudSpacer/>
+                    <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"
+                                  Class="mt-0"></MudTextField>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Nr</MudTh>
+                    <MudTh>Sign</MudTh>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Position</MudTh>
+                    <MudTh>Molar mass</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Nr">1</MudTd>
+                    <MudTd DataLabel="Sign">12</MudTd>
+                    <MudTd DataLabel="Name">13</MudTd>
+                    <MudTd DataLabel="Position">14</MudTd>
+                    <MudTd DataLabel="Molar mass">15</MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager/>
+                </PagerContent>
+            </MudTable>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private bool dense = true;
+    private bool hover = true;
+    private bool bordered = true;
+    private string searchString1 = "";
+    //private Element selectedItem1 = null;
+    //private HashSet<Element> selectedItems = new HashSet<Element>();
+
+    //private IEnumerable<Element> Elements = new List<Element>();
+
+    /*protected override async Task OnInitializedAsync()
+    {
+        //Elements = await httpClient.GetFromJsonAsync<List<Element>>("webapi/periodictable");
+    }*/
+
+    //private bool FilterFunc1(Element element) => FilterFunc(element, searchString1);
+
+    /*private bool FilterFunc(Element element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Sign.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{element.Number} {element.Position} {element.Molar}".Contains(searchString))
+            return true;
+        return false;
+    }*/
+}

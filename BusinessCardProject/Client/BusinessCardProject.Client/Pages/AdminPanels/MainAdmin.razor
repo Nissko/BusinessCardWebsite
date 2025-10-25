@@ -1,0 +1,89 @@
+﻿@page "/admin-panel"
+@using BusinessCardProject.Client.Pages.AdminPanels.AdminEnums
+@using BusinessCardProject.Client.Pages.AdminPanels.AdminСomponents
+
+<PageTitle>Панель-администратора</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="pt-2">
+    <MudGrid Class="mt-2">
+        @*Левая колонка*@
+        <MudItem xs="12" sm="5" lg="3" Class="py-1">
+            <MudItem Class="d-flex align-center px-3 py-2 h-100">
+                <MudList T="string" Class="mud-width-full">
+                    <MudText Typo="Typo.subtitle1" Class="px-4">Администрирование</MudText>
+                    <MudDivider Class="my-1"/>
+                    <MudListItem Text="Графики"
+                                 Icon="@Icons.Material.TwoTone.Analytics"
+                                 IconColor="Color.Info"
+                                 @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Graphs))"/>
+                    <MudListItem Text="Сервер"
+                                 Icon="@Icons.Material.TwoTone.Storage"
+                                 IconColor="Color.Info"
+                                 @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Servers))"/>
+                    <MudListItem Text="Заказы" 
+                                 Icon="@Icons.Material.TwoTone.Receipt" 
+                                 IconColor="Color.Info"
+                                 @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Orders))"/>
+                    <MudListItem Text="Настройки" 
+                                 Icon="@Icons.Material.TwoTone.Settings" 
+                                 IconColor="Color.Info">
+                        <NestedList>
+                            <MudListItem Text="Пользователи" 
+                                         Icon="@Icons.Material.TwoTone.People"
+                                         IconColor="Color.Success"
+                                         @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Users))"/>
+                            @*Тут будет логирование действий пользователя со стороны Backend(-a)*@
+                            <MudListItem Text="Аудит" 
+                                         Icon="@Icons.Material.TwoTone.Security"
+                                         IconColor="Color.Warning"
+                                         @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Audits))"/>
+                        </NestedList>
+                    </MudListItem>
+                </MudList>
+            </MudItem>
+        </MudItem>
+
+        @*Правая панелька*@
+        <MudItem xs="12" sm="7" lg="9" Class="py-1">
+            @*Нужно добавлять компоненты в папку, а также в конструкцию ниже*@
+            @switch (ComponentName)
+            {
+                case "Graphs":
+                    <GraphСomponents/>
+                    break;
+                case "Servers":
+                    <ServerComponents/>
+                    break;
+                case "Orders":
+                    <OrderComponents/>
+                    break;
+                case "Users":
+                    <UserComponents/>
+                    break;
+                case "Audits":
+                    <AuditComponents/>
+                    break;
+                default:
+                    <MudPaper>
+                        <MudText Typo="Typo.h6" Class="mt-2 px-2 py-2" Color="Color.Info">
+                            Выбери пункт администрирования!
+                        </MudText>
+                    </MudPaper>
+                    break;
+            }
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private string ComponentName { get; set; } = nameof(AdminFiltersBtnEnum.Graphs);
+
+    /// <summary>
+    /// Изменение правого меню
+    /// </summary>
+    /// <param name="name">Название компонента</param>
+    private void ChangeSelectCurrentComponent(string name)
+    {
+        ComponentName = name;
+    }
+}

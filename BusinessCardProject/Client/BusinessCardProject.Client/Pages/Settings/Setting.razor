@@ -3,55 +3,106 @@
 <PageTitle>Настройки</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Medium">
-    <MudText Typo="Typo.h5" Align="Align.Justify" GutterBottom="true" Class="mt-4">
+    <MudText Typo="Typo.h5" Align="Align.Justify" GutterBottom="true" Class="mt-4 px-3">
         <b>Настройки:</b>
     </MudText>
 
-    @*Switch для соц.сетей*@
-    <MudPaper Class="d-flex flex-wrap align-center gap-2 pl-4 pr-4 py-2 mb-4">
-        <MudText Typo="Typo.h6" Class="m-0">
-            Платформа для видеоуроков:
-        </MudText>
-        
-        <div class="d-flex flex-wrap align-center gap-6 w-100" style="width: 100%">
-            <MudSwitch T="bool"
-                       Style="user-select: none;"
-                       Value="@SocialPageSwitch1"
-                       ValueChanged="@(v => OnSwitchSocialPageChanged(nameof(SocialPageSwitch1), v))"
-                       LabelPlacement="@Placement"
-                       Color="Color.Success"
-                       UncheckedColor="Color.Error">
-                YouTube
-            </MudSwitch>
+    <MudGrid Class="mt-2">
+        @*Левая колонка*@
+        <MudItem xs="12" sm="5" md="4" Class="py-1">
+            <MudItem Class="d-flex align-center px-3 py-2 h-100" Style="min-height: 74px;">
+                <MudText>
+                    Платформа для просмотра:
+                </MudText>
+            </MudItem>
+        </MudItem>
 
-            <MudSwitch T="bool"
-                       Style="user-select: none;"
-                       Value="@SocialPageSwitch2"
-                       ValueChanged="@(v => OnSwitchSocialPageChanged(nameof(SocialPageSwitch2), v))"
-                       LabelPlacement="@Placement"
-                       Color="Color.Success"
-                       UncheckedColor="Color.Error">
-                RuTube
-            </MudSwitch>
+        @*Правая колонка*@
+        <MudItem xs="12" sm="7" md="5" Class="py-1">
+            <MudItem Class="d-flex justify-space-between align-center px-2 py-2 h-100"
+                     Style="min-height: 74px;">
+                <MudSwitch T="bool"
+                           Style="user-select: none;"
+                           Value="@SocialPageSwitch1"
+                           ValueChanged="@(v => OnSwitchSocialPageChanged(nameof(SocialPageSwitch1), v))"
+                           LabelPlacement="@Placement"
+                           Color="Color.Success"
+                           UncheckedColor="Color.Error">
+                    <MudText Typo="Typo.caption">YouTube</MudText>
+                </MudSwitch>
 
-            <MudSwitch T="bool"
-                       Style="user-select: none;"
-                       Value="@SocialPageSwitch3"
-                       ValueChanged="@(v => OnSwitchSocialPageChanged(nameof(SocialPageSwitch3), v))"
-                       LabelPlacement="@Placement"
-                       Color="Color.Success"
-                       UncheckedColor="Color.Error">
-                VK Видео
-            </MudSwitch>
-        </div>
-    </MudPaper>
-    
-    @*Switch для ЯП*@
-    <MudPaper Class="d-flex flex-wrap align-center gap-2 pl-4 pr-4 py-2">
-        <MudText Typo="Typo.h6" Class="m-0">
-            Выберите язык программирования:
-        </MudText>
-    </MudPaper>
+                <MudSwitch T="bool"
+                           Style="user-select: none;"
+                           Value="@SocialPageSwitch2"
+                           ValueChanged="@(v => OnSwitchSocialPageChanged(nameof(SocialPageSwitch2), v))"
+                           LabelPlacement="@Placement"
+                           Color="Color.Success"
+                           UncheckedColor="Color.Error">
+                    <MudText Typo="Typo.caption">RuTube</MudText>
+                </MudSwitch>
+
+                <MudSwitch T="bool"
+                           Style="user-select: none;"
+                           Value="@SocialPageSwitch3"
+                           ValueChanged="@(v => OnSwitchSocialPageChanged(nameof(SocialPageSwitch3), v))"
+                           LabelPlacement="@Placement"
+                           Color="Color.Success"
+                           UncheckedColor="Color.Error">
+                    <MudText Typo="Typo.caption">VK Видео</MudText>
+                </MudSwitch>
+            </MudItem>
+        </MudItem>
+    </MudGrid>
+
+    @*Для выбора ЯП*@
+    @*<MudGrid Class="mt-2">
+        $1$Левая колонка#1#
+        <MudItem xs="12" sm="5" md="4" Class="py-1">
+            <MudItem Elevation="1" Class="d-flex align-center px-3 py-2 h-100" Style="min-height: 74px;">
+                <MudText>
+                    Язык изучения (ЯП):
+                </MudText>
+            </MudItem>
+        </MudItem>
+
+        $1$Правая колонка#1#
+        <MudItem xs="12" sm="7" md="5" Class="py-1">
+            <MudItem Elevation="1" Class="d-flex justify-space-between align-center px-2 py-2 h-100"
+                     Style="min-height: 74px;">
+                <MudSwitch T="bool"
+                           Style="user-select: none;"
+                           LabelPlacement="@Placement"
+                           Color="Color.Success"
+                           UncheckedColor="Color.Error">
+                    <MudText Typo="Typo.caption">C#</MudText>
+                </MudSwitch>
+
+                <MudSwitch T="bool"
+                           Style="user-select: none;"
+                           LabelPlacement="@Placement"
+                           Color="Color.Success"
+                           UncheckedColor="Color.Error">
+                    <MudText Typo="Typo.caption">PHP</MudText>
+                </MudSwitch>
+                
+                <MudSwitch T="bool"
+                           Style="user-select: none;"
+                           LabelPlacement="@Placement"
+                           Color="Color.Success"
+                           UncheckedColor="Color.Error">
+                    <MudText Typo="Typo.caption">Laravel</MudText>
+                </MudSwitch>
+
+                <MudSwitch T="bool"
+                           Style="user-select: none;"
+                           LabelPlacement="@Placement"
+                           Color="Color.Success"
+                           UncheckedColor="Color.Error">
+                    <MudText Typo="Typo.caption">Python</MudText>
+                </MudSwitch>
+            </MudItem>
+        </MudItem>
+    </MudGrid>*@
 </MudContainer>
 
 @code {
@@ -68,8 +119,8 @@
     /// <summary>
     /// Положение текста
     /// </summary>
-    private Placement Placement { get; } = Placement.Bottom;
-    
+    private static Placement Placement => Placement.Bottom;
+
     /// <summary>
     /// Переключение Switch(-ей) для соц. сетей
     /// </summary>
@@ -80,7 +131,7 @@
         //Если пытаемся установить единственный Switch на false
         if (!value)
             return;
-        
+
         SocialPageSwitch1 = false;
         SocialPageSwitch2 = false;
         SocialPageSwitch3 = false;
@@ -94,8 +145,9 @@
                 case nameof(SocialPageSwitch2): SocialPageSwitch2 = true; break;
                 case nameof(SocialPageSwitch3): SocialPageSwitch3 = true; break;
             }
-            
+
             /*Отправить запрос на изменение настроек у пользователя в бд*/
         }
     }
+
 }

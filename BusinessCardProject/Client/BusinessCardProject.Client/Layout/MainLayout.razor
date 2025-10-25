@@ -3,15 +3,15 @@
 @inject ProjectInfoGlobalClass ProjectInfoGlobal
 @inject HttpClient HttpClient
 @inject IJSRuntime JsRuntime
-@inject NavigationManager NavManager
 
-<MudThemeProvider Theme="_theme" IsDarkMode="_isDarkMode" />
+<MudThemeProvider Theme="_theme" IsDarkMode="_isDarkMode"/>
 <MudPopoverProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 <MudLayout>
     <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(_ => DrawerToggle())"/>
+        <MudIconButton Icon="@Icons.Material.TwoTone.Menu" Color="Color.Inherit" Edge="Edge.Start"
+                       OnClick="@(_ => DrawerToggle())"/>
         <MudLink Href="" Underline="Underline.None">
             <MudText Typo="Typo.h5" Class="ml-3" Style="font-weight: bold" Color="@_color">
                 @ProjectInfoGlobal.ProjectName
@@ -26,26 +26,33 @@
                  Icon="@Icons.Material.TwoTone.MoreVert">
 
             <MudMenuItem Icon="@Icons.Material.TwoTone.Settings"
-                     IconColor="Color.Info"
-                     Label="Настройки"
-                     Href="/user-setting"
-                     ForceLoad="false">
+                         IconColor="Color.Info"
+                         Label="Настройки"
+                         Href="/user-setting"
+                         ForceLoad="false">
+            </MudMenuItem>
+
+            <MudMenuItem Icon="@Icons.Material.TwoTone.AdminPanelSettings"
+                         IconColor="Color.Success"
+                         Label="Админ-панель"
+                         Href="/admin-panel"
+                         ForceLoad="false">
             </MudMenuItem>
 
             <MudDivider/>
-            
-            <MudMenuItem Icon="@Icons.Material.Rounded.Group"
+
+            <MudMenuItem Icon="@Icons.Material.TwoTone.Group"
                          IconColor="Color.Error"
                          Label="Пользовательское соглашение"
                          Href="/user-agreement"
                          ForceLoad="false"/>
-            
-            <MudMenuItem Icon="@Icons.Material.Rounded.SafetyDivider"
+
+            <MudMenuItem Icon="@Icons.Material.TwoTone.SafetyDivider"
                          IconColor="Color.Error"
                          Label="Политика конфиденциальности"
                          Href="/privacy-policy"
                          ForceLoad="false"/>
-            
+
             <MudDivider/>
 
             <MudMenuItem Href="/"
@@ -61,7 +68,8 @@
                          Label="Выход"/>
         </MudMenu>
     </MudAppBar>
-    <MudDrawer id="nav-drawer" @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+    <MudDrawer id="nav-drawer" @bind-Open="_drawerOpen" Breakpoint="Breakpoint.None" ClipMode="DrawerClipMode.Always"
+               Elevation="4">
         <NavMenu/>
     </MudDrawer>
     <MudMainContent Class="pt-16 pa-4">
@@ -70,6 +78,7 @@
 </MudLayout>
 
 @code {
+
     //Переменные фреймворка по умолчанию
     private bool _drawerOpen;
     private bool _isDarkMode;
@@ -79,16 +88,16 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        
+
         var storageResult = await JsRuntime.InvokeAsync<string>("localStorage.getItem", "isDarkMode");
         if (bool.TryParse(storageResult, out var isDarkMode))
         {
             _isDarkMode = isDarkMode;
         }
-        
+
         _drawerOpen = false;
         _color = isDarkMode ? Color.Info : Color.Dark;
-        
+
         _theme = new()
         {
             PaletteLight = _lightPalette,
@@ -96,9 +105,9 @@
             LayoutProperties = new LayoutProperties()
         };
     }
-    
+
     #region Код фреймворка по умолчанию
-    
+
     /// <summary>
     /// Открыть/закрыть меню навигации
     /// </summary>
@@ -162,15 +171,7 @@
         true => Icons.Material.Filled.WbSunny,
         false => Icons.Material.Outlined.DarkMode,
     };
-    
-    #endregion
-    
-    #region Nav
 
-    private void NavToSettings()
-    {
-        NavManager.NavigateTo("/user-setting");
-    }
-    
     #endregion
+
 }

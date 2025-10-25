@@ -1,0 +1,71 @@
+﻿<MudGrid Class="justify-space-between mt-1" Spacing="2">
+    <MudItem xs="12" sm="6" lg="6">
+        <MudPaper Elevation="1" Class="pa-2 mud-width-full">
+            <MudText Typo="Typo.subtitle2">
+                Посещения за эту неделю:
+            </MudText>
+            <MudChart ChartType="ChartType.Line"
+                      ChartSeries="@_series"
+                      @bind-SelectedIndex="_index"
+                      XAxisLabels="@_xAxisLabels"
+                      ChartOptions="@_options"
+                      Width="440"
+                      AxisChartOptions="_axisChartOptions"
+                      Class="mud-width-full"/>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" lg="6">
+        <MudPaper Elevation="1" Class="pa-2 mud-width-full">
+            <MudText Typo="Typo.subtitle2">
+                Популярный ЯП:
+            </MudText>
+            <MudChart ChartType="ChartType.Line"
+                      ChartSeries="@_series"
+                      @bind-SelectedIndex="_index"
+                      XAxisLabels="@_xAxisLabels"
+                      ChartOptions="@_options"
+                      Width="440"
+                      AxisChartOptions="_axisChartOptions"
+                      Class="mud-width-full"/>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private int _index = -1;
+    private ChartOptions _options = new();
+    private AxisChartOptions _axisChartOptions = new();
+    
+    private List<ChartSeries> _series =
+    [
+        new()
+        {
+            Name = "Прошлая",
+            Data =
+            [
+                90, 79, 72, 69, 62, 62, 55
+            ],
+            ShowDataMarkers = true
+        },
+
+        new()
+        {
+            Name = "Текущая",
+            Data =
+            [
+                10, 41, 35, 51, 49, 62, 69
+            ],
+            ShowDataMarkers = true,
+        }
+
+    ];
+    private string[] _xAxisLabels = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _axisChartOptions.MatchBoundsToSize = true;
+        _series.ForEach(x => x.ShowDataMarkers = true);
+        _options.ChartPalette = ["#e74c3c", "#2ecc71"];
+    }
+}
