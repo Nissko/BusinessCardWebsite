@@ -1,6 +1,7 @@
 ﻿@inject IBrowserViewportService BrowserViewportService
 
 @page "/video-courses"
+@using BusinessCardProject.Client.Pages.CoursesPages.Video.VideoComponents
 
 <PageTitle>Видео-курсы</PageTitle>
 
@@ -57,9 +58,7 @@
 
         <!-- Правая колонка: объекты (курсы) -->
         <MudItem xs="12" sm="7" md="8">
-            <MudPaper Elevation="0" Class="pa-4">
-                1) @_currentBreakpoint
-            </MudPaper>
+            <VideoCourseDataComponent SizeBreakPointOption="_currentBreakpoint"/>
         </MudItem>
     </MudGrid>
 </MudContainer>

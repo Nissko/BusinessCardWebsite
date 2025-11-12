@@ -1,0 +1,73 @@
+﻿<MudCard>
+    <MudCardContent Class="d-flex px-2 py-2">
+        <MudItem>
+            <MudImage ObjectFit="ObjectFit.Cover" 
+                      Height="SizeOption" Width="SizeOption" 
+                      Src="images/image.jpg"
+                      Class="rounded-lg"/>
+        </MudItem>
+        <MudItem Class="px-4 mud-width-full">
+            @*Типы данных - Название*@
+            <MudText Typo="Typo.h6" Style="font-weight: bold;">
+                Типы данных. Часть 1
+            </MudText>
+            
+            <MudDivider Class="my-1"/>
+            
+            @*Описание*@
+            <MudText Typo="Typo.body2" Align="Align.Justify">
+                Рассматриваем типы данных в теории.
+            </MudText>
+        </MudItem>
+    </MudCardContent>
+    @*TODO: Сделать ссылку из DTO в зависимости от выбранной в настройках*@
+    <MudCardActions Class="pt-1 pb-3 px-3">
+        <MudButton Href="https://www.google.com/"
+                   Target="blank"
+                   Variant="Variant.Filled" 
+                   ButtonType="ButtonType.Button" 
+                   Color="Color.Info">
+            Смотреть урок
+        </MudButton>
+        @*TODO: Добавить кнопку: Добавить в избранное*@
+    </MudCardActions>
+</MudCard>
+
+@code {
+
+    /// <summary>
+    /// Точка останова по ширине окна (Xxl, Lg, Md, Sm, Xs)
+    /// </summary>
+    [Parameter]
+    public Breakpoint SizeBreakPointOption { get; set; }
+    
+    //TODO:Добавить информацию о курсах (DTO + параметр)
+
+    /// <summary>
+    /// Ширина картинки в px
+    /// </summary>
+    public int SizeOption { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        InitImgWeight(SizeBreakPointOption);
+    }
+
+    /// <summary>
+    /// Размер изображения в зависимости от ширины окна
+    /// </summary>
+    /// <param name="sizeBreakPoint">значение в px</param>
+    private void InitImgWeight(Breakpoint sizeBreakPoint)
+    {
+        SizeOption = sizeBreakPoint switch
+        {
+            Breakpoint.Xxl => 250,
+            Breakpoint.Lg => 200,
+            Breakpoint.Md => 200,
+            Breakpoint.Sm => 150,
+            Breakpoint.Xs => 100,
+            _ => SizeOption
+        };
+    }
+}

@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\sample-data\weather.json" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>
