@@ -1,8 +1,5 @@
 ﻿@page "/donation-project"
-@using BusinessCardProject.Client.Services.ProjectInfoService
-@using BusinessCardProject.Client.Services.ProjectInfoService.Classes
-@inject UserSettingService UserSetting
-@implements IDisposable
+@using BusinessCardProject.Client.Pages.DonationPage.DonationComponents
 
 <PageTitle>Помощь проекту</PageTitle>
 
@@ -11,23 +8,7 @@
         Вы можете поддержать проект с помощью реквизитов, указанных ниже, тем самым вложив средства в его дальнейшее
         развитие и улучшение.
     </MudText>
-    <MudItem Class="d-flex flex-column align-center my-2">
-        <MudImage Src="@_imageByTheme?.DonationQrCodeImage"
-                  Width="250"
-                  Alt="QR-для пожертвований"
-                  Elevation="17"
-                  ObjectPosition="ObjectPosition.Center"
-                  Class="rounded-lg my-2"/>
-        <MudButton ButtonType="ButtonType.Button"
-                   Variant="Variant.Filled"
-                   Color="Color.Success"
-                   Class="my-2"
-                   Style="width: 250px;"
-                   Href="@ProjectInfoGlobalClass.ProjectOwnerEmail"
-                   Target="blank">
-            Поддержать проект
-        </MudButton>
-    </MudItem>
+    <DonationImageComponent/>
     <MudText Typo="Typo.caption" Align="Align.Justify">
         Все поступающие средства направляются исключительно на развитие проекта, включая оплату хостинга, поддержку и
         улучшение контента, а также привлечение дополнительных авторов.
@@ -35,45 +16,4 @@
 
 </MudContainer>
 
-@code {
-    private ImageByThemeClass? _imageByTheme;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await InitOrUpdateImageByTheme();
-
-        // Подписка на событие изменения настроек пользователя 
-        UserSetting.OnChange += OnUserSettingsChanged;
-    }
-
-    #region Для QR-кода
-
-    private void OnUserSettingsChanged()
-    {
-        InvokeAsync(() =>
-        {
-            _ = InitOrUpdateImageByTheme();
-            StateHasChanged();
-        });
-    }
-
-    private async Task InitOrUpdateImageByTheme()
-    {
-        if (UserSetting.Settings.UpdateTime == null)
-        {
-            await UserSetting.LoadAsync();
-            UserSetting.Settings.UpdateTime = DateTime.Now;
-            await UserSetting.SaveAsync();
-        }
-        
-        _imageByTheme = new ImageByThemeClass(UserSetting.Settings.IsDark);
-    }
-
-    #endregion
-    
-    //Отписка от события
-    public void Dispose()
-    {
-        UserSetting.OnChange -= OnUserSettingsChanged;
-    }
-}
+@code {}

@@ -1,0 +1,47 @@
+﻿@inject IBrowserViewportService BrowserViewportService
+@page "/video-courses"
+@using BusinessCardProject.Client.Pages.CoursesPages.VideoPage.VideoComponents
+
+<PageTitle>Видео-курсы</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    <MudGrid Class="mt-2">
+        <!-- Левая колонка: фильтры -->
+        <MudItem xs="12" sm="5" md="4">
+            <VideoFiltersCourseComponent SizeBreakPointOption="_currentBreakpoint"/>
+        </MudItem>
+
+        <!-- Правая колонка: объекты (курсы) -->
+        <MudItem xs="12" sm="7" md="8">
+            <VideoCourseDataComponent SizeBreakPointOption="_currentBreakpoint"/>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    /// <summary>
+    /// Размер окна типа Xs, Sm и тд
+    /// </summary>
+    private Breakpoint _currentBreakpoint;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        // Подписываемся на изменения размера окна
+        await BrowserViewportService.SubscribeAsync(Guid.NewGuid(), OnViewportChanged, fireImmediately: true);
+    }
+
+    /// <summary>
+    /// Событие на изменение точки ширины окна
+    /// </summary>
+    /// <param name="args">Размер окна (Xs, Sm, Md)</param>
+    private async Task OnViewportChanged(BrowserViewportEventArgs args)
+    {
+        _currentBreakpoint = args.Breakpoint;
+        /*TODO: Удалить на release версии*/
+        Console.WriteLine($"Размер экрана - {_currentBreakpoint}");
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+}

@@ -1,0 +1,103 @@
+﻿<MudHidden Breakpoint="Breakpoint.SmAndUp">
+    <MudButton @onclick="ToggleShowFilters"
+               Variant="Variant.Outlined"
+               Color="Color.Default"
+               Class="mud-width-full mb-2"
+               Size="Size.Small">
+        @(IsShowFiltersCourses ? "Скрыть фильтры" : "Показать фильтры")
+    </MudButton>
+</MudHidden>
+@if (IsShowFiltersCourses || SizeBreakPointOption != Breakpoint.Xs)
+{
+    <MudPaper Elevation="0" Class="pa-4">
+        <MudForm @ref="_formFiltersFindCourses">
+            <MudSelect T="string"
+                       Placeholder="Курс"
+                       Variant="Variant.Text"
+                       Clearable="true"
+                       Required="true"
+                       Class="mb-4"
+                       RequiredError="Выбор курса обязателен!"
+                       Margin="Margin.Dense"
+                       ShrinkLabel>
+                @foreach (var test in _testValues)
+                {
+                    <MudSelectItem Value="@test">@test</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect T="string"
+                       Placeholder="Модуль"
+                       Variant="Variant.Text"
+                       Clearable="true"
+                       Required="true"
+                       RequiredError="Выбор модуля обязателен!"
+                       Margin="Margin.Dense"
+                       ShrinkLabel>
+                @foreach (var test in _testValues)
+                {
+                    <MudSelectItem Value="@test">@test</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Info"
+                       Class="mud-width-full mt-4"
+                       OnClick="@(async () => await Submit())"
+                       Size="Size.Small">
+                Найти
+            </MudButton>
+        </MudForm>
+    </MudPaper>
+}
+
+@code {
+
+    /// <summary>
+    /// Точка останова по ширине окна (Xxl, Lg, Md, Sm, Xs)
+    /// </summary>
+    [Parameter]
+    public Breakpoint SizeBreakPointOption { get; set; }
+
+    /// <summary>
+    /// Форма для фильтров
+    /// </summary>
+    private MudForm? _formFiltersFindCourses;
+
+    /// <summary>
+    /// Признак показа окна фильтров
+    /// </summary>
+    private bool IsShowFiltersCourses { get; set; } = true;
+
+    /// <summary>
+    /// TODO:Тест значения, удалить
+    /// </summary>
+    private readonly List<string> _testValues = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        //TODO:Тестовые данные (удалить после)
+        _testValues.Add("База");
+        _testValues.Add("Основы ООП.");
+        _testValues.Add("Разработка микросервиса. С использованием RabbitMQ.");
+        _testValues.Add("Разработка микросервиса. С использованием Grpc.");
+    }
+
+    /// <summary>
+    /// Форма для поиска курсов по фильтрам
+    /// </summary>
+    private async Task Submit()
+    {
+        if (_formFiltersFindCourses != null) await _formFiltersFindCourses.Validate();
+    }
+
+    /// <summary>
+    /// Переключение показа фильтров
+    /// </summary>
+    private void ToggleShowFilters()
+    {
+        IsShowFiltersCourses = !IsShowFiltersCourses;
+    }
+
+}

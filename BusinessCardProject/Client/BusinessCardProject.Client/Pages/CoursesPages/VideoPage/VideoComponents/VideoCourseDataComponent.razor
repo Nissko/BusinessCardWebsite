@@ -1,0 +1,118 @@
+﻿<MudCard>
+    <MudCardContent Class="d-flex px-2 py-2">
+        <MudItem Class="d-flex flex-column align-center gap-2">
+            @*TODO: сделать получение изображения карточки*@
+            <MudImage ObjectFit="ObjectFit.Cover"
+                      Height="SizeImgOption" Width="SizeImgOption"
+                      Src="images/image.jpg"
+                      Class="rounded-lg"/>
+            @*TODO: Сделать ссылку из DTO в зависимости от выбранной в настройках*@
+            <MudButton Href="https://www.google.com/"
+                       Target="blank"
+                       Variant="Variant.Filled"
+                       ButtonType="ButtonType.Button"
+                       Color="Color.Info"
+                       Size="Size.Small"
+                       FullWidth="true">
+                Смотреть
+            </MudButton>
+        </MudItem>
+        <MudItem Class="px-2 mud-width-full">
+            @*Типы данных - Название*@
+            <MudText Typo="SizeHeadTextOption" Style="font-weight: bold;">
+                Типы данных. Часть 1
+            </MudText>
+
+            <MudDivider Class="my-1"/>
+
+            @*Описание*@
+            <MudText Typo="SizeMainTextOption" Align="Align.Justify">
+                Рассматриваем типы данных в теории.
+            </MudText>
+        </MudItem>
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+    /// <summary>
+    /// Точка останова по ширине окна (Xxl, Lg, Md, Sm, Xs)
+    /// </summary>
+    [Parameter]
+    public Breakpoint SizeBreakPointOption { get; set; }
+
+    //TODO:Добавить информацию о курсах (DTO + параметр)
+
+    /// <summary>
+    /// Ширина картинки в px
+    /// </summary>
+    private int SizeImgOption { get; set; }
+
+    /// <summary>
+    /// Размер текста заголовков в зависимости от окна
+    /// </summary>
+    private Typo SizeHeadTextOption { get; set; }
+
+    /// <summary>
+    /// Размер основного текста в зависимости от окна
+    /// </summary>
+    private Typo SizeMainTextOption { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        /*Функции для динамического изменения*/
+        InitImgFromWeight(SizeBreakPointOption);
+        InitHeadTypoFromWeight(SizeBreakPointOption);
+        InitMainTypoFromWeight(SizeBreakPointOption);
+    }
+
+    /// <summary>
+    /// Размер изображения в зависимости от ширины окна
+    /// </summary>
+    private void InitImgFromWeight(Breakpoint sizeBreakPoint)
+    {
+        SizeImgOption = sizeBreakPoint switch
+        {
+            Breakpoint.Xxl => 250,
+            Breakpoint.Lg => 200,
+            Breakpoint.Md => 200,
+            Breakpoint.Sm => 125,
+            Breakpoint.Xs => 100,
+            _ => SizeImgOption
+        };
+    }
+
+    /// <summary>
+    /// Размер текста заголовков в зависимости от окна
+    /// </summary>
+    private void InitHeadTypoFromWeight(Breakpoint sizeBreakPoint)
+    {
+        SizeHeadTextOption = sizeBreakPoint switch
+        {
+            Breakpoint.Xxl => Typo.h5,
+            Breakpoint.Lg => Typo.h5,
+            Breakpoint.Md => Typo.h5,
+            Breakpoint.Sm => Typo.subtitle1,
+            Breakpoint.Xs => Typo.caption,
+            _ => SizeHeadTextOption
+        };
+    }
+
+    /// <summary>
+    /// Размер основного текста в зависимости от окна
+    /// </summary>
+    private void InitMainTypoFromWeight(Breakpoint sizeBreakPoint)
+    {
+        SizeMainTextOption = sizeBreakPoint switch
+        {
+            Breakpoint.Xxl => Typo.body2,
+            Breakpoint.Lg => Typo.body2,
+            Breakpoint.Md => Typo.body2,
+            Breakpoint.Sm => Typo.body2,
+            Breakpoint.Xs => Typo.caption,
+            _ => SizeMainTextOption
+        };
+    }
+
+}
