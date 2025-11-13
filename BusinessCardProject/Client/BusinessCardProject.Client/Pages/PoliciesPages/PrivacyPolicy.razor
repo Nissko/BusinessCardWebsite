@@ -1,6 +1,5 @@
 ﻿@page "/privacy-policy"
-@using BusinessCardProject.Client.Services.ProjectInfoService
-@inject ProjectInfoGlobalClass ProjectInfoGlobal
+@using BusinessCardProject.Client.Services.ProjectInfoService.Classes
 
 <PageTitle>Политика конфиденциальности</PageTitle>
 
@@ -17,20 +16,20 @@
     <MudText Typo="Typo.body1" Align="Align.Justify" GutterBottom="true">
         <b>1.1.</b> Настоящая Политика конфиденциальности (далее – «Политика») принята Администратором и действует в
         отношении всей информации, которую Администратор может получить о Пользователе
-        сайта <b>@ProjectInfoGlobal.ProjectLink</b> (далее
+        сайта <b>@ProjectInfoGlobalClass.ProjectLink</b> (далее
         – «Сайт» или «Сервис») с любого устройства и при коммуникации с Администратором в любой форме.
     </MudText>
 
     <MudText Typo="Typo.body1" Align="Align.Justify" GutterBottom="true">
-        <b>1.2.</b> Используя Cайт (просмотр, чтение текста, отправка или загрузка информации) и предоставляя свои
+        <b>1.2.</b> Используя cайт (просмотр, чтение текста, отправка или загрузка информации) и предоставляя свои
         персональные данные, Пользователь Сайта дает согласие на обработку персональных данных в соответствии с данной
         Политикой, если дополнительные требования к согласию не установлены настоящей Политикой.
     </MudText>
 
     <MudText Typo="Typo.body1" Align="Align.Justify" GutterBottom="true">
         <b>1.3.</b> Для целей настоящей Политики под «Администратором» понимается самозанятый –
-        <b>@ProjectInfoGlobal.ProjectOwnerSurname @ProjectInfoGlobal.ProjectOwnerName @ProjectInfoGlobal.ProjectOwnerPatronymic</b>,
-        почта: <b>@ProjectInfoGlobal.ProjectOwnerEmail</b>, ИНН: <b>@ProjectInfoGlobal.ProjectOwnerINN</b>.
+        <b>@ProjectInfoGlobalClass.ProjectOwnerSurname @ProjectInfoGlobalClass.ProjectOwnerName @ProjectInfoGlobalClass.ProjectOwnerPatronymic</b>,
+        почта: <b>@ProjectInfoGlobalClass.ProjectOwnerEmail</b>, ИНН: <b>@ProjectInfoGlobalClass.ProjectOwnerINN</b>.
     </MudText>
 
     @*2 Пункт*@

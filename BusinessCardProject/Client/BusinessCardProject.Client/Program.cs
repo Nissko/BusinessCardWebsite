@@ -9,8 +9,8 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 /*Добавление библиотеки MudBlazor*/
 builder.Services.AddMudServices();
 builder.Services.AddMudBlazorResizeListener();
-/*Инициализация глобальных данных*/
-builder.Services.AddSingleton<ProjectInfoGlobalClass>();
+/*Инициализация кэша*/
+builder.Services.AddSingleton<UserSettingService>();
 
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");

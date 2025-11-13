@@ -1,0 +1,134 @@
+﻿@using BusinessCardProject.Client.Services.ProjectInfoService
+@using BusinessCardProject.Client.Services.ProjectInfoService.Objects
+@inject UserSettingService UserSetting
+
+<MudItem Class="d-flex justify-space-between align-center px-2 py-2 h-100"
+         Style="min-height: 74px;">
+    <MudSwitch T="bool"
+               Style="user-select: none;"
+               Value="SocialPageSwitch1"
+               ValueChanged="@(v => OnSwitchSocialPageChanged(nameof(SocialPageSwitch1), v))"
+               LabelPlacement="@Placement"
+               Color="Color.Success"
+               UncheckedColor="Color.Error">
+        <MudText Typo="Typo.caption">YouTube</MudText>
+    </MudSwitch>
+
+    <MudSwitch T="bool"
+               Style="user-select: none;"
+               Value="SocialPageSwitch2"
+               ValueChanged="@(v => OnSwitchSocialPageChanged(nameof(SocialPageSwitch2), v))"
+               LabelPlacement="@Placement"
+               Color="Color.Success"
+               UncheckedColor="Color.Error">
+        <MudText Typo="Typo.caption">RuTube</MudText>
+    </MudSwitch>
+
+    <MudSwitch T="bool"
+               Style="user-select: none;"
+               Value="SocialPageSwitch3"
+               ValueChanged="@(v => OnSwitchSocialPageChanged(nameof(SocialPageSwitch3), v))"
+               LabelPlacement="@Placement"
+               Color="Color.Success"
+               UncheckedColor="Color.Error">
+        <MudText Typo="Typo.caption">VK Видео</MudText>
+    </MudSwitch>
+</MudItem>
+
+@code {
+    
+    #region Инициализация переменных для Switch соц.сетей
+
+    /*Switch для социальных сетей */
+    public bool SocialPageSwitch1 { get; private set; }
+    public bool SocialPageSwitch2 { get; private set; }
+    public bool SocialPageSwitch3 { get; private set; }
+
+    #endregion
+
+    /// <summary>
+    /// Положение текста
+    /// </summary>
+    private static Placement Placement => Placement.Bottom;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Инициализация кэша локального хранилища
+        if (UserSetting.Settings.VideoPlatform == null)
+        {
+            await InitUserSettingList();
+        }
+
+        //Получение значения из кэша
+        if (UserSetting.Settings.VideoPlatform != null)
+        {
+            SocialPageSwitch1 = UserSetting.Settings.VideoPlatform.YouTube;
+            SocialPageSwitch2 = UserSetting.Settings.VideoPlatform.RuTube;
+            SocialPageSwitch3 = UserSetting.Settings.VideoPlatform.VkVideo;
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+    /// <summary>
+    /// Переключение Switch(-ей) для соц. сетей
+    /// </summary>
+    /// <param name="propertyName">switch name</param>
+    /// <param name="value">switch value</param>
+    private async Task OnSwitchSocialPageChanged(string propertyName, bool value)
+    {
+        //Если пытаемся установить единственный Switch на false
+        if (!value)
+            return;
+
+        SocialPageSwitch1 = false;
+        SocialPageSwitch2 = false;
+        SocialPageSwitch3 = false;
+
+        //Включение Switch, который был установлен на True
+        if (value)
+        {
+            switch (propertyName)
+            {
+                case nameof(SocialPageSwitch1):
+                {
+                    SocialPageSwitch1 = true;
+                    UserSetting.Settings.VideoPlatform?.SetYouTube();
+                    await UserSetting.SaveAsync();
+                    break;
+                }
+                case nameof(SocialPageSwitch2):
+                {
+                    SocialPageSwitch2 = true; 
+                    UserSetting.Settings.VideoPlatform?.SetRuTube();
+                    await UserSetting.SaveAsync();
+                    break;
+                }
+                case nameof(SocialPageSwitch3):
+                {
+                    SocialPageSwitch3 = true; 
+                    UserSetting.Settings.VideoPlatform?.SetVkVideo();
+                    await UserSetting.SaveAsync();
+                    break;
+                }
+            }
+
+            /*TODO: Отправить запрос на изменение настроек у пользователя в бд*/
+        }
+    }
+
+    /// <summary>
+    /// Инициализация объекта VideoPlatform
+    /// </summary>
+    private async Task InitUserSettingList()
+    {
+        await UserSetting.LoadAsync();
+        if (UserSetting.Settings.VideoPlatform is { YouTube: false, RuTube: false, VkVideo: false })
+        {
+            //TODO: Сделать загрузку UserSettings из БД
+            UserSetting.Settings.VideoPlatform = new VideoPlatformList();
+            UserSetting.Settings.VideoPlatform.SetYouTube();
+            await UserSetting.SaveAsync();
+        }
+    } 
+}

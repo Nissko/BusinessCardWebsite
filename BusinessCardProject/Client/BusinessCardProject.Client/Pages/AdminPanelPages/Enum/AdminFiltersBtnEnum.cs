@@ -1,4 +1,4 @@
-﻿namespace BusinessCardProject.Client.Pages.AdminPanels.AdminEnums
+﻿namespace BusinessCardProject.Client.Pages.AdminPanelPages.Enum
 {
     /// <summary>
     /// Справочник кнопок в админ-панели

@@ -1,0 +1,33 @@
+﻿@page "/user-setting"
+@using BusinessCardProject.Client.Pages.SettingPage.Components
+
+<PageTitle>Настройки</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium">
+    <MudText Typo="Typo.h5" Align="Align.Justify" GutterBottom="true" Class="mt-4 px-3">
+        <b>Настройки:</b>
+    </MudText>
+
+    <MudGrid Class="mt-2">
+        @*Левая колонка*@
+        <MudItem xs="12" sm="5" md="4" Class="py-1">
+            <MudItem Class="d-flex align-center px-3 py-2 h-100" Style="min-height: 74px;">
+                <MudText>
+                    Платформа для просмотра:
+                </MudText>
+            </MudItem>
+        </MudItem>
+
+        @*Правая колонка*@
+        <MudItem xs="12" sm="7" md="5" Class="py-1">
+            <SelectSocialPageComponent/>
+        </MudItem>
+    </MudGrid>
+    
+    @*TODO: Сделать выбор языка программирования*@ 
+    
+</MudContainer>
+
+@code {
+    
+}

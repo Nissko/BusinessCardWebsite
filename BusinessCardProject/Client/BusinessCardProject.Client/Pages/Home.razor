@@ -1,13 +1,12 @@
 ﻿@page "/"
 @page "/home"
-@using BusinessCardProject.Client.Services.ProjectInfoService
-@inject ProjectInfoGlobalClass ProjectInfoGlobal
+@using BusinessCardProject.Client.Services.ProjectInfoService.Classes
 
 <PageTitle>Главная страница</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Medium">
     <MudText Typo="Typo.h4" GutterBottom="true" Class="mt-4 mb-4" Style="font-weight: bold">
-        Приветствую Вас на проекте @ProjectInfoGlobal.ProjectName!
+        Приветствую Вас на проекте @ProjectInfoGlobalClass.ProjectName!
     </MudText>
     
     <MudAlert Severity="Severity.Info" Variant="Variant.Filled"
@@ -31,12 +30,12 @@
     <MudText Typo="Typo.body1" Align="Align.Justify" Class="mt-4 mb-4">
         При обнаружении неточностей в текстовых материалах уроков или возникновении вопросов,
         пожалуйста, направляйте запросы на электронную почту 
-        &laquo;<MudLink Color="Color.Info" Href="@_mailLink">@ProjectInfoGlobal.ProjectOwnerEmail</MudLink>&raquo;.
+        &laquo;<MudLink Color="Color.Info" Href="@_mailLink">@ProjectInfoGlobalClass.ProjectOwnerEmail</MudLink>&raquo;.
     </MudText>
     
     <MudText Typo="Typo.body1" Align="Align.Justify" Class="mt-4 mb-4">
         Прошу Вас, если вы остались довольны уроками, 
-        поделиться своим отзывом в разделе &laquo;<MudLink Color="Color.Info" Href="/rate" Target="blank">Отзывы</MudLink>&raquo;. 
+        поделиться своим отзывом в разделе &laquo;<MudLink Color="Color.Info" Href="/rate">Отзывы</MudLink>&raquo;. 
         Ваша обратная связь будет крайне полезна как для меня, так и для новых пользователей, 
         посещающих сайт. Спасибо!
     </MudText>
@@ -53,6 +52,6 @@
     {
         await base.OnInitializedAsync();
 
-        _mailLink = $"mailto:{ProjectInfoGlobal.ProjectOwnerEmail}";
+        _mailLink = $"mailto:{ProjectInfoGlobalClass.ProjectOwnerEmail}";
     }
 }
