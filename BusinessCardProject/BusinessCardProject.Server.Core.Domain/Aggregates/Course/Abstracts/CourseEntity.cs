@@ -1,28 +1,24 @@
-﻿using BusinessCardProject.Server.Core.Domain.Common;
-using BusinessCardProject.Server.Core.Domain.Enums.Course;
+﻿using BusinessCardProject.Server.Core.Domain.Commons;
 
-namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course;
+namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course.Abstracts;
 
 /// <summary>
 /// Сущность курса
 /// </summary>
-public class CourseEntity : Entity
+public abstract class CourseEntity(
+    Guid courseAuthorId,
+    string courseName,
+    string courseDescription,
+    string courseImg,
+    DateTime courseDatePublished,
+    double coursePrice,
+    int courseDiscount,
+    bool isShow,
+    int displayOrder,
+    bool isFree = false)
+    : Entity
 {
-    public CourseEntity(Guid courseAuthorId, string courseName, string courseDescription, string courseImg,
-        DateTime courseDatePublished, double coursePrice, TypeOfCourseEnum courseType, bool isFree = false)
-    {
-        _courseAuthorId = courseAuthorId;
-        _courseName = courseName;
-        _courseDescription = courseDescription;
-        //TODO: сделать получения default.jpg, если нет изображения
-        _courseImg = courseImg ?? "default.jpg";
-        _courseDatePublished = courseDatePublished;
-        _coursePrice = coursePrice;
-        _courseRate = 0;
-        _courseRateCount = 0;
-        _isFree = isFree;
-        _courseType = courseType;
-    }
+    //TODO: сделать получения default.jpg, если нет изображения
 
     #region Public Properties
 
@@ -57,14 +53,19 @@ public class CourseEntity : Entity
     public double Price => _coursePrice;
 
     /// <summary>
+    /// Скидка на курс
+    /// </summary>
+    public int Discount => _courseDiscount;
+
+    /// <summary>
     /// Рейтинг
     /// </summary>
     public double Rate => _courseRate;
 
     /// <summary>
-    /// Тип курса
+    /// Признак, бесплатный или платный курс
     /// </summary>
-    public string TypeOfCourse => _courseType.Name;
+    public bool IsFree => _isFree;
 
     #endregion
 
@@ -73,55 +74,62 @@ public class CourseEntity : Entity
     /// <summary>
     /// Автор курса
     /// </summary>
-    private Guid _courseAuthorId;
+    private Guid _courseAuthorId = courseAuthorId;
 
     /// <summary>
     /// Название
     /// </summary>
-    private string _courseName;
+    private string _courseName = courseName;
 
     /// <summary>
     /// Описание
     /// </summary>
-    private string _courseDescription;
+    private string _courseDescription = courseDescription;
 
     /// <summary>
     /// Обложка курса
     /// </summary>
-    private string _courseImg;
+    private string _courseImg = courseImg ?? "default.jpg";
 
     /// <summary>
     /// Дата создания
     /// </summary>
-    private DateTime _courseDatePublished;
+    private DateTime _courseDatePublished = courseDatePublished;
 
     /// <summary>
     /// Цена курса
     /// TODO: Сделать старую цену и скидку(считаем локально)
     /// </summary>
-    private double _coursePrice;
+    private double _coursePrice = coursePrice;
+
+    /// <summary>
+    /// Скидка в %
+    /// </summary>
+    private int _courseDiscount = courseDiscount;
 
     /// <summary>
     /// Рейтинг курса(Если ему оставят отзыв,
     /// то дернется метод, который обновит rate у курса)
     /// </summary>
-    private double _courseRate;
+    private double _courseRate = 0;
 
     /// <summary>
     /// Кол-во оценок (Всего)
     /// Для перерасчета оценок
     /// </summary>
-    private int _courseRateCount;
+    private int _courseRateCount = 0;
 
     /// <summary>
     /// Признак, платный курс или нет
     /// </summary>
-    private bool _isFree;
+    private bool _isFree = isFree;
 
-    /// <summary>
-    /// Тип курса(видео/лекция)
-    /// </summary>
-    private TypeOfCourseEnum _courseType;
+    #endregion
+
+    #region Options
+
+    public bool IsShow { get; private set; } = isShow;
+    public int DisplayOrder { get; private set; } = displayOrder;
 
     #endregion
 

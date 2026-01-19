@@ -7,7 +7,7 @@ namespace BusinessCardProject.Client.Services.ProjectInfoService;
 /// <summary>
 /// Сервис пользовательских настроек в LocalStorage
 /// </summary>
-public class UserSettingService
+internal class UserSettingService
 {
     private readonly IJSRuntime _jsRuntime;
     private const string StorageKey = "userSettings";

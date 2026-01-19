@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace BusinessCardProject.Server.Core.Domain.Common;
+namespace BusinessCardProject.Server.Core.Domain.Commons;
 
 public abstract class Enumeration
     : IComparable

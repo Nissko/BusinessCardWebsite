@@ -1,4 +1,4 @@
-﻿namespace BusinessCardProject.Server.Core.Domain.Common;
+﻿namespace BusinessCardProject.Server.Core.Domain.Commons;
 
 public abstract class Entity
 {

@@ -1,17 +1,19 @@
-﻿using BusinessCardProject.Server.Core.Domain.Common;
+﻿using BusinessCardProject.Server.Core.Domain.Commons;
 
 namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course;
 
 /// <summary>
 /// Сущность автора курса
 /// </summary>
-public class CourseAuthorEntity : Entity
+internal class CourseAuthorEntity : Entity
 {
-    public CourseAuthorEntity(string authorName, string authorSurname, string authorPatronymic)
+    public CourseAuthorEntity(string authorName, string authorSurname, string authorPatronymic,
+        string? authorNickName = null)
     {
         _authorName = authorName;
         _authorSurname = authorSurname;
         _authorPatronymic = authorPatronymic;
+        _authorNickName = authorNickName;
     }
 
     #region Public Properties
@@ -55,6 +57,12 @@ public class CourseAuthorEntity : Entity
     /// Отчество автора
     /// </summary>
     private string _authorPatronymic;
+    
+    /// <summary>
+    /// Никнейм автора
+    /// <remarks>Если автор хочет скрыть ФИО</remarks>
+    /// </summary>
+    private string? _authorNickName;
 
     #endregion
 
@@ -67,6 +75,17 @@ public class CourseAuthorEntity : Entity
     private string GetFullName()
     {
         return $"{_authorPatronymic}  {_authorName.First()}. {_authorSurname.First()}.";
+    }
+    
+    /// <summary>
+    /// Получить Ник автора
+    /// </summary>
+    private string GetNickname()
+    {
+        /*TODO: Переделать на кастомное исключение*/
+        return _authorNickName is null
+            ? throw new ArgumentNullException(_authorNickName)
+            : $"{_authorNickName}";
     }
 
     #endregion

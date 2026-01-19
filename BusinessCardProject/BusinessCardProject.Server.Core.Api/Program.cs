@@ -1,46 +1,44 @@
-using BusinessCardProject.Server.Core.Api;
+/*ContainerBuilder build = new ContainerBuilder();
+build.RegisterModule(new ApplicationModule());*/
+
+using BusinessCardProject.Server.Core.Application.Application.Extensions;
+using BusinessCardProject.Server.Core.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services
+    .AddCollectionInfrastructure(builder.Configuration)
+    .AddApplication();
+
+// Настройка CORS
+/*builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorClient",
+        builder => builder.WithOrigins("https://localhost:7089")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});*/
+
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.UseCors("AllowBlazorClient");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
+//app.MapControllers();
 
 app.Run();
-
-namespace BusinessCardProject.Server.Core.Api
-{
-    record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-    {
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
-}
