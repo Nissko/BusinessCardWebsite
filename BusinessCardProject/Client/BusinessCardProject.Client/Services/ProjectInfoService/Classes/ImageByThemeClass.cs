@@ -3,7 +3,7 @@
 /// <summary>
 /// Получение серверных изображений в зависимости от темы
 /// </summary>
-public class ImageByThemeClass
+internal class ImageByThemeClass
 {
     private bool _isDark;
     

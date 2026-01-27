@@ -10,12 +10,24 @@
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 <MudLayout>
-    <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.TwoTone.Menu" Color="Color.Inherit" Edge="Edge.Start"
+    @*TODO: Elevation=0, оставить или изменить*@
+    @*TODO: Переделать под телефоны верхнюю менюшку*@
+    <MudAppBar Elevation="0">
+        <MudIconButton Icon="@Icons.Material.Rounded.Menu" Color="Color.Inherit" Edge="Edge.Start"
                        OnClick="@(_ => DrawerToggle())"/>
         <MudLink Href="" Underline="Underline.None">
-            <MudText Typo="Typo.h5" Class="ml-3" Style="font-weight: bold" Color="@_color">
+            <MudText Typo="Typo.h4" Class="ml-3" Style="font-weight: bold" Color="@_color">
                 @ProjectInfoGlobalClass.ProjectName
+            </MudText>
+        </MudLink>
+        <MudLink Href="/courses" Underline="Underline.None">
+            <MudText Typo="Typo.h6" Class="ml-8 mr-8" Style="font-weight: bold" Color="@_color">
+                Курсы
+            </MudText>
+        </MudLink>
+        <MudLink Href="/about-us" Underline="Underline.None">
+            <MudText Typo="Typo.h6" Style="font-weight: bold" Color="@_color">
+                О проекте
             </MudText>
         </MudLink>
         <MudSpacer/>
@@ -24,16 +36,16 @@
                  Variant="Variant.Text"
                  Size="Size.Medium"
                  Color="Color.Inherit"
-                 Icon="@Icons.Material.TwoTone.MoreVert">
+                 Icon="@Icons.Material.Rounded.MoreVert">
 
-            <MudMenuItem Icon="@Icons.Material.TwoTone.Settings"
+            <MudMenuItem Icon="@Icons.Material.Rounded.Settings"
                          IconColor="Color.Info"
                          Label="Настройки"
                          Href="/user-setting"
                          ForceLoad="false">
             </MudMenuItem>
 
-            <MudMenuItem Icon="@Icons.Material.TwoTone.AdminPanelSettings"
+            <MudMenuItem Icon="@Icons.Material.Rounded.AdminPanelSettings"
                          IconColor="Color.Success"
                          Label="Админ-панель"
                          Href="/admin-panel"
@@ -42,13 +54,13 @@
 
             <MudDivider/>
 
-            <MudMenuItem Icon="@Icons.Material.TwoTone.Group"
+            <MudMenuItem Icon="@Icons.Material.Rounded.Group"
                          IconColor="Color.Error"
                          Label="Пользовательское соглашение"
                          Href="/user-agreement"
                          ForceLoad="false"/>
 
-            <MudMenuItem Icon="@Icons.Material.TwoTone.SafetyDivider"
+            <MudMenuItem Icon="@Icons.Material.Rounded.SafetyDivider"
                          IconColor="Color.Error"
                          Label="Политика конфиденциальности"
                          Href="/privacy-policy"
@@ -58,13 +70,13 @@
 
             <MudMenuItem Href="/"
                          ForceLoad
-                         Icon="@Icons.Material.TwoTone.Login"
+                         Icon="@Icons.Material.Rounded.Login"
                          IconColor="Color.Info"
                          Label="Вход"/>
 
             <MudMenuItem Href="/"
                          ForceLoad
-                         Icon="@Icons.Material.TwoTone.Logout"
+                         Icon="@Icons.Material.Rounded.Logout"
                          IconColor="Color.Info"
                          Label="Выход"/>
         </MudMenu>

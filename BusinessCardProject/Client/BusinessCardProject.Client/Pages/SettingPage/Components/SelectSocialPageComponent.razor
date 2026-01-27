@@ -62,9 +62,7 @@
         //Получение значения из кэша
         if (UserSetting.Settings.VideoPlatform != null)
         {
-            SocialPageSwitch1 = UserSetting.Settings.VideoPlatform.YouTube;
-            SocialPageSwitch2 = UserSetting.Settings.VideoPlatform.RuTube;
-            SocialPageSwitch3 = UserSetting.Settings.VideoPlatform.VkVideo;
+            SetValueFromCache(UserSetting.Settings.VideoPlatform.Platform);
         }
 
         await base.OnInitializedAsync();
@@ -93,21 +91,21 @@
                 case nameof(SocialPageSwitch1):
                 {
                     SocialPageSwitch1 = true;
-                    UserSetting.Settings.VideoPlatform?.SetYouTube();
+                    UserSetting.Settings.VideoPlatform?.SetPlatform(0);
                     await UserSetting.SaveAsync();
                     break;
                 }
                 case nameof(SocialPageSwitch2):
                 {
                     SocialPageSwitch2 = true; 
-                    UserSetting.Settings.VideoPlatform?.SetRuTube();
+                    UserSetting.Settings.VideoPlatform?.SetPlatform(1);
                     await UserSetting.SaveAsync();
                     break;
                 }
                 case nameof(SocialPageSwitch3):
                 {
                     SocialPageSwitch3 = true; 
-                    UserSetting.Settings.VideoPlatform?.SetVkVideo();
+                    UserSetting.Settings.VideoPlatform?.SetPlatform(2);
                     await UserSetting.SaveAsync();
                     break;
                 }
@@ -123,12 +121,24 @@
     private async Task InitUserSettingList()
     {
         await UserSetting.LoadAsync();
-        if (UserSetting.Settings.VideoPlatform is { YouTube: false, RuTube: false, VkVideo: false })
+        if (UserSetting.Settings.VideoPlatform is null)
         {
             //TODO: Сделать загрузку UserSettings из БД
-            UserSetting.Settings.VideoPlatform = new VideoPlatformList();
-            UserSetting.Settings.VideoPlatform.SetYouTube();
+            UserSetting.Settings.VideoPlatform = new UserSettingsList();
+            UserSetting.Settings.VideoPlatform.SetPlatform(0);
             await UserSetting.SaveAsync();
         }
-    } 
+    }
+
+    /// <summary>
+    /// Устанавливаем значение Switch из кэша
+    /// </summary>
+    private void SetValueFromCache(int platformFromCache)
+    {
+        _ = platformFromCache == 0
+            ? SocialPageSwitch1 = true
+            : platformFromCache == 1
+                ? SocialPageSwitch2 = true
+                : SocialPageSwitch3 = true;
+    }
 }
