@@ -5,9 +5,14 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course;
 /// <summary>
 /// Модуль курса (подкатегория)
 /// </summary>
-internal class CourseModuleEntity : Entity
+public class CourseModuleEntity : Entity
 {
-    public CourseModuleEntity(string name, string description, Guid courseThemeId)
+    public CourseModuleEntity()
+    {
+        VideoCourses = new HashSet<VideoCourseEntity>();
+    }
+    
+    public CourseModuleEntity(string name, string description, Guid courseThemeId) :  this()
     {
         _name = name;
         _description = description;
@@ -17,15 +22,39 @@ internal class CourseModuleEntity : Entity
     /// <summary>
     /// Название модуля
     /// </summary>
+    public string Name => _name;
     private string _name;
 
     /// <summary>
     /// Описание модуля
     /// </summary>
+    public string Description => _description;
     private string _description;
 
     /// <summary>
-    /// Id модуля к которому принадлежит тема
+    /// Тема которой принадлежит модуль
     /// </summary>
+    public virtual CourseThemeEntity CourseTheme { get; private set; }
     private Guid _courseThemeId;
+    
+    #region virtual
+    
+    /// <summary>
+    /// Коллекция видеокурсов
+    /// </summary>
+    public virtual ICollection<VideoCourseEntity> VideoCourses { get; private set; }
+
+    #endregion
+    
+    #region fucntions
+
+    /// <summary>
+    /// Метод для добавления видеокурса
+    /// </summary>
+    public void AddVideoCourse(VideoCourseEntity videoCourse)
+    {
+        VideoCourses.Add(videoCourse);
+    }
+
+    #endregion
 }

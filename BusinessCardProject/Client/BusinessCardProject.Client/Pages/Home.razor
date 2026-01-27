@@ -1,44 +1,42 @@
 ﻿@page "/"
 @page "/home"
-@using BusinessCardProject.Client.Services.ProjectInfoService.Classes
 
 <PageTitle>Главная страница</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Medium">
     <MudText Typo="Typo.h4" GutterBottom="true" Class="mt-4 mb-4" Style="font-weight: bold">
-        Приветствую Вас на проекте @ProjectInfoGlobalClass.ProjectName!
+        Главная страница, переделать её!
     </MudText>
     
-    <MudAlert Severity="Severity.Info" Variant="Variant.Filled"
-              Class="my-2" Elevation="6">
-        На данном ресурсе представлены учебные материалы по C#, разработке приложений и WEB-приложений.
-        Предлагаемые материалы будут полезны как начинающим, так и тем, кто стремится к расширению своих знаний!
-    </MudAlert>
-    
-    <MudText Typo="Typo.body1" Align="Align.Justify" Class="mt-4 mb-4">
-        На сайте будет представлен контент как в видеоформате, так и в текстовом. 
-        Текстовый формат будет доступен не для всех блоков.
-        Вводный блок будет подробно и доступно изложен в текстовом формате, 
-        что позволит новичкам в программировании удобно конспектировать необходимую информацию.
-    </MudText>
-    
-    <MudAlert Severity="Severity.Error" Variant="Variant.Filled" 
-              Class="my-2" Elevation="6">
-        Для полноценного использования функционала сайта потребуется пройти процедуру регистрации и авторизации.
-    </MudAlert>
-    
-    <MudText Typo="Typo.body1" Align="Align.Justify" Class="mt-4 mb-4">
-        При обнаружении неточностей в текстовых материалах уроков или возникновении вопросов,
-        пожалуйста, направляйте запросы на электронную почту 
-        &laquo;<MudLink Color="Color.Info" Href="@_mailLink">@ProjectInfoGlobalClass.ProjectOwnerEmail</MudLink>&raquo;.
-    </MudText>
-    
-    <MudText Typo="Typo.body1" Align="Align.Justify" Class="mt-4 mb-4">
-        Прошу Вас, если вы остались довольны уроками, 
-        поделиться своим отзывом в разделе &laquo;<MudLink Color="Color.Info" Href="/rate">Отзывы</MudLink>&raquo;. 
-        Ваша обратная связь будет крайне полезна как для меня, так и для новых пользователей, 
-        посещающих сайт. Спасибо!
-    </MudText>
+    <MudTimeline>
+        <MudTimelineItem Color="Color.Info" Size="Size.Small">
+            <ItemOpposite>
+                <MudText Color="Color.Info" Typo="Typo.h5">База</MudText>
+            </ItemOpposite>
+            <ItemContent>
+                <MudText Color="Color.Info" Typo="Typo.h6" GutterBottom="true">Atom Towns</MudText>
+                <MudText>Construction of the town of Pripyat, one of 9 “atom towns” begins, to be inhabited by future employees of the nuclear power plants.</MudText>
+            </ItemContent>
+        </MudTimelineItem>
+        <MudTimelineItem Color="Color.Success" Size="Size.Small">
+            <ItemOpposite>
+                <MudText Color="Color.Success" Typo="Typo.h5">Повышение знаний</MudText>
+            </ItemOpposite>
+            <ItemContent>
+                <MudText Color="Color.Success" Typo="Typo.h6" GutterBottom="true">Operational</MudText>
+                <MudText>The first of the Chernobyl Nuclear Power Plants four reactors is ready to operate followed by number 2 in 1978.</MudText>
+            </ItemContent>
+        </MudTimelineItem>
+        <MudTimelineItem Color="Color.Error" Size="Size.Small">
+            <ItemOpposite>
+                <MudText Color="Color.Error" Typo="Typo.h5">1979</MudText>
+            </ItemOpposite>
+            <ItemContent>
+                <MudText Color="Color.Error" Typo="Typo.h6" GutterBottom="true">Pripyat</MudText>
+                <MudText>Pripyat officially proclaimed as a city.<br />The Chernobyl Atomic Power Station reaches its first 10 billion kilowatt-hours of electical output.</MudText>
+            </ItemContent>
+        </MudTimelineItem>
+    </MudTimeline>
     
     @*В будующем можно рассказать о достижениях*@
     @*В будующем можно рассказать о себе*@
@@ -46,12 +44,8 @@
 
 @code
 {
-    private string _mailLink = string.Empty;
-
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
-        _mailLink = $"mailto:{ProjectInfoGlobalClass.ProjectOwnerEmail}";
     }
 }

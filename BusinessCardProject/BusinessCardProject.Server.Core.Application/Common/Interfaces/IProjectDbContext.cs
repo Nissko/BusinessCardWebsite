@@ -1,5 +1,4 @@
 ﻿using BusinessCardProject.Server.Core.Domain.Aggregates.Course;
-using BusinessCardProject.Server.Core.Domain.Aggregates.Course.Abstracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 

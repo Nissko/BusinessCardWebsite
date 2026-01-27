@@ -23,7 +23,7 @@ public abstract class CourseEntity(
     #region Public Properties
 
     /// <summary>
-    /// Автор курса
+    /// Автор
     /// </summary>
     public Guid AuthorId => _courseAuthorId;
 

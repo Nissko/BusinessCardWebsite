@@ -1,8 +1,9 @@
-/*ContainerBuilder build = new ContainerBuilder();
-build.RegisterModule(new ApplicationModule());*/
-
 using BusinessCardProject.Server.Core.Application.Application.Extensions;
 using BusinessCardProject.Server.Core.Infrastructure.Extensions;
+
+//TODO: Autofac, удалить?
+/*ContainerBuilder build = new ContainerBuilder();
+build.RegisterModule(new ApplicationModule());*/
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,23 +23,27 @@ builder.Services
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 app.UseCors("AllowBlazorClient");
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "OpenApi v1");
+        options.RoutePrefix = "swagger";
+    });
 }
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
 
-//app.MapControllers();
+app.MapControllers();
 
 app.Run();

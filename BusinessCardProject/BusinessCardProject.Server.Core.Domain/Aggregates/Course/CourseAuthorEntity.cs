@@ -5,10 +5,15 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course;
 /// <summary>
 /// Сущность автора курса
 /// </summary>
-internal class CourseAuthorEntity : Entity
+public class CourseAuthorEntity : Entity
 {
+    public CourseAuthorEntity()
+    {
+        VideoCourses = new HashSet<VideoCourseEntity>();
+    }
+
     public CourseAuthorEntity(string authorName, string authorSurname, string authorPatronymic,
-        string? authorNickName = null)
+        string? authorNickName = null) : this()
     {
         _authorName = authorName;
         _authorSurname = authorSurname;
@@ -34,6 +39,11 @@ internal class CourseAuthorEntity : Entity
     public string Patronymic => _authorPatronymic;
 
     /// <summary>
+    /// Альтернативное имя
+    /// </summary>
+    public string Nickname => GetNickname();
+
+    /// <summary>
     /// ФИО
     /// Формат: Иванов И. И.
     /// </summary>
@@ -57,17 +67,40 @@ internal class CourseAuthorEntity : Entity
     /// Отчество автора
     /// </summary>
     private string _authorPatronymic;
-    
+
     /// <summary>
     /// Никнейм автора
     /// <remarks>Если автор хочет скрыть ФИО</remarks>
     /// </summary>
     private string? _authorNickName;
+    
+    //TODO: Добавить поле с Guid из таблицы Users
+
+    #endregion
+
+    #region virtual
+
+    /// <summary>
+    /// Коллекция видеокурсов
+    /// </summary>
+    public virtual ICollection<VideoCourseEntity> VideoCourses { get; private set; }
 
     #endregion
 
     #region Functions
 
+    #region fucntions
+
+    /// <summary>
+    /// Метод для добавления видеокурса
+    /// </summary>
+    public void AddVideoCourse(VideoCourseEntity videoCourse)
+    {
+        VideoCourses.Add(videoCourse);
+    }
+
+    #endregion
+    
     /// <summary>
     /// ФИО автора
     /// </summary>
@@ -76,7 +109,7 @@ internal class CourseAuthorEntity : Entity
     {
         return $"{_authorPatronymic}  {_authorName.First()}. {_authorSurname.First()}.";
     }
-    
+
     /// <summary>
     /// Получить Ник автора
     /// </summary>

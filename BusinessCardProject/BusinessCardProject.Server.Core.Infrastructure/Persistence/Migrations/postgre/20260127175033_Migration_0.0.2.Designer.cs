@@ -3,6 +3,7 @@ using System;
 using BusinessCardProject.Server.Core.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.postgre
 {
     [DbContext(typeof(ProjectDbContext))]
-    partial class ProjectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260127175033_Migration_0.0.2")]
+    partial class Migration_002
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,13 +120,14 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                         .HasColumnName("Name")
                         .HasComment("Название");
 
-                    b.Property<Guid?>("_typeOfCourse")
-                        .HasColumnType("uuid")
-                        .HasColumnName("TypeOfCourse");
+                    b.Property<Guid>("_typeOfCourseId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("_programmingLanguageId");
+
+                    b.HasIndex("_typeOfCourseId");
 
                     b.ToTable("Themes", "dev_prod");
                 });
@@ -287,7 +291,15 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BusinessCardProject.Server.Core.Domain.Enums.Course.TypeOfCourseEnum", "TypeOfCourse")
+                        .WithMany()
+                        .HasForeignKey("_typeOfCourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ProgrammingLanguages");
+
+                    b.Navigation("TypeOfCourse");
                 });
 
             modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.Course.VideoCourseEntity", b =>

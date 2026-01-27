@@ -18,4 +18,8 @@
       <ProjectReference Include="..\BusinessCardProject.Server.Core.Domain\BusinessCardProject.Server.Core.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Application\Command\" />
+    </ItemGroup>
+
 </Project>

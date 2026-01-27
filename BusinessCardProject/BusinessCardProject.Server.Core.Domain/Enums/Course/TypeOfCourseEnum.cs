@@ -2,7 +2,7 @@
 
 namespace BusinessCardProject.Server.Core.Domain.Enums.Course;
 
-internal class TypeOfCourseEnum : Enumeration
+public class TypeOfCourseEnum : Enumeration
 {
     public TypeOfCourseEnum(Guid id, string name) : base(id, name)
     {
@@ -53,11 +53,9 @@ internal class TypeOfCourseEnum : Enumeration
     /// <summary>
     /// Типы курсов
     /// </summary>
-    public static readonly TypeOfCourseEnum VideoCourseType = new TypeOfCourseEnum(
-        Guid.Parse("2091ba8a-a99c-4605-929f-de6c72bf86e8"),
-        "Видеокурс".ToLowerInvariant());
+    public static readonly TypeOfCourseEnum VideoCourseType =
+        new(Guid.Parse("2091ba8a-a99c-4605-929f-de6c72bf86e8"), "Видеокурс".ToLowerInvariant());
 
-    public static readonly TypeOfCourseEnum TextCourseType = new TypeOfCourseEnum(
-        Guid.Parse("0cf77df5-a114-4bde-be62-c6c65efc6484"),
-        "Текстовый".ToLowerInvariant());
+    public static readonly TypeOfCourseEnum TextCourseType =
+        new(Guid.Parse("0cf77df5-a114-4bde-be62-c6c65efc6484"), "Текстовый".ToLowerInvariant());
 }

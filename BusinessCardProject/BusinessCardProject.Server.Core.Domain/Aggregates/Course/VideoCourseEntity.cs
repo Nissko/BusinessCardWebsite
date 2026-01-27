@@ -11,12 +11,14 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
         public VideoCourseEntity(string linkCourseOnYoutube, string linkCourseOnRutube, string linkCourseOnVkVideo,
             Guid courseAuthorId, string courseName, string courseDescription, string courseImg,
             DateTime courseDatePublished, double coursePrice, int courseDiscount, bool isShow, int displayOrder,
-            bool isFree = false) : base(courseAuthorId, courseName, courseDescription, courseImg, courseDatePublished,
-            coursePrice, courseDiscount, isShow, displayOrder, isFree)
+            Guid courseModuleId, bool isFree = false) : base(courseAuthorId, courseName, courseDescription, courseImg,
+            courseDatePublished, coursePrice, courseDiscount, isShow, displayOrder, isFree)
         {
             _linkCourseOnYoutube = linkCourseOnYoutube;
             _linkCourseOnRutube = linkCourseOnRutube;
             _linkCourseOnVkVideo = linkCourseOnVkVideo;
+            _courseAuthorId = courseAuthorId;
+            _courseModuleId = courseModuleId;
         }
 
         #region Public Fields
@@ -54,6 +56,18 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
         /// Ссылка курса на VkVideo
         /// </summary>
         private string _linkCourseOnVkVideo;
+
+        /// <summary>
+        /// Предмет для категории подготовки
+        /// </summary>
+        public virtual CourseModuleEntity CourseModule { get; private set; }
+        private Guid _courseModuleId;
+
+        /// <summary>
+        /// Автор, которому принадлежит курс
+        /// </summary>
+        public virtual CourseAuthorEntity CourseAuthor { get; private set; }
+        private Guid _courseAuthorId;
 
         #endregion
 

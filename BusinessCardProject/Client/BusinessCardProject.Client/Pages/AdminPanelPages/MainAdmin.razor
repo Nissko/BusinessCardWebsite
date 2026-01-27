@@ -13,28 +13,28 @@
                     <MudText Typo="Typo.subtitle1" Class="px-4">Администрирование</MudText>
                     <MudDivider Class="my-1"/>
                     <MudListItem Text="Графики"
-                                 Icon="@Icons.Material.TwoTone.Analytics"
+                                 Icon="@Icons.Material.Rounded.Analytics"
                                  IconColor="Color.Info"
                                  @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Graphs))"/>
                     <MudListItem Text="Сервер"
-                                 Icon="@Icons.Material.TwoTone.Storage"
+                                 Icon="@Icons.Material.Rounded.Storage"
                                  IconColor="Color.Info"
                                  @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Servers))"/>
                     <MudListItem Text="Заказы" 
-                                 Icon="@Icons.Material.TwoTone.Receipt" 
+                                 Icon="@Icons.Material.Rounded.Receipt" 
                                  IconColor="Color.Info"
                                  @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Orders))"/>
                     <MudListItem Text="Настройки" 
-                                 Icon="@Icons.Material.TwoTone.Settings" 
+                                 Icon="@Icons.Material.Rounded.Settings" 
                                  IconColor="Color.Info">
                         <NestedList>
                             <MudListItem Text="Пользователи" 
-                                         Icon="@Icons.Material.TwoTone.People"
+                                         Icon="@Icons.Material.Rounded.People"
                                          IconColor="Color.Success"
                                          @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Users))"/>
                             @*Тут будет логирование действий пользователя со стороны Backend(-a)*@
                             <MudListItem Text="Аудит" 
-                                         Icon="@Icons.Material.TwoTone.Security"
+                                         Icon="@Icons.Material.Rounded.Security"
                                          IconColor="Color.Warning"
                                          @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Audits))"/>
                         </NestedList>

@@ -85,5 +85,22 @@ internal class VideoCourseConfiguration : IEntityTypeConfiguration<VideoCourseEn
             .HasColumnName("DisplayOrder")
             .HasDefaultValue(0)
             .HasComment("Порядок сортировки");
+
+        builder.HasOne(x => x.CourseModule)
+            .WithMany(x => x.VideoCourses)
+            .HasForeignKey("_courseModuleId")
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasOne(x => x.CourseAuthor)
+            .WithMany(x => x.VideoCourses)
+            .HasForeignKey("_courseAuthorId")
+            .OnDelete(DeleteBehavior.Cascade);
+
+        #region Индексы
+
+        builder.HasIndex("_courseModuleId");
+        builder.HasIndex("_courseAuthorId"); 
+
+        #endregion
     }
 }
