@@ -14,7 +14,8 @@ public class TypeOfCourseConfiguration : IEntityTypeConfiguration<TypeOfCourseEn
             .ValueGeneratedNever();
 
         builder.Property(o => o.Name)
-            .HasMaxLength(200);
+            .HasMaxLength(200)
+            .HasComment("Название типа курса");
 
         builder.HasIndex(x => x.Id);
     }

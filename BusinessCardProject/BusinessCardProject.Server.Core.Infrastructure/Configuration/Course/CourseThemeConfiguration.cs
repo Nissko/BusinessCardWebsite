@@ -23,7 +23,7 @@ public class CourseThemeConfiguration : IEntityTypeConfiguration<CourseThemeEnti
             .HasMaxLength(1000)
             .HasComment("Описание");
 
-        builder.Property<TypeOfCourseEnum>("_typeOfCourse")
+        builder.Property<TypeOfCourseEnum>("_typeOfCourseId")
             .HasColumnName("TypeOfCourse")
             .HasConversion(
                 v => v.Id,
@@ -31,12 +31,12 @@ public class CourseThemeConfiguration : IEntityTypeConfiguration<CourseThemeEnti
 
         builder.HasOne(x => x.ProgrammingLanguages)
             .WithMany(x => x.CourseThemes)
-            .HasForeignKey("_programmingLanguageId")
+            .HasForeignKey("ProgrammingLanguageId")
             .OnDelete(DeleteBehavior.Cascade);
 
         #region Индексы
 
-        builder.HasIndex("_programmingLanguageId");
+        builder.HasIndex("ProgrammingLanguageId");
 
         #endregion
     }

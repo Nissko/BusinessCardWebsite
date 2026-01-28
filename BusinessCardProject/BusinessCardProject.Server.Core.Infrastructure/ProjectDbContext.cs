@@ -1,7 +1,9 @@
-﻿using BusinessCardProject.Server.Core.Domain.Aggregates.Course;
-using BusinessCardProject.Server.Core.Domain.Commons.Interface;
+﻿using BusinessCardProject.Server.Core.Application.Common.Interfaces;
+using BusinessCardProject.Server.Core.Domain.Aggregates.Course;
+using BusinessCardProject.Server.Core.Domain.Aggregates.User;
 using BusinessCardProject.Server.Core.Domain.Enums.Course;
 using BusinessCardProject.Server.Core.Infrastructure.Configuration.Course;
+using BusinessCardProject.Server.Core.Infrastructure.Configuration.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace BusinessCardProject.Server.Core.Infrastructure
@@ -22,6 +24,8 @@ namespace BusinessCardProject.Server.Core.Infrastructure
         public DbSet<CourseModuleEntity> CourseModule { get; set; }
         public DbSet<VideoCourseEntity> VideoCourse { get; set; }
 
+        public DbSet<UserRoleEntity> UserRole { get; set; }
+        public DbSet<UserProfileEntity> UserProfile { get; set; }
 
         public void Migrate()
         {
@@ -32,13 +36,24 @@ namespace BusinessCardProject.Server.Core.Infrastructure
         {
             modelBuilder.HasDefaultSchema(_defaultSchema);
 
+            #region course
+
             modelBuilder.ApplyConfiguration(new TypeOfCourseConfiguration());
-            
             modelBuilder.ApplyConfiguration(new ProgrammingLanguageCourseConfiguration());
             modelBuilder.ApplyConfiguration(new CourseAuthorEntityConfiguration());
             modelBuilder.ApplyConfiguration(new CourseThemeConfiguration());
             modelBuilder.ApplyConfiguration(new CourseModuleConfiguration());
             modelBuilder.ApplyConfiguration(new VideoCourseConfiguration());
+
+            #endregion
+
+            #region user
+
+            modelBuilder.ApplyConfiguration(new UserProfileConfiguration());
+            modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new UserRoleEnumConfiguration());
+
+            #endregion
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProjectDbContext).Assembly);
         }

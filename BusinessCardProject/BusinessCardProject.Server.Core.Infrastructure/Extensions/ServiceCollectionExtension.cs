@@ -2,10 +2,10 @@
 using BusinessCardProject.Server.Core.Application.Common.Interfaces;
 using BusinessCardProject.Server.Core.Application.Common.Interfaces.CustomMediator;
 using BusinessCardProject.Server.Core.Infrastructure.Extensions.CustomFunctional;
+using BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using IProjectDbContext = BusinessCardProject.Server.Core.Domain.Commons.Interface.IProjectDbContext;
 
 namespace BusinessCardProject.Server.Core.Infrastructure.Extensions;
 
@@ -46,8 +46,8 @@ public static class ServiceCollectionExtension
             }
         }
 
-        /*//Репозитории
-        services.AddScoped<ISubjectRepository, SubjectRepository>();*/
+        //Репозитории
+        services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
 
         services.AddApplication();
 

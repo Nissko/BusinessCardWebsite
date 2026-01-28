@@ -13,8 +13,9 @@ public static class DependecyInjection
             
         // Регистрируем MediatR
         services.AddMediatR(Assembly.GetExecutingAssembly());
+        
         // Регистрируем AutoMapper
-        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        //services.AddAutoMapper(Assembly.GetExecutingAssembly());
         /*// Регистрируем ICustomMapper
         services.AddScoped<ICustomMapper, CustomMapper>();*/
 

@@ -33,7 +33,7 @@ public class ProgrammingLanguageCourseEntity : Entity
 
     #endregion
 
-    #region Private Fields
+    #region Private properties
 
     /// <summary>
     /// Название яп
@@ -56,7 +56,9 @@ public class ProgrammingLanguageCourseEntity : Entity
     public virtual ICollection<CourseThemeEntity> CourseThemes { get; private set; }
 
     #endregion
-    
+
+    #region functions
+
     /// <summary>
     /// Метод для добавления категории
     /// </summary>
@@ -64,4 +66,16 @@ public class ProgrammingLanguageCourseEntity : Entity
     {
         CourseThemes.Add(theme);
     }
+
+    /// <summary>
+    /// Изменение информации о ЯП
+    /// </summary>
+    /// <param name="name"></param>
+    public void Update(string name)
+    {
+        _name = name;
+    }
+
+    #endregion
+    
 }

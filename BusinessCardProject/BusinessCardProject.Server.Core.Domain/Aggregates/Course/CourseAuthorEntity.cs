@@ -13,7 +13,7 @@ public class CourseAuthorEntity : Entity
     }
 
     public CourseAuthorEntity(string authorName, string authorSurname, string authorPatronymic,
-        string? authorNickName = null) : this()
+        string authorNickName) : this()
     {
         _authorName = authorName;
         _authorSurname = authorSurname;
@@ -41,7 +41,7 @@ public class CourseAuthorEntity : Entity
     /// <summary>
     /// Альтернативное имя
     /// </summary>
-    public string Nickname => GetNickname();
+    public string Nickname => _authorNickName;
 
     /// <summary>
     /// ФИО
@@ -51,7 +51,7 @@ public class CourseAuthorEntity : Entity
 
     #endregion
 
-    #region Private Fields
+    #region Private properties
 
     /// <summary>
     /// Имя автора
@@ -72,8 +72,8 @@ public class CourseAuthorEntity : Entity
     /// Никнейм автора
     /// <remarks>Если автор хочет скрыть ФИО</remarks>
     /// </summary>
-    private string? _authorNickName;
-    
+    private string _authorNickName;
+
     //TODO: Добавить поле с Guid из таблицы Users
 
     #endregion
@@ -87,8 +87,6 @@ public class CourseAuthorEntity : Entity
 
     #endregion
 
-    #region Functions
-
     #region fucntions
 
     /// <summary>
@@ -99,8 +97,6 @@ public class CourseAuthorEntity : Entity
         VideoCourses.Add(videoCourse);
     }
 
-    #endregion
-    
     /// <summary>
     /// ФИО автора
     /// </summary>
@@ -108,17 +104,6 @@ public class CourseAuthorEntity : Entity
     private string GetFullName()
     {
         return $"{_authorPatronymic}  {_authorName.First()}. {_authorSurname.First()}.";
-    }
-
-    /// <summary>
-    /// Получить Ник автора
-    /// </summary>
-    private string GetNickname()
-    {
-        /*TODO: Переделать на кастомное исключение*/
-        return _authorNickName is null
-            ? throw new ArgumentNullException(_authorNickName)
-            : $"{_authorNickName}";
     }
 
     #endregion

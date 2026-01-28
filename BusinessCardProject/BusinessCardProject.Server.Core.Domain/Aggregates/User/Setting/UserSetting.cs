@@ -3,7 +3,7 @@
     /// <summary>
     /// Настройки пользователя
     /// </summary>
-    internal class UserSetting : Dictionary<string, object?>
+    public class UserSetting : Dictionary<string, object?>
     {
         public T? Get<T>(string key)
         {

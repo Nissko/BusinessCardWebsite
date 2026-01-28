@@ -39,7 +39,18 @@
                     <MudSelectItem Value="@test">@test</MudSelectItem>
                 }
             </MudSelect>
-
+        
+            <MudItem Class="d-flex align-center">
+                <MudCheckBox @bind-Value="CheckBox1" UncheckedColor="Color.Error"
+                             Color="Color.Success" CheckedIcon="@Icons.Material.Filled.AttachMoney"
+                             UncheckedIcon="@Icons.Material.Filled.MoneyOff"></MudCheckBox>
+                <MudText Class="ml-1">
+                    @(CheckBox1 ? "Платные" : "Бесплатные")
+                </MudText>
+            </MudItem>
+            
+            
+            
             <MudButton Variant="Variant.Filled"
                        Color="Color.Info"
                        Class="mud-width-full mt-4"
@@ -68,6 +79,8 @@
     /// Признак показа окна фильтров
     /// </summary>
     private bool IsShowFiltersCourses { get; set; } = true;
+
+    public bool CheckBox1 { get; set; } = true;
 
     /// <summary>
     /// TODO:Тест значения, удалить

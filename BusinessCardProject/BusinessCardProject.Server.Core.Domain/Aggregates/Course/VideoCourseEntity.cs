@@ -6,7 +6,7 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
     /// <summary>
     /// Видеокурсы
     /// </summary>
-    public class VideoCourseEntity : CourseEntity
+    public class VideoCourseEntity : CourseAbstract
     {
         public VideoCourseEntity(string linkCourseOnYoutube, string linkCourseOnRutube, string linkCourseOnVkVideo,
             Guid courseAuthorId, string courseName, string courseDescription, string courseImg,
@@ -40,7 +40,7 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
 
         #endregion
 
-        #region Private Fields
+        #region Private properties
 
         /// <summary>
         /// Ссылка курса на YouTube

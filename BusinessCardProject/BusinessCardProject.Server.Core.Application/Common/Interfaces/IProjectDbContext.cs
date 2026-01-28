@@ -1,4 +1,6 @@
 ﻿using BusinessCardProject.Server.Core.Domain.Aggregates.Course;
+using BusinessCardProject.Server.Core.Domain.Aggregates.User;
+using BusinessCardProject.Server.Core.Domain.Enums.Course;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
@@ -8,11 +10,15 @@ public interface IProjectDbContext
 {
     DatabaseFacade Database { get; }
 
-    #region Course
-
+    public DbSet<ProgrammingLanguageCourseEntity> ProgrammingLanguageCourse { get; set; }
+    public DbSet<CourseAuthorEntity> CourseAuthor { get; set; }
+    public DbSet<CourseThemeEntity> CourseTheme { get; set; }
+    public DbSet<TypeOfCourseEnum> TypeOfCourse { get; set; }
+    public DbSet<CourseModuleEntity> CourseModule { get; set; }
     public DbSet<VideoCourseEntity> VideoCourse { get; set; }
-    
-    #endregion
+
+    public DbSet<UserRoleEntity> UserRole { get; set; }
+    public DbSet<UserProfileEntity> UserProfile { get; set; }
 
     void Migrate();
 

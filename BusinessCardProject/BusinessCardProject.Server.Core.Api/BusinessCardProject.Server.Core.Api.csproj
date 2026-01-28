@@ -21,6 +21,7 @@
       <ProjectReference Include="..\BusinessCardProject.Server.Core.Application\BusinessCardProject.Server.Core.Application.csproj" />
       <ProjectReference Include="..\BusinessCardProject.Server.Core.Domain\BusinessCardProject.Server.Core.Domain.csproj" />
       <ProjectReference Include="..\BusinessCardProject.Server.Core.Infrastructure\BusinessCardProject.Server.Core.Infrastructure.csproj" />
+      <ProjectReference Include="..\ContractualDTOs\ContractualDtos\ContractualDtos.csproj" />
     </ItemGroup>
 
 </Project>

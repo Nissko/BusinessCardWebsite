@@ -2,18 +2,18 @@
 
 namespace BusinessCardProject.Server.Core.Domain.Enums.User;
 
-internal class UserRoleEnum : Enumeration
+public class UserRoleEnum : Enumeration
 {
     private UserRoleEnum(Guid id, string name) : base(id, name)
     { }
 
-    private static IEnumerable<UserRoleEnum> List()
+    public static IEnumerable<UserRoleEnum> List()
     {
         return
         [
             User,
-            Admin,
-            Author
+            Author,
+            Admin
         ];
     }
 
@@ -53,12 +53,12 @@ internal class UserRoleEnum : Enumeration
     public static readonly UserRoleEnum User = new(
         Guid.Parse("9a460a7b-600f-4662-a598-2e61cd64d171"),
         "Пользователь".ToLowerInvariant());
-
-    public static readonly UserRoleEnum Admin = new(
-        Guid.Parse("48240e89-0d8d-4e4f-a6df-9776df45794c"),
-        "Администратор".ToLowerInvariant());
     
     public static readonly UserRoleEnum Author = new(
         Guid.Parse("4956dc45-e3eb-4944-ae14-41d591f31869"),
         "Автор".ToLowerInvariant());
+    
+    public static readonly UserRoleEnum Admin = new(
+        Guid.Parse("48240e89-0d8d-4e4f-a6df-9776df45794c"),
+        "Администратор".ToLowerInvariant());
 }

@@ -5,7 +5,7 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course.Abstracts;
 /// <summary>
 /// Сущность курса
 /// </summary>
-public abstract class CourseEntity(
+public abstract class CourseAbstract(
     Guid courseAuthorId,
     string courseName,
     string courseDescription,
@@ -69,7 +69,7 @@ public abstract class CourseEntity(
 
     #endregion
 
-    #region Private Fields
+    #region Private properties
 
     /// <summary>
     /// Автор курса
