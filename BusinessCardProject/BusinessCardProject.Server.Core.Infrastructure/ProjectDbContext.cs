@@ -65,10 +65,13 @@ namespace BusinessCardProject.Server.Core.Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //Адрес тестового сервера
             optionsBuilder
                 .UseNpgsql(
-                    "Server=109.205.58.47;User Id=persProjectUser;Password=7FEpX_wl6g;Port=5432;Database=testDb;")
+                    "Server=109.205.58.47;User Id=persProjectUser;Password=7FEpX_wl6g;Port=5432;Database=testDb;",
+                    npgsqlOptions => 
+                    {
+                        npgsqlOptions.UseNodaTime();
+                    })
                 .UseLazyLoadingProxies();
         }
 

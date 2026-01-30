@@ -1,8 +1,13 @@
 ﻿using BusinessCardProject.Server.Core.Application.Application.Extensions;
 using BusinessCardProject.Server.Core.Application.Common.Interfaces;
 using BusinessCardProject.Server.Core.Application.Common.Interfaces.CustomMediator;
+using BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.Course;
+using BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.User;
 using BusinessCardProject.Server.Core.Infrastructure.Extensions.CustomFunctional;
 using BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses;
+using BusinessCardProject.Server.Core.Infrastructure.Repositories.Users;
+using BusinessCardProject.Server.Core.Infrastructure.Security.Interface;
+using BusinessCardProject.Server.Core.Infrastructure.Security.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +30,8 @@ public static class ServiceCollectionExtension
 
         //Регистрация кастомного Mediator(-a)
         services.AddScoped<ICustomMediator, CustomMediator>();
+        services.AddScoped<IPasswordHash, PasswordHashService>();
+        
         var applicationAssembly = typeof(IRequest<>).Assembly;
 
         foreach (var type in applicationAssembly.GetTypes())
@@ -48,6 +55,9 @@ public static class ServiceCollectionExtension
 
         //Репозитории
         services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
+        services.AddScoped<ICourseThemeRepository, CourseThemeRepository>();
+        services.AddScoped<ICourseModuleRepository, CourseModuleRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         services.AddApplication();
 

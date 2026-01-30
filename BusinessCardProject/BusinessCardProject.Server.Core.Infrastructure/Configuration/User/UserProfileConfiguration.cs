@@ -1,4 +1,5 @@
-﻿using BusinessCardProject.Server.Core.Domain.Aggregates.User;
+﻿using System.Text.Json;
+using BusinessCardProject.Server.Core.Domain.Aggregates.User;
 using BusinessCardProject.Server.Core.Domain.Aggregates.User.Setting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -48,6 +49,15 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfileEnti
             .IsRequired()
             .HasComment("Пароль");
 
+        builder.Property(x => x.DateOfRegistered)
+            .HasColumnName("DateOfRegistered")
+            .HasComment("Дата регистрации");
+
+        builder.Property(x => x.DateOfDeletion)
+            .HasColumnName("DateOfDeletion")
+            .IsRequired(false)
+            .HasComment("Дата деактивации аккаунта");
+
         builder.Property<bool>("_isActive")
             .HasColumnName("isActive")
             .HasDefaultValue(false)
@@ -63,8 +73,8 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfileEnti
         builder.Property(e => e.Settings)
             .HasColumnType("jsonb")
             .HasConversion(
-                v => v,
-                v => v ?? new UserSetting()
+                v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
+                v => JsonSerializer.Deserialize<UserSetting>(v, JsonSerializerOptions.Default) ?? new UserSetting()
             )
             .HasComment("Настройки пользователя");
 

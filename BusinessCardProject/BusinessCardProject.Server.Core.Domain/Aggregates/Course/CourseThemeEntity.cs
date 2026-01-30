@@ -59,6 +59,28 @@ public class CourseThemeEntity : Entity
     #region fucntions
 
     /// <summary>
+    /// Обновление сущности
+    /// </summary>
+    public void Update(string name, string description, Guid typeOfCourseId,
+        ProgrammingLanguageCourseEntity programmingLanguageId)
+    {
+        _themeName = name;
+        _themeDescription = description;
+        _typeOfCourseId = TypeOfCourseEnum.FromId(typeOfCourseId);
+        ProgrammingLanguages = programmingLanguageId;
+    }
+    
+    /// <summary>
+    /// Обновление сущности
+    /// </summary>
+    public void Update(string name, string description, Guid typeOfCourseId)
+    {
+        _themeName = name;
+        _themeDescription = description;
+        _typeOfCourseId = TypeOfCourseEnum.FromId(typeOfCourseId);
+    }
+    
+    /// <summary>
     /// Метод для добавления модуля
     /// </summary>
     public void AddModule(CourseModuleEntity module)

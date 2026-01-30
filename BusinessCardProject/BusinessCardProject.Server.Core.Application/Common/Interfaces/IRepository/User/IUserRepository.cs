@@ -1,0 +1,49 @@
+﻿using ContractualDtos.DTO.User.UserProfile.Dtos;
+using ContractualDtos.DTO.User.UserProfile.Requests;
+
+namespace BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.User;
+
+public interface IUserRepository
+{
+    /// <summary>
+    /// Вывод всех пользователей
+    /// </summary>
+    Task<List<UserProfileDtos>> GetAllAsync();
+
+    /// <summary>
+    /// Добавление нового пользователя
+    /// </summary>
+    /// <param name="dto">передаваемые параметры из запроса</param>
+    Task<bool?> Create(CreateUserProfileRequestDto dto);
+
+    /// <summary>
+    /// Поиск определенного пользователя
+    /// </summary>
+    /// <param name="id">передаваемые параметры из запроса</param>
+    Task<UserProfileDtos?> Read(Guid id);
+
+    /// <summary>
+    /// Изменение определенного пользователя
+    /// </summary>
+    /// <param name="dto">передаваемые параметры из запроса</param>
+    Task<UserProfileDtos?> Update(UpdateUserProfileRequestDto dto);
+
+    /// <summary>
+    /// Деактивация определенного пользователя
+    /// </summary>
+    /// <param name="id">передаваемые параметры из запроса</param>
+    Task<bool> SafeDelete(Guid id);
+    
+    /// <summary>
+    /// Восстановление профиля пользователя, если спустя время он решил восстановить удаленный аккаунт
+    /// </summary>
+    Task<bool> RecoveryUserProfile(Guid id);
+    
+    /// <summary>
+    /// Авторизация пользоватея
+    /// </summary>
+    /// <param name="nickname">Никнейм пользователя</param>
+    /// <param name="password">Пароль пользователя</param>
+    /// TODO: возвращать AccessToken
+    Task<bool> Login(AuthUserDto dto);
+}

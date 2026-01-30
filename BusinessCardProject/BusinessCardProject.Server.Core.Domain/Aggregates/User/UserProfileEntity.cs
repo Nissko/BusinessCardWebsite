@@ -14,7 +14,7 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.User
         string email,
         string altName,
         string password)
-        : PersonInfoAbstract(surname, name, patronymic, email, altName, DateTime.Now, null)
+        : PersonInfoAbstract(surname, name, patronymic, email, altName)
     {
         /*TODO: Потом исправить и сделать чтобы было True после подтверждения*/
 
@@ -92,6 +92,26 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.User
 
         #region functions
 
+        /// <summary>
+        /// Деактивация аккаунта(safe-delete)
+        /// </summary>
+        public void DeactivateAccount()
+        {
+            _isActive = false;
+            _isBlocked = true;
+            SetDateOfDeletion(true);
+        }
+
+        /// <summary>
+        /// Восстановление аккаунта, если тот был деактивирован
+        /// </summary>
+        public void RecoveryAccount()
+        {
+            _isActive = true;
+            _isBlocked = false;
+            SetDateOfDeletion(false);
+        }
+        
         /// <summary>
         /// Функционал для добавления роли
         /// </summary>

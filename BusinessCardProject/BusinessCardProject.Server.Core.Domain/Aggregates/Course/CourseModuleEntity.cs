@@ -48,6 +48,19 @@ public class CourseModuleEntity : Entity
     
     #region fucntions
 
+    public void Update(string name, string description, CourseThemeEntity courseTheme)
+    {
+        _name = name;
+        _description = description;
+        CourseTheme = courseTheme;
+    }
+    
+    public void Update(string name, string description)
+    {
+        _name = name;
+        _description = description;
+    }
+    
     /// <summary>
     /// Метод для добавления видеокурса
     /// </summary>

@@ -37,6 +37,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{163AA1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{2AE1A16A-36CF-40E5-8767-15920B94B94C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessCardProject.Server.Core.Infrastructure.Security", "BusinessCardProject.Server.Core.Infrastructure.Security\BusinessCardProject.Server.Core.Infrastructure.Security\BusinessCardProject.Server.Core.Infrastructure.Security.csproj", "{B2BD3440-8706-4AD5-954F-6D61A3692C82}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{C550C10F-C7DB-4C09-96C3-F22DFE79249D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C550C10F-C7DB-4C09-96C3-F22DFE79249D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C550C10F-C7DB-4C09-96C3-F22DFE79249D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2BD3440-8706-4AD5-954F-6D61A3692C82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2BD3440-8706-4AD5-954F-6D61A3692C82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2BD3440-8706-4AD5-954F-6D61A3692C82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2BD3440-8706-4AD5-954F-6D61A3692C82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +100,7 @@ Global
 		{A45E424C-5F3D-43B0-81E4-9E718930DCFF} = {6DF3F641-86E3-4B2C-80AD-7514A9F6B232}
 		{EFCC3658-F2E5-4095-A0BF-ACA63113CDA9} = {163AA1C6-0AB9-43F3-AA73-CEE858E69BC3}
 		{97E8D076-70C6-420B-B0C3-174926D9A768} = {2AE1A16A-36CF-40E5-8767-15920B94B94C}
+		{B2BD3440-8706-4AD5-954F-6D61A3692C82} = {2AE1A16A-36CF-40E5-8767-15920B94B94C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {20B77252-D979-4169-AB40-93EF2533A116}
