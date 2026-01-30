@@ -37,7 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{163AA1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{2AE1A16A-36CF-40E5-8767-15920B94B94C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessCardProject.Server.Core.Infrastructure.Security", "BusinessCardProject.Server.Core.Infrastructure.Security\BusinessCardProject.Server.Core.Infrastructure.Security\BusinessCardProject.Server.Core.Infrastructure.Security.csproj", "{B2BD3440-8706-4AD5-954F-6D61A3692C82}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessCardProject.Server.Core.Infrastructure.Security", "BusinessCardProject.Server.Core.Infrastructure.Security\BusinessCardProject.Server.Core.Infrastructure.Security.csproj", "{B2BD3440-8706-4AD5-954F-6D61A3692C82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
