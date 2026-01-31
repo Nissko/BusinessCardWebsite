@@ -10,4 +10,8 @@
         <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="9.0.0"/>
         <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.0"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BusinessCardProject.Server.Core.Application\BusinessCardProject.Server.Core.Application.csproj" />
+    </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace BusinessCardProject.Server.Core.Infrastructure.Security.Interface;
+﻿namespace BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.User;
 
 public interface IPasswordHash
 {

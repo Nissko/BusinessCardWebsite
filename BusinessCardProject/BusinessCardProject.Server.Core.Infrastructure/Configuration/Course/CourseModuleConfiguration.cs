@@ -25,7 +25,7 @@ public class CourseModuleConfiguration : IEntityTypeConfiguration<CourseModuleEn
         builder.HasOne(x => x.CourseTheme)
             .WithMany(x => x.CourseModules)
             .HasForeignKey("CourseThemeId")
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
 
         #region Индексы
 

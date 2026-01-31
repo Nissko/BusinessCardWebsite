@@ -1,5 +1,6 @@
-﻿using BusinessCardProject.Server.Core.Domain.Aggregates.User.Setting;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using NodaTime;
 
 #nullable disable
 
@@ -76,7 +77,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Settings = table.Column<UserSetting>(type: "jsonb", nullable: false, comment: "Настройки пользователя"),
+                    Settings = table.Column<string>(type: "jsonb", nullable: false, comment: "Настройки пользователя"),
                     isActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false, comment: "Признак работоспособности профиля"),
                     isBlocked = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false, comment: "Признак блокировки"),
                     Password = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false, comment: "Пароль"),
@@ -84,7 +85,9 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false, comment: "Имя"),
                     Patronymic = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false, comment: "Отчество"),
                     NickName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false, comment: "Почта"),
-                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false, comment: "Почта")
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false, comment: "Почта"),
+                    DateOfRegistered = table.Column<Instant>(type: "timestamp with time zone", nullable: false, comment: "Дата регистрации"),
+                    DateOfDeletion = table.Column<Instant>(type: "timestamp with time zone", nullable: true, comment: "Дата деактивации аккаунта")
                 },
                 constraints: table =>
                 {
@@ -111,7 +114,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                         principalSchema: "dev_prod",
                         principalTable: "ProgrammingLanguages",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -132,7 +135,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                         principalSchema: "dev_prod",
                         principalTable: "UserProfiles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -154,7 +157,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                         principalSchema: "dev_prod",
                         principalTable: "Themes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -164,19 +167,18 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     CourseModuleId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CourseAuthorId1 = table.Column<Guid>(type: "uuid", nullable: false),
-                    CourseAuthorId = table.Column<Guid>(type: "uuid", nullable: false, comment: "ID автора"),
-                    CourseDatePublished = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Дата публикации"),
-                    CourseDescription = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false, comment: "Описание"),
-                    CourseDiscount = table.Column<int>(type: "integer", nullable: false, comment: "Размер скидки"),
-                    CourseImg = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false, comment: "Изображение"),
-                    CourseName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false, comment: "Название"),
-                    CoursePrice = table.Column<double>(type: "double precision", nullable: false, comment: "Стоимость"),
-                    CourseRate = table.Column<double>(type: "double precision", nullable: false, comment: "Рейтинг"),
+                    CourseAuthorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DatePublished = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, comment: "Дата публикации"),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false, comment: "Описание"),
+                    Discount = table.Column<int>(type: "integer", nullable: false, comment: "Размер скидки"),
+                    Img = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false, comment: "Изображение"),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false, comment: "Название"),
+                    Price = table.Column<double>(type: "double precision", nullable: false, comment: "Стоимость"),
+                    Rate = table.Column<double>(type: "double precision", nullable: false, comment: "Рейтинг"),
                     IsFree = table.Column<bool>(type: "boolean", nullable: false, comment: "Признак, платный курс или нет"),
-                    LinkCourseOnRutube = table.Column<string>(type: "text", nullable: false, comment: "Ссылка на рутуб"),
-                    LinkCourseOnVkVideo = table.Column<string>(type: "text", nullable: false, comment: "Ссылка на ВК видео"),
-                    LinkCourseOnYoutube = table.Column<string>(type: "text", nullable: false, comment: "Ссылка на ютуб"),
+                    LinkOnRutube = table.Column<string>(type: "text", nullable: false, comment: "Ссылка на рутуб"),
+                    LinkOnVkVideo = table.Column<string>(type: "text", nullable: false, comment: "Ссылка на ВК видео"),
+                    LinkOnYoutube = table.Column<string>(type: "text", nullable: false, comment: "Ссылка на ютуб"),
                     IsShow = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false, comment: "Признак, будет ли показываться курс на странице"),
                     DisplayOrder = table.Column<int>(type: "integer", nullable: false, defaultValue: 0, comment: "Порядок сортировки")
                 },
@@ -184,19 +186,19 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                 {
                     table.PrimaryKey("PK_VideoCourse", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_VideoCourse_CourseAuthors_CourseAuthorId1",
-                        column: x => x.CourseAuthorId1,
+                        name: "FK_VideoCourse_CourseAuthors_CourseAuthorId",
+                        column: x => x.CourseAuthorId,
                         principalSchema: "dev_prod",
                         principalTable: "CourseAuthors",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_VideoCourse_Modules_CourseModuleId",
                         column: x => x.CourseModuleId,
                         principalSchema: "dev_prod",
                         principalTable: "Modules",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateIndex(
@@ -251,10 +253,10 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_VideoCourse_CourseAuthorId1",
+                name: "IX_VideoCourse_CourseAuthorId",
                 schema: "dev_prod",
                 table: "VideoCourse",
-                column: "CourseAuthorId1");
+                column: "CourseAuthorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VideoCourse_CourseModuleId",

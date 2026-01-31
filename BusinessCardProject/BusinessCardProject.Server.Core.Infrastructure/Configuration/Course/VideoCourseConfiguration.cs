@@ -15,59 +15,54 @@ internal class VideoCourseConfiguration : IEntityTypeConfiguration<VideoCourseEn
         builder.HasKey(x => x.Id);
 
         builder.Property<string>("_linkCourseOnYoutube")
-            .HasColumnName("LinkCourseOnYoutube")
+            .HasColumnName("LinkOnYoutube")
             .IsRequired()
             .HasComment("Ссылка на ютуб");
 
         builder.Property<string>("_linkCourseOnRutube")
-            .HasColumnName("LinkCourseOnRutube")
+            .HasColumnName("LinkOnRutube")
             .IsRequired()
             .HasComment("Ссылка на рутуб");
 
         builder.Property<string>("_linkCourseOnVkVideo")
-            .HasColumnName("LinkCourseOnVkVideo")
+            .HasColumnName("LinkOnVkVideo")
             .IsRequired()
             .HasComment("Ссылка на ВК видео");
 
-        builder.Property<Guid>("_courseAuthorId")
-            .HasColumnName("CourseAuthorId")
-            .IsRequired()
-            .HasComment("ID автора");
-
         builder.Property<string>("_courseName")
-            .HasColumnName("CourseName")
+            .HasColumnName("Name")
             .IsRequired()
             .HasMaxLength(200)
             .HasComment("Название");
 
         builder.Property<string>("_courseDescription")
-            .HasColumnName("CourseDescription")
+            .HasColumnName("Description")
             .IsRequired()
             .HasMaxLength(500)
             .HasComment("Описание");
 
         builder.Property<string>("_courseImg")
-            .HasColumnName("CourseImg")
+            .HasColumnName("Img")
             .HasMaxLength(200)
             .HasComment("Изображение");
 
         builder.Property<DateTime>("_courseDatePublished")
-            .HasColumnName("CourseDatePublished")
+            .HasColumnName("DatePublished")
             .IsRequired()
             .HasComment("Дата публикации");
 
         builder.Property<double>("_coursePrice")
-            .HasColumnName("CoursePrice")
+            .HasColumnName("Price")
             .IsRequired()
             .HasComment("Стоимость");
 
         builder.Property<int>("_courseDiscount")
-            .HasColumnName("CourseDiscount")
+            .HasColumnName("Discount")
             .IsRequired()
             .HasComment("Размер скидки");
 
         builder.Property<double>("_courseRate")
-            .HasColumnName("CourseRate")
+            .HasColumnName("Rate")
             .IsRequired()
             .HasComment("Рейтинг");
 
@@ -89,12 +84,12 @@ internal class VideoCourseConfiguration : IEntityTypeConfiguration<VideoCourseEn
         builder.HasOne(x => x.CourseModule)
             .WithMany(x => x.VideoCourses)
             .HasForeignKey("CourseModuleId")
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
         
         builder.HasOne(x => x.CourseAuthor)
             .WithMany(x => x.VideoCourses)
             .HasForeignKey("CourseAuthorId")
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
 
         #region Индексы
 

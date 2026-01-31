@@ -1,21 +1,23 @@
 ﻿using BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.User;
-using ContractualDtos.DTO.User.UserProfile.Dtos;
 using ContractualDtos.DTO.User.UserProfile.Requests;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BusinessCardProject.Server.Core.Api.Controllers.User;
+namespace BusinessCardProject.Server.Core.Api.Controllers.User.UserProfile;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController : ControllerBase
+public class UserProfileController : ControllerBase
 {
     private readonly IUserRepository _repository;
 
-    public UserController(IUserRepository repository)
+    public UserProfileController(IUserRepository repository)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
     
+    /// <summary>
+    /// TODO: Добавить CurrentUserService чтобы смотреть на пользователя, который посылает этот запрос
+    /// </summary>
     [HttpGet("get")]
     public async Task<IActionResult> GetAllAsync()
     {
@@ -23,6 +25,9 @@ public class UserController : ControllerBase
         return result.Count != 0 ? Ok(result) : NoContent();
     }
 
+    /// <summary>
+    /// TODO: Добавить CurrentUserService чтобы смотреть на пользователя, который посылает этот запрос
+    /// </summary>
     [HttpPost("create")]
     public async Task<IActionResult> CreateAsync([FromBody] CreateUserProfileRequestDto dto)
     {
@@ -30,6 +35,9 @@ public class UserController : ControllerBase
         return result != null ? Created() : BadRequest();
     }
     
+    /// <summary>
+    /// TODO: Добавить CurrentUserService чтобы смотреть на пользователя, который посылает этот запрос
+    /// </summary>
     [HttpGet("find/{id}")]
     public async Task<IActionResult> FindAsync(Guid id)
     {
@@ -37,6 +45,9 @@ public class UserController : ControllerBase
         return result != null ? Ok(result) : NoContent();
     }
 
+    /// <summary>
+    /// TODO: Добавить CurrentUserService чтобы смотреть на пользователя, который посылает этот запрос
+    /// </summary>
     [HttpPatch("update")]
     public async Task<IActionResult> UpdateAsync([FromBody] UpdateUserProfileRequestDto dto)
     {
@@ -62,12 +73,5 @@ public class UserController : ControllerBase
     {
         var result = await _repository.RecoveryUserProfile(id);
         return result ? Ok() : NoContent();
-    }
-    
-    [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync([FromBody] AuthUserDto dto)
-    {
-        var result = await _repository.Login(dto);
-        return result ? Ok(result) : BadRequest("Некорректно введены данные от учетной записи пользователя");
     }
 }

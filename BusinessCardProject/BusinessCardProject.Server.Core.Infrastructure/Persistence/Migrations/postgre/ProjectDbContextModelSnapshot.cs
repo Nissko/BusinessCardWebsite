@@ -4,6 +4,7 @@ using BusinessCardProject.Server.Core.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NodaTime;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -176,50 +177,45 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                         .HasColumnName("IsShow")
                         .HasComment("Признак, будет ли показываться курс на странице");
 
-                    b.Property<Guid>("_courseAuthorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("CourseAuthorId")
-                        .HasComment("ID автора");
-
                     b.Property<DateTime>("_courseDatePublished")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("CourseDatePublished")
+                        .HasColumnName("DatePublished")
                         .HasComment("Дата публикации");
 
                     b.Property<string>("_courseDescription")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
-                        .HasColumnName("CourseDescription")
+                        .HasColumnName("Description")
                         .HasComment("Описание");
 
                     b.Property<int>("_courseDiscount")
                         .HasColumnType("integer")
-                        .HasColumnName("CourseDiscount")
+                        .HasColumnName("Discount")
                         .HasComment("Размер скидки");
 
                     b.Property<string>("_courseImg")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
-                        .HasColumnName("CourseImg")
+                        .HasColumnName("Img")
                         .HasComment("Изображение");
 
                     b.Property<string>("_courseName")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
-                        .HasColumnName("CourseName")
+                        .HasColumnName("Name")
                         .HasComment("Название");
 
                     b.Property<double>("_coursePrice")
                         .HasColumnType("double precision")
-                        .HasColumnName("CoursePrice")
+                        .HasColumnName("Price")
                         .HasComment("Стоимость");
 
                     b.Property<double>("_courseRate")
                         .HasColumnType("double precision")
-                        .HasColumnName("CourseRate")
+                        .HasColumnName("Rate")
                         .HasComment("Рейтинг");
 
                     b.Property<bool>("_isFree")
@@ -230,19 +226,19 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                     b.Property<string>("_linkCourseOnRutube")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("LinkCourseOnRutube")
+                        .HasColumnName("LinkOnRutube")
                         .HasComment("Ссылка на рутуб");
 
                     b.Property<string>("_linkCourseOnVkVideo")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("LinkCourseOnVkVideo")
+                        .HasColumnName("LinkOnVkVideo")
                         .HasComment("Ссылка на ВК видео");
 
                     b.Property<string>("_linkCourseOnYoutube")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("LinkCourseOnYoutube")
+                        .HasColumnName("LinkOnYoutube")
                         .HasComment("Ссылка на ютуб");
 
                     b.HasKey("Id");
@@ -251,11 +247,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
 
                     b.HasIndex("CourseModuleId");
 
-                    b.ToTable("VideoCourse", "dev_prod", t =>
-                        {
-                            t.Property("CourseAuthorId")
-                                .HasColumnName("CourseAuthorId1");
-                        });
+                    b.ToTable("VideoCourse", "dev_prod");
                 });
 
             modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.User.UserProfileEntity", b =>
@@ -271,12 +263,12 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                         .HasColumnName("NickName")
                         .HasComment("Почта");
 
-                    b.Property<DateTime?>("DateOfDeletion")
+                    b.Property<Instant?>("DateOfDeletion")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("DateOfDeletion")
                         .HasComment("Дата деактивации аккаунта");
 
-                    b.Property<DateTime>("DateOfRegistered")
+                    b.Property<Instant>("DateOfRegistered")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("DateOfRegistered")
                         .HasComment("Дата регистрации");
@@ -408,7 +400,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                     b.HasOne("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseThemeEntity", "CourseTheme")
                         .WithMany("CourseModules")
                         .HasForeignKey("CourseThemeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("CourseTheme");
@@ -419,7 +411,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                     b.HasOne("BusinessCardProject.Server.Core.Domain.Aggregates.Course.ProgrammingLanguageCourseEntity", "ProgrammingLanguages")
                         .WithMany("CourseThemes")
                         .HasForeignKey("ProgrammingLanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("ProgrammingLanguages");
@@ -430,13 +422,13 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                     b.HasOne("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseAuthorEntity", "CourseAuthor")
                         .WithMany("VideoCourses")
                         .HasForeignKey("CourseAuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.HasOne("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseModuleEntity", "CourseModule")
                         .WithMany("VideoCourses")
                         .HasForeignKey("CourseModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("CourseAuthor");
@@ -449,7 +441,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                     b.HasOne("BusinessCardProject.Server.Core.Domain.Aggregates.User.UserProfileEntity", "UserProfile")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("UserProfile");

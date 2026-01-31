@@ -6,7 +6,6 @@ using BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.
 using BusinessCardProject.Server.Core.Infrastructure.Extensions.CustomFunctional;
 using BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses;
 using BusinessCardProject.Server.Core.Infrastructure.Repositories.Users;
-using BusinessCardProject.Server.Core.Infrastructure.Security.Interface;
 using BusinessCardProject.Server.Core.Infrastructure.Security.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -58,6 +57,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<ICourseThemeRepository, CourseThemeRepository>();
         services.AddScoped<ICourseModuleRepository, CourseModuleRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ICourseAuthorRepository, CourseAuthorRepository>();
 
         services.AddApplication();
 

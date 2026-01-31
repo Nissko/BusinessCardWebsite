@@ -3,7 +3,6 @@ using BusinessCardProject.Server.Core.Application.Common.Interfaces;
 using BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.User;
 using BusinessCardProject.Server.Core.Domain.Aggregates.User;
 using BusinessCardProject.Server.Core.Domain.Enums.User;
-using BusinessCardProject.Server.Core.Infrastructure.Security.Interface;
 using ContractualDtos.DTO.User.UserProfile.Dtos;
 using ContractualDtos.DTO.User.UserProfile.Requests;
 using Microsoft.EntityFrameworkCore;

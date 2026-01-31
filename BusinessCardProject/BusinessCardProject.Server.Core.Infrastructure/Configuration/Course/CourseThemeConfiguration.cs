@@ -32,7 +32,7 @@ public class CourseThemeConfiguration : IEntityTypeConfiguration<CourseThemeEnti
         builder.HasOne(x => x.ProgrammingLanguages)
             .WithMany(x => x.CourseThemes)
             .HasForeignKey("ProgrammingLanguageId")
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
 
         #region Индексы
 

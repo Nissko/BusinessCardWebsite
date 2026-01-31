@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using BusinessCardProject.Server.Core.Infrastructure.Security.Interface;
+using BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.User;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace BusinessCardProject.Server.Core.Infrastructure.Security.Service;
@@ -13,16 +13,16 @@ public class PasswordHashService : IPasswordHash
 
     public Task<string> HashPassword(string password)
     {
-        byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
+        var salt = RandomNumberGenerator.GetBytes(SaltSize);
 
-        byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
+        var hash = Rfc2898DeriveBytes.Pbkdf2(
             password: Encoding.UTF8.GetBytes(password),
             salt: salt,
             iterations: Iterations,
             hashAlgorithm: HashAlgorithmName.SHA256,
             outputLength: HashSize);
 
-        byte[] hashBytes = new byte[SaltSize + HashSize];
+        var hashBytes = new byte[SaltSize + HashSize];
         Array.Copy(salt, 0, hashBytes, 0, SaltSize);
         Array.Copy(hash, 0, hashBytes, SaltSize, HashSize);
 
@@ -39,18 +39,18 @@ public class PasswordHashService : IPasswordHash
 
         try
         {
-            byte[] hashBytes = Convert.FromBase64String(hashedPassword);
+            var hashBytes = Convert.FromBase64String(hashedPassword);
 
             if (hashBytes.Length != SaltSize + HashSize)
                 return Task.FromResult(false);
 
-            byte[] salt = new byte[SaltSize];
+            var salt = new byte[SaltSize];
             Array.Copy(hashBytes, 0, salt, 0, SaltSize);
 
-            byte[] storedHash = new byte[HashSize];
+            var storedHash = new byte[HashSize];
             Array.Copy(hashBytes, SaltSize, storedHash, 0, HashSize);
 
-            byte[] computedHash = KeyDerivation.Pbkdf2(
+            var computedHash = KeyDerivation.Pbkdf2(
                 password: providedPassword,
                 salt: salt,
                 prf: KeyDerivationPrf.HMACSHA256,

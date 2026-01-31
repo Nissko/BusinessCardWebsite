@@ -89,6 +89,14 @@ public class CourseAuthorEntity : Entity
 
     #region fucntions
 
+    public void Update(string surname, string name, string patronymic, string nickname)
+    {
+        _authorSurname = surname;
+        _authorName = name;
+        _authorPatronymic = patronymic;
+        _authorNickName = nickname;
+    }
+    
     /// <summary>
     /// Метод для добавления видеокурса
     /// </summary>

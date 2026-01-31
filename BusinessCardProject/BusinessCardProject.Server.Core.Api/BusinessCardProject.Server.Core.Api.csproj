@@ -24,8 +24,4 @@
       <ProjectReference Include="..\ContractualDTOs\ContractualDtos\ContractualDtos.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Controllers\Course\" />
-    </ItemGroup>
-
 </Project>

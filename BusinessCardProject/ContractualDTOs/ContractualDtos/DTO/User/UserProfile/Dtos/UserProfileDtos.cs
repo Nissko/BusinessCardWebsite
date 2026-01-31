@@ -1,6 +1,4 @@
-﻿using NodaTime;
-
-namespace ContractualDtos.DTO.User.UserProfile.Dtos;
+﻿namespace ContractualDtos.DTO.User.UserProfile.Dtos;
 
 /// <summary>
 /// DTO для возврата объекта
