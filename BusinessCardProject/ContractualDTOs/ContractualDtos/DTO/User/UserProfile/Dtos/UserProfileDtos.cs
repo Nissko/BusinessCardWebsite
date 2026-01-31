@@ -10,7 +10,8 @@ public record UserProfileDtos(
     string Patronymic,
     string Email,
     string AltName,
-    string CreatedOn)
+    string CreatedOn,
+    List<UserRoleDto> UserRoles)
 {
     /// <summary>
     /// Идентификатор
@@ -46,4 +47,9 @@ public record UserProfileDtos(
     /// Дата создания профиля
     /// </summary>
     public string CreatedOn { get; init; } = CreatedOn;
+    
+    /// <summary>
+    /// Роли пользователя
+    /// </summary>
+    public List<UserRoleDto> UserRoles { get; init; } =  UserRoles;
 }

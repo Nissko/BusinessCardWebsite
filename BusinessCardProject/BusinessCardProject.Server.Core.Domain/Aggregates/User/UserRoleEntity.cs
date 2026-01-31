@@ -14,7 +14,7 @@ public class UserRoleEntity(Guid userProfileId, UserRoleEnum userRole) : Entity
     /// Пользователь
     /// </summary>
     public virtual UserProfileEntity UserProfile { get; private set; }
-    private Guid _userProfileId = userProfileId;
+    public Guid UserProfileId = userProfileId;
     
     /// <summary>
     /// Роль

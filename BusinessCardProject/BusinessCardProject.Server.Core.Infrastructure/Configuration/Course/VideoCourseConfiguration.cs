@@ -83,18 +83,18 @@ internal class VideoCourseConfiguration : IEntityTypeConfiguration<VideoCourseEn
 
         builder.HasOne(x => x.CourseModule)
             .WithMany(x => x.VideoCourses)
-            .HasForeignKey("CourseModuleId")
+            .HasForeignKey(x=>x.CourseModuleId)
             .OnDelete(DeleteBehavior.SetNull);
         
         builder.HasOne(x => x.CourseAuthor)
             .WithMany(x => x.VideoCourses)
-            .HasForeignKey("CourseAuthorId")
+            .HasForeignKey(x=>x.CourseAuthorId)
             .OnDelete(DeleteBehavior.SetNull);
 
         #region Индексы
 
-        builder.HasIndex("CourseModuleId");
-        builder.HasIndex("CourseAuthorId"); 
+        builder.HasIndex(x=>x.CourseModuleId);
+        builder.HasIndex(x=>x.CourseAuthorId); 
 
         #endregion
     }

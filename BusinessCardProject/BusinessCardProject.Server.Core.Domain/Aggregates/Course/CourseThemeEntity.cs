@@ -20,7 +20,7 @@ public class CourseThemeEntity : Entity
         _themeName = themeName;
         _themeDescription = themeDescription;
         _typeOfCourseId = typeOfCourseId;
-        _programmingLanguageId = programmingLanguageId;
+        ProgrammingLanguageId = programmingLanguageId;
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class CourseThemeEntity : Entity
     /// ЯП к которому принадлежит тема
     /// </summary>
     public virtual ProgrammingLanguageCourseEntity ProgrammingLanguages { get; private set; }
-    private Guid _programmingLanguageId;
+    public Guid ProgrammingLanguageId;
 
     #region virtual
 

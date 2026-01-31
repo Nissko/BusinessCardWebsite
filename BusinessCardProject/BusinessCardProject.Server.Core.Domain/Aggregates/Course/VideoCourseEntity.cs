@@ -17,8 +17,8 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
             _linkCourseOnYoutube = linkCourseOnYoutube;
             _linkCourseOnRutube = linkCourseOnRutube;
             _linkCourseOnVkVideo = linkCourseOnVkVideo;
-            _courseAuthorId = courseAuthorId;
-            _courseModuleId = courseModuleId;
+            CourseAuthorId = courseAuthorId;
+            CourseModuleId = courseModuleId;
         }
 
         #region Public Fields
@@ -61,13 +61,13 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
         /// Предмет для категории подготовки
         /// </summary>
         public virtual CourseModuleEntity CourseModule { get; private set; }
-        private Guid _courseModuleId;
+        public Guid CourseModuleId;
 
         /// <summary>
         /// Автор, которому принадлежит курс
         /// </summary>
         public virtual CourseAuthorEntity CourseAuthor { get; private set; }
-        private Guid _courseAuthorId;
+        public Guid CourseAuthorId;
 
         #endregion
 

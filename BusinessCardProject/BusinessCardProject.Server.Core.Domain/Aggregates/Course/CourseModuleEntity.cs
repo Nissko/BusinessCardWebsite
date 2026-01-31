@@ -16,7 +16,7 @@ public class CourseModuleEntity : Entity
     {
         _name = name;
         _description = description;
-        _courseThemeId = courseThemeId;
+        CourseThemeId = courseThemeId;
     }
     
     /// <summary>
@@ -35,7 +35,7 @@ public class CourseModuleEntity : Entity
     /// Тема которой принадлежит модуль
     /// </summary>
     public virtual CourseThemeEntity CourseTheme { get; private set; }
-    private Guid _courseThemeId;
+    public Guid CourseThemeId;
     
     #region virtual
     

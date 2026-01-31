@@ -70,6 +70,21 @@ public class UserRepository : IUserRepository
         }
     }
 
+    public async Task<UserProfileEntity> GetUserEntityFromId(Guid id)
+    {
+        try
+        {
+            var userProfile = await _context.UserProfile.FindAsync(id) ??
+                              throw new Exception("Не удалось найти профиль пользователя");
+
+            return userProfile;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
     public async Task<UserProfileDtos?> Update(UpdateUserProfileRequestDto dto)
     {
         try
@@ -141,6 +156,18 @@ public class UserRepository : IUserRepository
         }
     }
 
+    public async Task<bool> AddNewRole(AddNewUserRoleRequestDto dto)
+    {
+        var role = UserRoleEnum.FromId(dto.RoleId);
+        if (dto.UserProfile.UserRoles.FirstOrDefault(t => t.UserRole == role) != null)
+            throw new Exception("Данная роль уже есть у пользователя");
+
+        _context.UserRole.Add(new UserRoleEntity(dto.UserProfile.Id, role));
+        await SaveChanges();
+
+        return true;
+    }
+
     #endregion
 
     public async Task<bool> Login(AuthUserDto dto)
@@ -160,16 +187,19 @@ public class UserRepository : IUserRepository
     /// <summary>
     /// Формирование DTO для return
     /// </summary>
-    private static UserProfileDtos GetUserProfileDto(UserProfileEntity entity)
+    private static UserProfileDtos GetUserProfileDto(UserProfileEntity e)
     {
         return new UserProfileDtos(
-            entity.Id,
-            entity.Surname,
-            entity.Name,
-            entity.Patronymic,
-            entity.Email,
-            entity.AltName,
-            entity.DateOfRegistered.ToLocalString()
+            e.Id,
+            e.Surname,
+            e.Name,
+            e.Patronymic,
+            e.Email,
+            e.AltName,
+            e.DateOfRegistered.ToLocalString(),
+            e.UserRoles.Select(ur => new UserRoleDto(
+                ur.UserRole.Name
+            )).ToList()
         );
     }
 
@@ -179,8 +209,8 @@ public class UserRepository : IUserRepository
     private static List<UserProfileDtos> GetUserProfileDto(List<UserProfileEntity> entities)
     {
         DateTimeZone systemZone = DateTimeZoneProviders.Tzdb.GetSystemDefault();
-    
-        return entities.Select(e => 
+
+        return entities.Select(e =>
         {
             return new UserProfileDtos(
                 e.Id,
@@ -189,7 +219,10 @@ public class UserRepository : IUserRepository
                 e.Patronymic,
                 e.Email,
                 e.AltName,
-                e.DateOfRegistered.ToLocalString()
+                e.DateOfRegistered.ToLocalString(),
+                e.UserRoles.Select(ur => new UserRoleDto(
+                    ur.UserRole.Name
+                )).ToList()
             );
         }).ToList();
     }

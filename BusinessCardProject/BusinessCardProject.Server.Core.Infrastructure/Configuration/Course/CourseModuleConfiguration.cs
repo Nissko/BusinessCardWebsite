@@ -24,12 +24,12 @@ public class CourseModuleConfiguration : IEntityTypeConfiguration<CourseModuleEn
 
         builder.HasOne(x => x.CourseTheme)
             .WithMany(x => x.CourseModules)
-            .HasForeignKey("CourseThemeId")
+            .HasForeignKey(x=>x.CourseThemeId)
             .OnDelete(DeleteBehavior.SetNull);
 
         #region Индексы
 
-        builder.HasIndex("CourseThemeId");
+        builder.HasIndex(x=>x.CourseThemeId);
 
         #endregion
     }

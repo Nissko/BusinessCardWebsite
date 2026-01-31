@@ -38,11 +38,11 @@ public class UserRoleEnum : Enumeration
     /// <summary>
     /// Получение типа пользователя по его Id
     /// </summary>
-    public static string FromId(Guid fieldTypeId)
+    public static UserRoleEnum FromId(Guid fieldTypeId)
     {
         var request = List().SingleOrDefault(s => s.Id == fieldTypeId);
 
-        if (request != null) return request.ToString();
+        if (request != null) return request;
         {
             var typeOfCourseIsExists = string.Join(",", List().Select(s => s.Id));
 

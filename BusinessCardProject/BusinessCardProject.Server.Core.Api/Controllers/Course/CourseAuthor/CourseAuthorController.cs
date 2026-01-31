@@ -1,6 +1,8 @@
 ﻿using BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.Course;
 using BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.User;
+using BusinessCardProject.Server.Core.Domain.Enums.User;
 using ContractualDtos.DTO.Course.CourseAuthor.Requests;
+using ContractualDtos.DTO.User.UserProfile.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessCardProject.Server.Core.Api.Controllers.Course.CourseAuthor;
@@ -18,7 +20,7 @@ public class CourseAuthorController : ControllerBase
         _courseAuthorRepository = courseAuthorRepository
                                   ?? throw new ArgumentNullException(nameof(courseAuthorRepository));
     }
-    
+
     [HttpGet("get")]
     public async Task<IActionResult> GetAllAsync()
     {
@@ -29,13 +31,16 @@ public class CourseAuthorController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateAsync([FromBody] Guid id)
     {
-        var user = await _userRepository.Read(id);
-        if (user == null) return BadRequest();
+        var user = await _userRepository.GetUserEntityFromId(id);
+        var userAddRole = await _userRepository.AddNewRole(
+            new AddNewUserRoleRequestDto(user, UserRoleEnum.Author.Id));
+        if (!userAddRole) return BadRequest();
+
         var result = await _courseAuthorRepository.Create(new CreateCourseAuthorRequestDto(
             user.Surname, user.Name, user.Patronymic, user.AltName));
         return result != null ? Created() : BadRequest();
     }
-    
+
     [HttpGet("find/{id}")]
     public async Task<IActionResult> FindAsync(Guid id)
     {

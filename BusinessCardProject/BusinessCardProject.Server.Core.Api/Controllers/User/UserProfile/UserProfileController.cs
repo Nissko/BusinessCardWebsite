@@ -74,4 +74,11 @@ public class UserProfileController : ControllerBase
         var result = await _repository.RecoveryUserProfile(id);
         return result ? Ok() : NoContent();
     }
+
+    /*[HttpPost("add-role/{id}")]
+    public async Task<IActionResult> AddNewRoleAsync(AddNewUserRoleRequestDto dto)
+    {
+        var result = await _repository.AddNewRole(dto);
+        return result ? Ok() : NoContent();
+    }*/
 }

@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.postgre
 {
     [DbContext(typeof(ProjectDbContext))]
-    [Migration("20260131180515_Migration_0.0.1")]
+    [Migration("20260131192551_Migration_0.0.1")]
     partial class Migration_001
     {
         /// <inheritdoc />

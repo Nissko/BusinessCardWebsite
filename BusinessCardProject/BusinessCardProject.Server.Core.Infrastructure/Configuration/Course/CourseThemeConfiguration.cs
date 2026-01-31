@@ -31,12 +31,12 @@ public class CourseThemeConfiguration : IEntityTypeConfiguration<CourseThemeEnti
 
         builder.HasOne(x => x.ProgrammingLanguages)
             .WithMany(x => x.CourseThemes)
-            .HasForeignKey("ProgrammingLanguageId")
+            .HasForeignKey(x=>x.ProgrammingLanguageId)
             .OnDelete(DeleteBehavior.SetNull);
 
         #region Индексы
 
-        builder.HasIndex("ProgrammingLanguageId");
+        builder.HasIndex(x=>x.ProgrammingLanguageId);
 
         #endregion
     }

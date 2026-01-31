@@ -1,4 +1,5 @@
-﻿using ContractualDtos.DTO.User.UserProfile.Dtos;
+﻿using BusinessCardProject.Server.Core.Domain.Aggregates.User;
+using ContractualDtos.DTO.User.UserProfile.Dtos;
 using ContractualDtos.DTO.User.UserProfile.Requests;
 
 namespace BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.User;
@@ -21,6 +22,12 @@ public interface IUserRepository
     /// </summary>
     /// <param name="id">передаваемые параметры из запроса</param>
     Task<UserProfileDtos?> Read(Guid id);
+    
+    /// <summary>
+    /// Поиск определенного пользователя
+    /// </summary>
+    /// <param name="id">передаваемые параметры из запроса</param>
+    Task<UserProfileEntity> GetUserEntityFromId(Guid id);
 
     /// <summary>
     /// Изменение определенного пользователя
@@ -38,6 +45,11 @@ public interface IUserRepository
     /// Восстановление профиля пользователя, если спустя время он решил восстановить удаленный аккаунт
     /// </summary>
     Task<bool> RecoveryUserProfile(Guid id);
+
+    /// <summary>
+    /// Добавление новой роли для пользователя
+    /// </summary>
+    Task<bool> AddNewRole(AddNewUserRoleRequestDto dto);
     
     /// <summary>
     /// Авторизация пользоватея
