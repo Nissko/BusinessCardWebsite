@@ -6,7 +6,6 @@ using BusinessCardProject.Server.Core.Domain.Enums.User;
 using ContractualDtos.DTO.User.UserProfile.Dtos;
 using ContractualDtos.DTO.User.UserProfile.Requests;
 using Microsoft.EntityFrameworkCore;
-using NodaTime;
 
 namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Users;
 
@@ -208,8 +207,6 @@ public class UserRepository : IUserRepository
     /// </summary>
     private static List<UserProfileDtos> GetUserProfileDto(List<UserProfileEntity> entities)
     {
-        DateTimeZone systemZone = DateTimeZoneProviders.Tzdb.GetSystemDefault();
-
         return entities.Select(e =>
         {
             return new UserProfileDtos(

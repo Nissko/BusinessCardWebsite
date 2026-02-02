@@ -1,4 +1,5 @@
 ﻿using BusinessCardProject.Server.Core.Domain.Commons;
+using NodaTime;
 
 namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course.Abstracts;
 
@@ -6,11 +7,10 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course.Abstracts;
 /// Сущность курса
 /// </summary>
 public abstract class CourseAbstract(
-    Guid courseAuthorId,
     string courseName,
     string courseDescription,
     string courseImg,
-    DateTime courseDatePublished,
+    Instant courseDatePublished,
     double coursePrice,
     int courseDiscount,
     bool isShow,
@@ -21,11 +21,6 @@ public abstract class CourseAbstract(
     //TODO: сделать получения default.jpg, если нет изображения
 
     #region Public Properties
-
-    /// <summary>
-    /// Автор
-    /// </summary>
-    public Guid AuthorId => _courseAuthorId;
 
     /// <summary>
     /// Название
@@ -45,7 +40,7 @@ public abstract class CourseAbstract(
     /// <summary>
     /// Дата создания
     /// </summary>
-    public DateTime DatePublished => _courseDatePublished;
+    public Instant DatePublished => _courseDatePublished;
 
     /// <summary>
     /// Цена
@@ -72,11 +67,6 @@ public abstract class CourseAbstract(
     #region Private properties
 
     /// <summary>
-    /// Автор курса
-    /// </summary>
-    private Guid _courseAuthorId = courseAuthorId;
-
-    /// <summary>
     /// Название
     /// </summary>
     private string _courseName = courseName;
@@ -94,7 +84,7 @@ public abstract class CourseAbstract(
     /// <summary>
     /// Дата создания
     /// </summary>
-    private DateTime _courseDatePublished = courseDatePublished;
+    private Instant _courseDatePublished = courseDatePublished;
 
     /// <summary>
     /// Цена курса
@@ -134,6 +124,19 @@ public abstract class CourseAbstract(
     #endregion
 
     #region Functions
+
+    protected void UpdateCourseAbstract(string courseName, string courseDescription, string courseImg,
+        double coursePrice, int courseDiscount, bool isShow, int displayOrder, bool isFree = false)
+    {
+        _courseName = courseName;
+        _courseDescription = courseDescription;
+        _courseImg = courseImg;
+        _coursePrice = coursePrice;
+        _courseDiscount = courseDiscount;
+        IsShow = isShow;
+        DisplayOrder = displayOrder;
+        _isFree = isFree;
+    }
 
     /// <summary>
     /// Является ли курс платным

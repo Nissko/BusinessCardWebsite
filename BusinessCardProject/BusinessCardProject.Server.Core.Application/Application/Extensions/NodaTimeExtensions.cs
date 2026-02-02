@@ -7,7 +7,7 @@ public static class NodaTimeExtensions
 {
     public static LocalDateTime ToLocalDateTime(this Instant instant)
     {
-        DateTimeZone systemZone = DateTimeZoneProviders.Tzdb.GetSystemDefault();
+        var systemZone = DateTimeZoneProviders.Tzdb.GetSystemDefault();
         return instant.InZone(systemZone).LocalDateTime;
     }
     

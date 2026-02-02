@@ -1,6 +1,7 @@
 ﻿using BusinessCardProject.Server.Core.Domain.Aggregates.Course;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using NodaTime;
 
 namespace BusinessCardProject.Server.Core.Infrastructure.Configuration.Course;
 
@@ -46,7 +47,7 @@ internal class VideoCourseConfiguration : IEntityTypeConfiguration<VideoCourseEn
             .HasMaxLength(200)
             .HasComment("Изображение");
 
-        builder.Property<DateTime>("_courseDatePublished")
+        builder.Property("_courseDatePublished")
             .HasColumnName("DatePublished")
             .IsRequired()
             .HasComment("Дата публикации");

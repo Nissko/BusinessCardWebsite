@@ -58,6 +58,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<ICourseModuleRepository, CourseModuleRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICourseAuthorRepository, CourseAuthorRepository>();
+        services.AddScoped<IVideoCourseRepository, VideoCourseRepository>();
 
         services.AddApplication();
 

@@ -1,5 +1,6 @@
 ﻿using BusinessCardProject.Server.Core.Domain.Aggregates.Course.Abstracts;
 using BusinessCardProject.Server.Core.Domain.Enums.UserSetting;
+using NodaTime;
 
 namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
 {
@@ -10,8 +11,8 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
     {
         public VideoCourseEntity(string linkCourseOnYoutube, string linkCourseOnRutube, string linkCourseOnVkVideo,
             Guid courseAuthorId, string courseName, string courseDescription, string courseImg,
-            DateTime courseDatePublished, double coursePrice, int courseDiscount, bool isShow, int displayOrder,
-            Guid courseModuleId, bool isFree = false) : base(courseAuthorId, courseName, courseDescription, courseImg,
+            Instant courseDatePublished, double coursePrice, int courseDiscount, bool isShow, int displayOrder,
+            Guid courseModuleId, bool isFree = false) : base(courseName, courseDescription, courseImg,
             courseDatePublished, coursePrice, courseDiscount, isShow, displayOrder, isFree)
         {
             _linkCourseOnYoutube = linkCourseOnYoutube;
@@ -72,7 +73,19 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
         #endregion
 
         #region Functions
-
+        
+        public void Update(string linkOnYoutube, string linkOnRutube, string linkOnVkVideo, Guid courseAuthorId,
+            Guid courseModuleId, string name, string description, string imgUrl, double price, int discount,
+            bool isShow, int displayOrder, bool isFree)
+        {
+            _linkCourseOnYoutube = linkOnYoutube;
+            _linkCourseOnRutube = linkOnRutube;
+            _linkCourseOnVkVideo = linkOnVkVideo;
+            CourseAuthorId = courseAuthorId;
+            CourseModuleId = courseModuleId;
+            UpdateCourseAbstract(name, description, imgUrl, price, discount, isShow, displayOrder, isFree);
+        }
+        
         /// <summary>
         /// Получение ссылки на курс в зависимости от выбранного
         /// </summary>
