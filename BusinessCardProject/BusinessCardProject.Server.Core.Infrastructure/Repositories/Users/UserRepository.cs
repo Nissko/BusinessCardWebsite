@@ -2,10 +2,12 @@
 using BusinessCardProject.Server.Core.Application.Common.Interfaces;
 using BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.User;
 using BusinessCardProject.Server.Core.Domain.Aggregates.User;
+using BusinessCardProject.Server.Core.Domain.Aggregates.User.Setting;
 using BusinessCardProject.Server.Core.Domain.Enums.User;
 using ContractualDtos.DTO.User.UserProfile.Dtos;
 using ContractualDtos.DTO.User.UserProfile.Requests;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 
 namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Users;
 
@@ -167,6 +169,25 @@ public class UserRepository : IUserRepository
         return true;
     }
 
+    public async Task<bool> UpdateUserSettings(UserProfileSettingsDto settings)
+    {
+        var user = await _context.UserProfile.FirstOrDefaultAsync(t => t.Id == settings.UserProfileId);
+        if (user == null) return false;
+        var currentDateTime = SystemClock.Instance.GetCurrentInstant();
+
+        user.Settings = new UserSetting
+        {
+            [SettingKeys.IsDark] = settings.IsDark,
+            [SettingKeys.IsDrawerOpen] = settings.IsDrawerOpen,
+            [SettingKeys.UpdateTime] = currentDateTime.ToLocalString(),
+            [SettingKeys.Platform] = (int)settings.Platform
+        };
+
+        _context.UserProfile.Update(user);
+        await SaveChanges();
+        return true;
+    }
+
     #endregion
 
     public async Task<bool> Login(AuthUserDto dto)
@@ -196,6 +217,7 @@ public class UserRepository : IUserRepository
             e.Email,
             e.AltName,
             e.DateOfRegistered.ToLocalString(),
+            e.Settings,
             e.UserRoles.Select(ur => new UserRoleDto(
                 ur.UserRole.Name
             )).ToList()
@@ -217,6 +239,7 @@ public class UserRepository : IUserRepository
                 e.Email,
                 e.AltName,
                 e.DateOfRegistered.ToLocalString(),
+                e.Settings,
                 e.UserRoles.Select(ur => new UserRoleDto(
                     ur.UserRole.Name
                 )).ToList()

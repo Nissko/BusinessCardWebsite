@@ -138,7 +138,10 @@ public class CourseModuleRepository : ICourseModuleRepository
                     entity.CourseTheme.ProgrammingLanguages.Id,
                     entity.CourseTheme.ProgrammingLanguages.Name,
                     entity.CourseTheme.ProgrammingLanguages.CountSelectedUser
-                )
+                ),
+                entity.CourseTheme.DisplayOrder,
+                entity.CourseTheme.IsActive,
+                entity.CourseTheme.IsFree
             )
         );
     }
@@ -161,7 +164,10 @@ public class CourseModuleRepository : ICourseModuleRepository
                     e.CourseTheme.ProgrammingLanguages.Id,
                     e.CourseTheme.ProgrammingLanguages.Name,
                     e.CourseTheme.ProgrammingLanguages.CountSelectedUser
-                )
+                ),
+                e.CourseTheme.DisplayOrder,
+                e.CourseTheme.IsActive,
+                e.CourseTheme.IsFree
             )
         )).ToList();
     }

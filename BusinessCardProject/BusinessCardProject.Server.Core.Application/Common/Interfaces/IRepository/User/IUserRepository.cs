@@ -50,6 +50,11 @@ public interface IUserRepository
     /// Добавление новой роли для пользователя
     /// </summary>
     Task<bool> AddNewRole(AddNewUserRoleRequestDto dto);
+
+    /// <summary>
+    /// Изменение настроек пользователя
+    /// </summary>
+    Task<bool> UpdateUserSettings(UserProfileSettingsDto settings);
     
     /// <summary>
     /// Авторизация пользоватея

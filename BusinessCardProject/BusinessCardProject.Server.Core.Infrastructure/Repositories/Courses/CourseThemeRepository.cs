@@ -23,7 +23,10 @@ public class CourseThemeRepository : ICourseThemeRepository
         try
         {
             var data = await _context.CourseTheme.ToListAsync();
-            return GetCourseThemeDto(data);
+            return GetCourseThemeDto(data
+                .Where(ct => ct.IsActive)
+                .OrderBy(ct => ct.DisplayOrder)
+                .ToList());
         }
         catch (Exception ex)
         {
@@ -36,7 +39,7 @@ public class CourseThemeRepository : ICourseThemeRepository
         try
         {
             var newCourseTheme = new CourseThemeEntity(dto.Name, dto.Description, dto.ProgrammingLanguageId,
-                TypeOfCourseEnum.FromId(dto.TypeOfCourseId));
+                TypeOfCourseEnum.FromId(dto.TypeOfCourseId), dto.DisplayOrder, dto.IsActive, dto.IsFree);
 
             var programLanguage = await _context.ProgrammingLanguageCourse.FindAsync([dto.ProgrammingLanguageId]);
             if (programLanguage == null) return null;
@@ -79,12 +82,14 @@ public class CourseThemeRepository : ICourseThemeRepository
             {
                 var programLanguage = await _context.ProgrammingLanguageCourse.FindAsync([dto.ProgrammingLanguageId]);
                 if (programLanguage == null) return null;
-                
-                courseTheme.Update(dto.Name, dto.Description, dto.TypeOfCourseId, programLanguage);
+
+                courseTheme.Update(dto.Name, dto.Description, dto.TypeOfCourseId, programLanguage, dto.DisplayOrder,
+                    dto.IsActive, dto.IsFree);
             }
             else
             {
-                courseTheme.Update(dto.Name, dto.Description, dto.TypeOfCourseId);
+                courseTheme.Update(dto.Name, dto.Description, dto.TypeOfCourseId, dto.DisplayOrder, dto.IsActive,
+                    dto.IsFree);
             }
 
             _context.CourseTheme.Update(courseTheme);
@@ -132,7 +137,10 @@ public class CourseThemeRepository : ICourseThemeRepository
             entity.ThemeDescription,
             entity.TypeOfCourse.Id,
             new ProgrammingLanguageDtos(entity.ProgrammingLanguages.Id, entity.ProgrammingLanguages.Name,
-                entity.ProgrammingLanguages.CountSelectedUser)
+                entity.ProgrammingLanguages.CountSelectedUser),
+            entity.DisplayOrder,
+            entity.IsActive,
+            entity.IsFree
         );
     }
 
@@ -147,7 +155,10 @@ public class CourseThemeRepository : ICourseThemeRepository
             e.ThemeDescription,
             e.TypeOfCourse.Id,
             new ProgrammingLanguageDtos(e.ProgrammingLanguages.Id, e.ProgrammingLanguages.Name,
-                e.ProgrammingLanguages.CountSelectedUser)
+                e.ProgrammingLanguages.CountSelectedUser),
+            e.DisplayOrder,
+            e.IsActive,
+            e.IsFree
         )).ToList();
     }
 }

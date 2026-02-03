@@ -5,4 +5,7 @@ public record UpdateCourseThemeRequestDto(
     string Name,
     string Description,
     Guid TypeOfCourseId,
-    Guid ProgrammingLanguageId);
+    Guid ProgrammingLanguageId,
+    int DisplayOrder,
+    bool IsActive,
+    bool IsFree);

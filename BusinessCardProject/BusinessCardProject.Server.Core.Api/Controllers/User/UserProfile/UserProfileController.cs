@@ -1,4 +1,5 @@
 ﻿using BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.User;
+using ContractualDtos.DTO.User.UserProfile.Dtos;
 using ContractualDtos.DTO.User.UserProfile.Requests;
 using Microsoft.AspNetCore.Mvc;
 
@@ -75,6 +76,13 @@ public class UserProfileController : ControllerBase
         return result ? Ok() : NoContent();
     }
 
+    [HttpPost("update-user-settings")]
+    public async Task<IActionResult> UpdateUserSettingsAsync([FromBody] UserProfileSettingsDto settings)
+    {
+        var result = await _repository.UpdateUserSettings(settings);
+        return result ? Ok() : NoContent();
+    }
+    
     /*[HttpPost("add-role/{id}")]
     public async Task<IActionResult> AddNewRoleAsync(AddNewUserRoleRequestDto dto)
     {

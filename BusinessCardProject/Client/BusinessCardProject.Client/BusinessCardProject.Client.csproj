@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CodeBeam.MudBlazor.Extensions.Qr" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.20" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.20" PrivateAssets="all" />
     <PackageReference Include="MudBlazor" Version="8.13.0" />
@@ -20,6 +21,11 @@
   <ItemGroup>
     <Folder Include="Pages\HomePage\" />
     <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ApiEndpoints\ApiEndpoints.csproj" />
+    <ProjectReference Include="..\..\ContractualDTOs\ContractualDtos\ContractualDtos.csproj" />
   </ItemGroup>
 
 </Project>

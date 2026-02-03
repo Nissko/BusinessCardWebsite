@@ -1,9 +1,6 @@
+using ApiEndpoints;
 using BusinessCardProject.Server.Core.Application.Application.Extensions;
 using BusinessCardProject.Server.Core.Infrastructure.Extensions;
-
-//TODO: Autofac, удалить?
-/*ContainerBuilder build = new ContainerBuilder();
-build.RegisterModule(new ApplicationModule());*/
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,38 +9,51 @@ builder.Services
     .AddApplication();
 
 // Настройка CORS
-/*builder.Services.AddCors(options =>
+builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowBlazorClient",
-        builder => builder.WithOrigins("https://localhost:7089")
+        builder => builder.WithOrigins(ApiEndpointRoutes.BaseFrontUrl)
             .AllowAnyMethod()
             .AllowAnyHeader());
-});*/
+});
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 
+// Настройка Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Business Card Project API",
+        Version = "v1",
+        Description = "API для управления бизнес-картами",
+        Contact = new Microsoft.OpenApi.Models.OpenApiContact
+        {
+            Name = "Ваше имя/команда",
+            Email = "email@example.com"
+        }
+    });
+});
 
 var app = builder.Build();
-app.UseCors("AllowBlazorClient");
 
+// Настройка конвейера middleware
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-
+    app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/openapi/v1.json", "OpenApi v1");
-        options.RoutePrefix = "swagger";
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Business Card API v1");
+        options.RoutePrefix = "swagger"; // Доступ по /swagger
+        options.DisplayRequestDuration();
+        options.EnableTryItOutByDefault();
     });
 }
 
+app.UseCors("AllowBlazorClient");
 app.UseHttpsRedirection();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

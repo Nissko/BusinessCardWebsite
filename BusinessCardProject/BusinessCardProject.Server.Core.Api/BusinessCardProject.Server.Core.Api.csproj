@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
@@ -13,11 +13,12 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6"/>
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ApiEndpoints\ApiEndpoints.csproj" />
       <ProjectReference Include="..\BusinessCardProject.Server.Core.Application\BusinessCardProject.Server.Core.Application.csproj" />
       <ProjectReference Include="..\BusinessCardProject.Server.Core.Domain\BusinessCardProject.Server.Core.Domain.csproj" />
       <ProjectReference Include="..\BusinessCardProject.Server.Core.Infrastructure\BusinessCardProject.Server.Core.Infrastructure.csproj" />

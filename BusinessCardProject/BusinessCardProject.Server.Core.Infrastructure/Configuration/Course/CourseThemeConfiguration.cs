@@ -22,6 +22,21 @@ public class CourseThemeConfiguration : IEntityTypeConfiguration<CourseThemeEnti
             .HasColumnName("Description")
             .HasMaxLength(1000)
             .HasComment("Описание");
+        
+        builder.Property<int>("_displayOrder")
+            .HasColumnName("DisplayOrder")
+            .HasDefaultValue(1)
+            .HasComment("Порядок отображения");
+        
+        builder.Property<bool>("_isActive")
+            .HasColumnName("IsActive")
+            .HasDefaultValue(false)
+            .HasComment("Нужно ли отображать");
+        
+        builder.Property<bool>("_isFree")
+            .HasColumnName("IsFree")
+            .HasDefaultValue(true)
+            .HasComment("Платная ли тема");
 
         builder.Property<TypeOfCourseEnum>("_typeOfCourseId")
             .HasColumnName("TypeOfCourse")

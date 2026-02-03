@@ -1,4 +1,6 @@
-﻿namespace ContractualDtos.DTO.User.UserProfile.Dtos;
+﻿using BusinessCardProject.Server.Core.Domain.Aggregates.User.Setting;
+
+namespace ContractualDtos.DTO.User.UserProfile.Dtos;
 
 /// <summary>
 /// DTO для возврата объекта
@@ -11,6 +13,7 @@ public record UserProfileDtos(
     string Email,
     string AltName,
     string CreatedOn,
+    UserSetting UserSetting,
     List<UserRoleDto> UserRoles)
 {
     /// <summary>
@@ -47,6 +50,11 @@ public record UserProfileDtos(
     /// Дата создания профиля
     /// </summary>
     public string CreatedOn { get; init; } = CreatedOn;
+    
+    /// <summary>
+    /// Настройки пользователя
+    /// </summary>
+    public UserSetting UserSetting { get; init; } = UserSetting;
     
     /// <summary>
     /// Роли пользователя

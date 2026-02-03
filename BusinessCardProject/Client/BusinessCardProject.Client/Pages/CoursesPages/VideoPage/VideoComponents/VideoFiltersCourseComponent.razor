@@ -1,4 +1,8 @@
-﻿<MudHidden Breakpoint="Breakpoint.SmAndUp">
+﻿@using ApiEndpoints
+@inject HttpClient HttpClient
+@using ContractualDtos.DTO.Course.CourseTheme.Dtos
+
+<MudHidden Breakpoint="Breakpoint.SmAndUp">
     <MudButton @onclick="ToggleShowFilters"
                Variant="Variant.Outlined"
                Color="Color.Default"
@@ -20,36 +24,30 @@
                        RequiredError="Выбор курса обязателен!"
                        Margin="Margin.Dense"
                        ShrinkLabel>
-                @foreach (var test in _testValues)
+                @if (_coursers != null)
                 {
-                    <MudSelectItem Value="@test">@test</MudSelectItem>
+                    foreach (var course in _coursers)
+                    {
+                        <MudSelectItem Value="@course.Id.ToString()">@course.Name</MudSelectItem>
+                    }
                 }
-            </MudSelect>
-
-            <MudSelect T="string"
-                       Placeholder="Модуль"
-                       Variant="Variant.Text"
-                       Clearable="true"
-                       Required="true"
-                       RequiredError="Выбор модуля обязателен!"
-                       Margin="Margin.Dense"
-                       ShrinkLabel>
-                @foreach (var test in _testValues)
+                else
                 {
-                    <MudSelectItem Value="@test">@test</MudSelectItem>
+                    <MudSelectItem T="string" Value="@string.Empty" Disabled="true">
+                        <MudSkeleton />
+                    </MudSelectItem>
                 }
+                @*TODO: Сделать MudSkeleton*@
             </MudSelect>
         
             <MudItem Class="d-flex align-center">
-                <MudCheckBox @bind-Value="CheckBox1" UncheckedColor="Color.Error"
+                <MudCheckBox @bind-Value="CheckBoxIsFree" UncheckedColor="Color.Error"
                              Color="Color.Success" CheckedIcon="@Icons.Material.Filled.AttachMoney"
                              UncheckedIcon="@Icons.Material.Filled.MoneyOff"></MudCheckBox>
                 <MudText Class="ml-1">
-                    @(CheckBox1 ? "Платные" : "Бесплатные")
+                    @(CheckBoxIsFree ? "Платные" : "Бесплатные")
                 </MudText>
             </MudItem>
-            
-            
             
             <MudButton Variant="Variant.Filled"
                        Color="Color.Info"
@@ -80,21 +78,19 @@
     /// </summary>
     private bool IsShowFiltersCourses { get; set; } = true;
 
-    public bool CheckBox1 { get; set; } = true;
+    public bool CheckBoxIsFree { get; set; } = true;
 
     /// <summary>
-    /// TODO:Тест значения, удалить
+    /// Темы курсов из БД
     /// </summary>
-    private readonly List<string> _testValues = new();
+    private CourseThemeDtos[]? _coursers;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        //TODO:Тестовые данные (удалить после)
-        _testValues.Add("База");
-        _testValues.Add("Основы ООП.");
-        _testValues.Add("Разработка микросервиса. С использованием RabbitMQ.");
-        _testValues.Add("Разработка микросервиса. С использованием Grpc.");
+
+        _coursers = await HttpClient.GetFromJsonAsync<CourseThemeDtos[]?>
+            ($"{ApiEndpointRoutes.BaseUrl}{ApiEndpointRoutes.CourseThemes.GetAll}");
     }
 
     /// <summary>

@@ -4,11 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>ApiEndpoints</RootNamespace>
     </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
-      <PackageReference Include="NodaTime" Version="3.3.0" />
-    </ItemGroup>
 
 </Project>
