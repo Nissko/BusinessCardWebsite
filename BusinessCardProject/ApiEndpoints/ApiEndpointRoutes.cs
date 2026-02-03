@@ -11,6 +11,10 @@ public static class ApiEndpointRoutes
     /// Url для frontend(-a)
     /// </summary>
     public static string BaseFrontUrl => "https://localhost:7209";
+    
+    //public static string BaseUrl => "http://localhost:5000/api/";
+
+    //public static string BaseFrontUrl => "http://localhost:5000";
 
     /// <summary>
     /// Ссылки на темы курсов

@@ -4,6 +4,9 @@ using BusinessCardProject.Server.Core.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+/*TODO: вкл.на хостинге*/
+//builder.Services.AddResponseCaching();
+
 builder.Services
     .AddCollectionInfrastructure(builder.Configuration)
     .AddApplication();
@@ -39,7 +42,7 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Настройка конвейера middleware
+// TODO: избавиться от swagger(-a) и переделать на тесты
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -50,6 +53,12 @@ if (app.Environment.IsDevelopment())
         options.DisplayRequestDuration();
         options.EnableTryItOutByDefault();
     });
+}
+else
+{
+    /*TODO: включить на серваке*/
+    app.UseResponseCaching();
+    app.UseRouting();
 }
 
 app.UseCors("AllowBlazorClient");

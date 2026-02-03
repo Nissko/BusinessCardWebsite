@@ -15,7 +15,11 @@ public class CourseThemeController : ControllerBase
         _repository = repository;
     }
 
+    /// <summary>
+    /// TODO: [ResponseCache(Duration = 600)] использовать при вкл.кэшировании
+    /// </summary>
     [HttpGet("get")]
+    [ResponseCache(Duration = 300)]
     public async Task<IActionResult> GetAllAsync()
     {
         var result = await _repository.GetAllAsync();
