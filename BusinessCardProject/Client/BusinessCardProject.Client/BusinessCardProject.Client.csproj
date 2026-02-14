@@ -28,4 +28,9 @@
     <ProjectReference Include="..\..\ContractualDTOs\ContractualDtos\ContractualDtos.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\images\Donation\QR_Dark.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\images\Donation\QR_Light.png" />
+  </ItemGroup>
+
 </Project>

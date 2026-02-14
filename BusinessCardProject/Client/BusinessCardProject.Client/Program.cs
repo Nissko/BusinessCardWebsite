@@ -1,4 +1,3 @@
-using ApiEndpoints;
 using BusinessCardProject.Client;
 using BusinessCardProject.Client.Services.ProjectInfoService;
 using Microsoft.AspNetCore.Components.Web;
@@ -10,12 +9,14 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 /*Добавление библиотеки MudBlazor*/
 builder.Services.AddMudServices();
 builder.Services.AddMudBlazorResizeListener();
+
 /*Инициализация кэша*/
 builder.Services.AddSingleton<UserSettingService>();
 
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(ApiEndpointRoutes.BaseFrontUrl) });
+builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri("https://localhost:7284/") });
+//builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(ApiEndpointRoutes.BaseUrlProd) });
 
 await builder.Build().RunAsync();

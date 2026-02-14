@@ -1,81 +1,83 @@
-﻿using BusinessCardProject.Server.Core.Domain.Commons;
+﻿using BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme;
+using BusinessCardProject.Server.Core.Domain.Commons;
 
-namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course;
-
-/// <summary>
-/// ЯП для изучения
-/// </summary>
-public class ProgrammingLanguageCourseEntity : Entity
+namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
 {
-    public ProgrammingLanguageCourseEntity()
+    /// <summary>
+    /// ЯП для изучения
+    /// </summary>
+    public class ProgrammingLanguageCourseEntity : Entity
     {
-        CourseThemes = new HashSet<CourseThemeEntity>();
-    }
+        public ProgrammingLanguageCourseEntity()
+        {
+            CourseThemes = new HashSet<CourseThemeEntity>();
+        }
     
-    public ProgrammingLanguageCourseEntity(string name, int countSelectedUser) : this()
-    {
-        _name = name;
-        _countSelectedUser = countSelectedUser;
-    }
+        public ProgrammingLanguageCourseEntity(string name, int countSelectedUser) : this()
+        {
+            _name = name;
+            _countSelectedUser = countSelectedUser;
+        }
 
-    #region Public Fields
+        #region Public Fields
 
-    /// <summary>
-    /// Название яп
-    /// </summary>
-    public string Name => _name;
+        /// <summary>
+        /// Название яп
+        /// </summary>
+        public string Name => _name;
 
-    /// <summary>
-    /// Сколько человек выбрали этот ЯП
-    /// <example>Для статистики</example>
-    /// </summary>
-    public int CountSelectedUser => _countSelectedUser;
+        /// <summary>
+        /// Сколько человек выбрали этот ЯП
+        /// <example>Для статистики</example>
+        /// </summary>
+        public int CountSelectedUser => _countSelectedUser;
 
-    #endregion
+        #endregion
 
-    #region Private properties
+        #region Private properties
 
-    /// <summary>
-    /// Название яп
-    /// </summary>
-    private string _name;
+        /// <summary>
+        /// Название яп
+        /// </summary>
+        private string _name;
 
-    /// <summary>
-    /// Сколько человек выбрали этот ЯП
-    /// <example>Для статистики</example>
-    /// </summary>
-    private int _countSelectedUser;
+        /// <summary>
+        /// Сколько человек выбрали этот ЯП
+        /// <example>Для статистики</example>
+        /// </summary>
+        private int _countSelectedUser;
 
-    #endregion
+        #endregion
     
-    #region virtual
+        #region virtual
     
-    /// <summary>
-    /// Коллекция категорий подготовок
-    /// </summary>
-    public virtual ICollection<CourseThemeEntity> CourseThemes { get; private set; }
+        /// <summary>
+        /// Коллекция категорий подготовок
+        /// </summary>
+        public virtual ICollection<CourseThemeEntity> CourseThemes { get; private set; }
 
-    #endregion
+        #endregion
 
-    #region functions
+        #region functions
 
-    /// <summary>
-    /// Метод для добавления категории
-    /// </summary>
-    public void AddTheme(CourseThemeEntity theme)
-    {
-        CourseThemes.Add(theme);
-    }
+        /// <summary>
+        /// Метод для добавления категории
+        /// </summary>
+        public void AddTheme(CourseThemeEntity theme)
+        {
+            CourseThemes.Add(theme);
+        }
 
-    /// <summary>
-    /// Изменение информации о ЯП
-    /// </summary>
-    /// <param name="name"></param>
-    public void Update(string name)
-    {
-        _name = name;
-    }
+        /// <summary>
+        /// Изменение информации о ЯП
+        /// </summary>
+        /// <param name="name"></param>
+        public void Update(string name)
+        {
+            _name = name;
+        }
 
-    #endregion
+        #endregion
     
+    }
 }

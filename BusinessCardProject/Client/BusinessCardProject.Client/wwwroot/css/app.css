@@ -44,6 +44,12 @@ html, body {
     color: rgb(74 134 255) !important;
 }
 
+.mud-treeview-item-content{
+    border-radius: 50px !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
 /*
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;

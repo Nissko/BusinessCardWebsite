@@ -4,232 +4,255 @@ using BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.
 using BusinessCardProject.Server.Core.Domain.Aggregates.User;
 using BusinessCardProject.Server.Core.Domain.Aggregates.User.Setting;
 using BusinessCardProject.Server.Core.Domain.Enums.User;
+using ContractualDtos.DTO.Table;
 using ContractualDtos.DTO.User.UserProfile.Dtos;
 using ContractualDtos.DTO.User.UserProfile.Requests;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 
-namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Users;
-
-public class UserRepository : IUserRepository
+namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Users
 {
-    private readonly IProjectDbContext _context;
-    private readonly IPasswordHash _passwordHash;
-
-    public UserRepository(IProjectDbContext context, IPasswordHash passwordHash)
+    public class UserRepository : IUserRepository
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-        _passwordHash = passwordHash ?? throw new ArgumentNullException(nameof(passwordHash));
-    }
+        private readonly IProjectDbContext _context;
+        private readonly IPasswordHash _passwordHash;
 
-    #region crud
-
-    public async Task<List<UserProfileDtos>> GetAllAsync()
-    {
-        try
+        public UserRepository(IProjectDbContext context, IPasswordHash passwordHash)
         {
-            var data = await _context.UserProfile.ToListAsync();
-            return GetUserProfileDto(data);
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _passwordHash = passwordHash ?? throw new ArgumentNullException(nameof(passwordHash));
         }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
-    }
 
-    public async Task<bool?> Create(CreateUserProfileRequestDto dto)
-    {
-        try
-        {
-            var hashPass = await _passwordHash.HashPassword(dto.Password);
-            var newUserProfile = new UserProfileEntity(dto.Surname, dto.Name, dto.Patronymic, dto.Email,
-                dto.AltName, hashPass);
-            var newUserRole = new UserRoleEntity(newUserProfile.Id, UserRoleEnum.User);
+        #region crud
 
-            newUserProfile.AddRole(newUserRole);
-            _context.UserProfile.Add(newUserProfile);
-            await SaveChanges();
-
-            return true;
-        }
-        catch (Exception ex)
+        public async Task<TableResponse<UserProfileDtos>> GetAllAsync(
+            int page,
+            int pageSize,
+            string? search = null,
+            string? sortBy = null,
+            string? sortDirection = "Ascending")
         {
-            throw new Exception(ex.Message, ex);
-        }
-    }
-
-    public async Task<UserProfileDtos?> Read(Guid id)
-    {
-        try
-        {
-            var userProfile = await _context.UserProfile.FindAsync(id);
-            return userProfile == null ? null : GetUserProfileDto(userProfile);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
-    }
-
-    public async Task<UserProfileEntity> GetUserEntityFromId(Guid id)
-    {
-        try
-        {
-            var userProfile = await _context.UserProfile.FindAsync(id) ??
-                              throw new Exception("Не удалось найти профиль пользователя");
-
-            return userProfile;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
-    }
-
-    public async Task<UserProfileDtos?> Update(UpdateUserProfileRequestDto dto)
-    {
-        try
-        {
-            var userProfile = await _context.UserProfile.FindAsync(dto.Id);
-            if (userProfile == null) return null;
-            if (userProfile.AltName != dto.AltName)
+            try
             {
-                var checkNewAltName = await _context.UserProfile.AnyAsync(t => t.AltName == dto.AltName);
-                if (checkNewAltName)
+                var dbQuery = _context.UserProfile.AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(search))
                 {
-                    throw new Exception("Такой никнейм уже занят");
+                    var searchLower = search.ToLower();
+                    dbQuery = dbQuery.Where(u =>
+                        u.Surname.ToLower().Contains(searchLower) ||
+                        u.Name.ToLower().Contains(searchLower) ||
+                        u.Patronymic.ToLower().Contains(searchLower) ||
+                        u.AltName.ToLower().Contains(searchLower) ||
+                        u.Email.ToLower().Contains(searchLower));
                 }
+
+                dbQuery = sortBy?.ToLower() switch
+                {
+                    "surname" => sortDirection == "Descending"
+                        ? dbQuery.OrderByDescending(u => u.Surname)
+                        : dbQuery.OrderBy(u => u.Surname),
+
+                    "altname" => sortDirection == "Descending"
+                        ? dbQuery.OrderByDescending(u => u.AltName)
+                        : dbQuery.OrderBy(u => u.AltName),
+
+                    "email" => sortDirection == "Descending"
+                        ? dbQuery.OrderByDescending(u => u.Email)
+                        : dbQuery.OrderBy(u => u.Email),
+
+                    "createdon" => sortDirection == "Descending"
+                        ? dbQuery.OrderByDescending(u => u.DateOfRegistered)
+                        : dbQuery.OrderBy(u => u.DateOfRegistered),
+
+                    _ => dbQuery.OrderBy(u => u.Surname)
+                };
+
+                var totalCount = await dbQuery.CountAsync();
+                var searchData = await dbQuery
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                return new TableResponse<UserProfileDtos>(GetUserProfileDto(searchData), totalCount);
             }
-
-            userProfile.Update(dto.Surname, dto.Name, dto.Patronymic, dto.Email, dto.AltName);
-            _context.UserProfile.Update(userProfile);
-            await SaveChanges();
-
-            return GetUserProfileDto(userProfile);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
-    }
-
-    public async Task<bool> SafeDelete(Guid id)
-    {
-        try
-        {
-            var userProfile = await _context.UserProfile.FindAsync([id]);
-            if (userProfile == null) return false;
-            if (userProfile.IsBlocked) throw new Exception("Пользователь уже заблокирован");
-
-            userProfile.DeactivateAccount();
-            _context.UserProfile.Update(userProfile);
-            await SaveChanges();
-
-            return true;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
-    }
-
-    public async Task<bool> RecoveryUserProfile(Guid id)
-    {
-        try
-        {
-            var userProfile = await _context.UserProfile.FindAsync([id]);
-            if (userProfile == null) return false;
-            if (!userProfile.IsActive && userProfile.IsBlocked)
+            catch (Exception ex)
             {
-                userProfile.RecoveryAccount();
+                throw new Exception(ex.Message, ex);
+            }
+        }
 
+        public async Task<bool?> Create(CreateUserProfileRequestDto dto)
+        {
+            try
+            {
+                var hashPass = await _passwordHash.HashPassword(dto.Password);
+                var newUserProfile = new UserProfileEntity(dto.Surname, dto.Name, dto.Patronymic, dto.Email,
+                    dto.AltName, hashPass);
+                var newUserRole = new UserRoleEntity(newUserProfile.Id, UserRoleEnum.User);
+
+                newUserProfile.AddRole(newUserRole);
+                _context.UserProfile.Add(newUserProfile);
+                await SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<UserProfileDtos?> Read(Guid id)
+        {
+            try
+            {
+                var userProfile = await _context.UserProfile.FindAsync(id);
+                return userProfile == null ? null : GetUserProfileDto(userProfile);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<UserProfileEntity> GetUserEntityFromId(Guid id)
+        {
+            try
+            {
+                var userProfile = await _context.UserProfile.FindAsync(id) ??
+                                  throw new Exception("Не удалось найти профиль пользователя");
+
+                return userProfile;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<UserProfileDtos?> Update(UpdateUserProfileRequestDto dto)
+        {
+            try
+            {
+                var userProfile = await _context.UserProfile.FindAsync(dto.Id);
+                if (userProfile == null) return null;
+                if (userProfile.AltName != dto.AltName)
+                {
+                    var checkNewAltName = await _context.UserProfile.AnyAsync(t => t.AltName == dto.AltName);
+                    if (checkNewAltName)
+                    {
+                        throw new Exception("Такой никнейм уже занят");
+                    }
+                }
+
+                userProfile.Update(dto.Surname, dto.Name, dto.Patronymic, dto.Email, dto.AltName);
+                _context.UserProfile.Update(userProfile);
+                await SaveChanges();
+
+                return GetUserProfileDto(userProfile);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<bool> SafeDelete(Guid id)
+        {
+            try
+            {
+                var userProfile = await _context.UserProfile.FindAsync([id]);
+                if (userProfile == null) return false;
+                if (userProfile.IsBlocked) throw new Exception("Пользователь уже заблокирован");
+
+                userProfile.DeactivateAccount();
                 _context.UserProfile.Update(userProfile);
                 await SaveChanges();
 
                 return true;
             }
-
-            throw new Exception("Пользователь не был удален.");
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
-        catch (Exception ex)
+
+        public async Task<bool> RecoveryUserProfile(Guid id)
         {
-            throw new Exception(ex.Message, ex);
+            try
+            {
+                var userProfile = await _context.UserProfile.FindAsync([id]);
+                if (userProfile == null) return false;
+                if (!userProfile.IsActive && userProfile.IsBlocked)
+                {
+                    userProfile.RecoveryAccount();
+
+                    _context.UserProfile.Update(userProfile);
+                    await SaveChanges();
+
+                    return true;
+                }
+
+                throw new Exception("Пользователь не был удален.");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
-    }
 
-    public async Task<bool> AddNewRole(AddNewUserRoleRequestDto dto)
-    {
-        var role = UserRoleEnum.FromId(dto.RoleId);
-        if (dto.UserProfile.UserRoles.FirstOrDefault(t => t.UserRole == role) != null)
-            throw new Exception("Данная роль уже есть у пользователя");
-
-        _context.UserRole.Add(new UserRoleEntity(dto.UserProfile.Id, role));
-        await SaveChanges();
-
-        return true;
-    }
-
-    public async Task<bool> UpdateUserSettings(UserProfileSettingsDto settings)
-    {
-        var user = await _context.UserProfile.FirstOrDefaultAsync(t => t.Id == settings.UserProfileId);
-        if (user == null) return false;
-        var currentDateTime = SystemClock.Instance.GetCurrentInstant();
-
-        user.Settings = new UserSetting
+        public async Task<bool> AddNewRole(AddNewUserRoleRequestDto dto)
         {
-            [SettingKeys.IsDark] = settings.IsDark,
-            [SettingKeys.IsDrawerOpen] = settings.IsDrawerOpen,
-            [SettingKeys.UpdateTime] = currentDateTime.ToLocalString(),
-            [SettingKeys.Platform] = (int)settings.Platform
-        };
+            var role = UserRoleEnum.FromId(dto.RoleId);
+            if (dto.UserProfile.UserRoles.FirstOrDefault(t => t.UserRole == role) != null)
+                throw new Exception("Данная роль уже есть у пользователя");
 
-        _context.UserProfile.Update(user);
-        await SaveChanges();
-        return true;
-    }
+            _context.UserRole.Add(new UserRoleEntity(dto.UserProfile.Id, role));
+            await SaveChanges();
 
-    #endregion
+            return true;
+        }
 
-    public async Task<bool> Login(AuthUserDto dto)
-    {
-        var userProfile = await _context.UserProfile.FirstOrDefaultAsync(t => t.AltName == dto.Nickname);
-        if (userProfile == null) return false;
+        public async Task<bool> UpdateUserSettings(UserProfileSettingsDto settings)
+        {
+            var user = await _context.UserProfile.FirstOrDefaultAsync(t => t.Id == settings.UserProfileId);
+            if (user == null) return false;
+            var currentDateTime = SystemClock.Instance.GetCurrentInstant();
 
-        var result = await _passwordHash.VerifyPassword(userProfile.Password, dto.Password);
-        return result;
-    }
+            user.Settings = new UserSetting
+            {
+                [SettingKeys.IsDark] = settings.IsDark,
+                [SettingKeys.IsDrawerOpen] = settings.IsDrawerOpen,
+                [SettingKeys.UpdateTime] = currentDateTime.ToLocalString(),
+                [SettingKeys.Platform] = (int)settings.Platform
+            };
 
-    private async Task SaveChanges()
-    {
-        await _context.SaveChangesAsync(CancellationToken.None);
-    }
+            _context.UserProfile.Update(user);
+            await SaveChanges();
+            return true;
+        }
 
-    /// <summary>
-    /// Формирование DTO для return
-    /// </summary>
-    private static UserProfileDtos GetUserProfileDto(UserProfileEntity e)
-    {
-        return new UserProfileDtos(
-            e.Id,
-            e.Surname,
-            e.Name,
-            e.Patronymic,
-            e.Email,
-            e.AltName,
-            e.DateOfRegistered.ToLocalString(),
-            e.Settings,
-            e.UserRoles.Select(ur => new UserRoleDto(
-                ur.UserRole.Name
-            )).ToList()
-        );
-    }
+        #endregion
 
-    /// <summary>
-    /// Формирование DTOs для return
-    /// </summary>
-    private static List<UserProfileDtos> GetUserProfileDto(List<UserProfileEntity> entities)
-    {
-        return entities.Select(e =>
+        public async Task<bool> Login(AuthUserDto dto)
+        {
+            var userProfile = await _context.UserProfile.FirstOrDefaultAsync(t => t.AltName == dto.Nickname);
+            if (userProfile == null) return false;
+
+            var result = await _passwordHash.VerifyPassword(userProfile.Password, dto.Password);
+            return result;
+        }
+
+        private async Task SaveChanges()
+        {
+            await _context.SaveChangesAsync(CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Формирование DTO для return
+        /// </summary>
+        private static UserProfileDtos GetUserProfileDto(UserProfileEntity e)
         {
             return new UserProfileDtos(
                 e.Id,
@@ -244,6 +267,29 @@ public class UserRepository : IUserRepository
                     ur.UserRole.Name
                 )).ToList()
             );
-        }).ToList();
+        }
+
+        /// <summary>
+        /// Формирование DTOs для return
+        /// </summary>
+        private static List<UserProfileDtos> GetUserProfileDto(List<UserProfileEntity> entities)
+        {
+            return entities.Select(e =>
+            {
+                return new UserProfileDtos(
+                    e.Id,
+                    e.Surname,
+                    e.Name,
+                    e.Patronymic,
+                    e.Email,
+                    e.AltName,
+                    e.DateOfRegistered.ToLocalString(),
+                    e.Settings,
+                    e.UserRoles.Select(ur => new UserRoleDto(
+                        ur.UserRole.Name
+                    )).ToList()
+                );
+            }).ToList();
+        }
     }
 }

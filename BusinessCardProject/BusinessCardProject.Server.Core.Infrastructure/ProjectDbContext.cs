@@ -1,7 +1,7 @@
 ﻿using BusinessCardProject.Server.Core.Application.Common.Interfaces;
 using BusinessCardProject.Server.Core.Domain.Aggregates.Course;
+using BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme;
 using BusinessCardProject.Server.Core.Domain.Aggregates.User;
-using BusinessCardProject.Server.Core.Domain.Enums.Course;
 using BusinessCardProject.Server.Core.Infrastructure.Configuration.Course;
 using BusinessCardProject.Server.Core.Infrastructure.Configuration.User;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +20,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure
         public DbSet<ProgrammingLanguageCourseEntity> ProgrammingLanguageCourse { get; set; }
         public DbSet<CourseAuthorEntity> CourseAuthor { get; set; }
         public DbSet<CourseThemeEntity> CourseTheme { get; set; }
-        public DbSet<TypeOfCourseEnum> TypeOfCourse { get; set; }
+        public DbSet<ThemeRecommendationEntity> ThemeRecommendation { get; set; }
         public DbSet<CourseModuleEntity> CourseModule { get; set; }
         public DbSet<VideoCourseEntity> VideoCourse { get; set; }
 
@@ -42,6 +42,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure
             modelBuilder.ApplyConfiguration(new ProgrammingLanguageCourseConfiguration());
             modelBuilder.ApplyConfiguration(new CourseAuthorEntityConfiguration());
             modelBuilder.ApplyConfiguration(new CourseThemeConfiguration());
+            modelBuilder.ApplyConfiguration(new ThemeRecommendationConfiguration());
             modelBuilder.ApplyConfiguration(new CourseModuleConfiguration());
             modelBuilder.ApplyConfiguration(new VideoCourseConfiguration());
 
@@ -68,10 +69,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure
             optionsBuilder
                 .UseNpgsql(
                     "Server=109.205.58.47;User Id=persProjectUser;Password=7FEpX_wl6g;Port=5432;Database=testDb;",
-                    npgsqlOptions => 
-                    {
-                        npgsqlOptions.UseNodaTime();
-                    })
+                    npgsqlOptions => { npgsqlOptions.UseNodaTime(); })
                 .UseLazyLoadingProxies();
         }
 

@@ -9,6 +9,8 @@
         Servers,
         Orders,
         Users,
+        CourseThemes,
+        CourseModules,
         Audits
     }
 }

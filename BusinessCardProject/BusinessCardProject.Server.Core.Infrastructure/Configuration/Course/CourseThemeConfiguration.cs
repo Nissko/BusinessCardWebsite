@@ -1,58 +1,59 @@
-﻿using BusinessCardProject.Server.Core.Domain.Aggregates.Course;
+﻿using BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme;
 using BusinessCardProject.Server.Core.Domain.Enums.Course;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BusinessCardProject.Server.Core.Infrastructure.Configuration.Course;
-
-public class CourseThemeConfiguration : IEntityTypeConfiguration<CourseThemeEntity>
+namespace BusinessCardProject.Server.Core.Infrastructure.Configuration.Course
 {
-    public void Configure(EntityTypeBuilder<CourseThemeEntity> builder)
+    public class CourseThemeConfiguration : IEntityTypeConfiguration<CourseThemeEntity>
     {
-        builder.ToTable("Themes");
-        builder.HasKey(x => x.Id);
+        public void Configure(EntityTypeBuilder<CourseThemeEntity> builder)
+        {
+            builder.ToTable("Themes");
+            builder.HasKey(x => x.Id);
 
-        builder.Property<string>("_themeName")
-            .HasColumnName("Name")
-            .HasMaxLength(200)
-            .IsRequired()
-            .HasComment("Название");
+            builder.Property<string>("_themeName")
+                .HasColumnName("Name")
+                .HasMaxLength(200)
+                .IsRequired()
+                .HasComment("Название");
 
-        builder.Property<string>("_themeDescription")
-            .HasColumnName("Description")
-            .HasMaxLength(1000)
-            .HasComment("Описание");
+            builder.Property<string>("_themeDescription")
+                .HasColumnName("Description")
+                .HasMaxLength(1000)
+                .HasComment("Описание");
         
-        builder.Property<int>("_displayOrder")
-            .HasColumnName("DisplayOrder")
-            .HasDefaultValue(1)
-            .HasComment("Порядок отображения");
+            builder.Property<int>("_displayOrder")
+                .HasColumnName("DisplayOrder")
+                .HasDefaultValue(1)
+                .HasComment("Порядок отображения");
         
-        builder.Property<bool>("_isActive")
-            .HasColumnName("IsActive")
-            .HasDefaultValue(false)
-            .HasComment("Нужно ли отображать");
+            builder.Property<bool>("_isActive")
+                .HasColumnName("IsActive")
+                .HasDefaultValue(false)
+                .HasComment("Нужно ли отображать");
         
-        builder.Property<bool>("_isFree")
-            .HasColumnName("IsFree")
-            .HasDefaultValue(true)
-            .HasComment("Платная ли тема");
+            builder.Property<bool>("_isFree")
+                .HasColumnName("IsFree")
+                .HasDefaultValue(true)
+                .HasComment("Платная ли тема");
 
-        builder.Property<TypeOfCourseEnum>("_typeOfCourseId")
-            .HasColumnName("TypeOfCourse")
-            .HasConversion(
-                v => v.Id,
-                v => TypeOfCourseEnum.List().First(t => t.Id == v));
+            builder.Property<TypeOfCourseEnum>("_typeOfCourseId")
+                .HasColumnName("TypeOfCourse")
+                .HasConversion(
+                    v => v.Id,
+                    v => TypeOfCourseEnum.List().First(t => t.Id == v));
 
-        builder.HasOne(x => x.ProgrammingLanguages)
-            .WithMany(x => x.CourseThemes)
-            .HasForeignKey(x=>x.ProgrammingLanguageId)
-            .OnDelete(DeleteBehavior.SetNull);
+            builder.HasOne(x => x.ProgrammingLanguages)
+                .WithMany(x => x.CourseThemes)
+                .HasForeignKey(x=>x.ProgrammingLanguageId)
+                .OnDelete(DeleteBehavior.SetNull);
 
-        #region Индексы
+            #region Индексы
 
-        builder.HasIndex(x=>x.ProgrammingLanguageId);
+            builder.HasIndex(x=>x.ProgrammingLanguageId);
 
-        #endregion
+            #endregion
+        }
     }
 }

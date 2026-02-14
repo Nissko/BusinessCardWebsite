@@ -2,21 +2,22 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BusinessCardProject.Server.Core.Infrastructure.Configuration.User;
-
-public class UserRoleEnumConfiguration : IEntityTypeConfiguration<UserRoleEnum>
+namespace BusinessCardProject.Server.Core.Infrastructure.Configuration.User
 {
-    public void Configure(EntityTypeBuilder<UserRoleEnum> builder)
+    public class UserRoleEnumConfiguration : IEntityTypeConfiguration<UserRoleEnum>
     {
-        builder.ToTable("TypeUserRoles");
+        public void Configure(EntityTypeBuilder<UserRoleEnum> builder)
+        {
+            builder.ToTable("TypeUserRoles");
 
-        builder.Property(o => o.Id)
-            .ValueGeneratedNever();
+            builder.Property(o => o.Id)
+                .ValueGeneratedNever();
 
-        builder.Property(o => o.Name)
-            .HasMaxLength(200)
-            .HasComment("Название роли");
+            builder.Property(o => o.Name)
+                .HasMaxLength(200)
+                .HasComment("Название роли");
 
-        builder.HasIndex(x => x.Id);
+            builder.HasIndex(x => x.Id);
+        }
     }
 }

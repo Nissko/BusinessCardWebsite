@@ -5,63 +5,64 @@ using ContractualDtos.DTO.Course.CourseAuthor.Requests;
 using ContractualDtos.DTO.User.UserProfile.Requests;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BusinessCardProject.Server.Core.Api.Controllers.Course.CourseAuthor;
-
-[ApiController]
-[Route("api/[controller]")]
-public class CourseAuthorController : ControllerBase
+namespace BusinessCardProject.Server.Core.Api.Controllers.Course.CourseAuthor
 {
-    private readonly IUserRepository _userRepository;
-    private readonly ICourseAuthorRepository _courseAuthorRepository;
-
-    public CourseAuthorController(IUserRepository userRepository, ICourseAuthorRepository courseAuthorRepository)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CourseAuthorController : ControllerBase
     {
-        _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-        _courseAuthorRepository = courseAuthorRepository
-                                  ?? throw new ArgumentNullException(nameof(courseAuthorRepository));
-    }
+        private readonly IUserRepository _userRepository;
+        private readonly ICourseAuthorRepository _courseAuthorRepository;
 
-    [HttpGet("get")]
-    public async Task<IActionResult> GetAllAsync()
-    {
-        var result = await _courseAuthorRepository.GetAllAsync();
-        return result.Count != 0 ? Ok(result) : NoContent();
-    }
+        public CourseAuthorController(IUserRepository userRepository, ICourseAuthorRepository courseAuthorRepository)
+        {
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _courseAuthorRepository = courseAuthorRepository
+                                      ?? throw new ArgumentNullException(nameof(courseAuthorRepository));
+        }
 
-    [HttpPost("create")]
-    public async Task<IActionResult> CreateAsync([FromBody] Guid id)
-    {
-        var user = await _userRepository.GetUserEntityFromId(id);
-        var userAddRole = await _userRepository.AddNewRole(
-            new AddNewUserRoleRequestDto(user, UserRoleEnum.Author.Id));
-        if (!userAddRole) return BadRequest();
+        [HttpGet("get")]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var result = await _courseAuthorRepository.GetAllAsync();
+            return result.Count != 0 ? Ok(result) : NoContent();
+        }
 
-        var result = await _courseAuthorRepository.Create(new CreateCourseAuthorRequestDto(
-            user.Surname, user.Name, user.Patronymic, user.AltName));
-        return result != null ? Created() : BadRequest();
-    }
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateAsync([FromBody] Guid id)
+        {
+            var user = await _userRepository.GetUserEntityFromId(id);
+            var userAddRole = await _userRepository.AddNewRole(
+                new AddNewUserRoleRequestDto(user, UserRoleEnum.Author.Id));
+            if (!userAddRole) return BadRequest();
 
-    [HttpGet("find/{id}")]
-    public async Task<IActionResult> FindAsync(Guid id)
-    {
-        var result = await _courseAuthorRepository.Read(id);
-        return result != null ? Ok(result) : NoContent();
-    }
+            var result = await _courseAuthorRepository.Create(new CreateCourseAuthorRequestDto(
+                user.Surname, user.Name, user.Patronymic, user.AltName));
+            return result != null ? Created() : BadRequest();
+        }
 
-    [HttpPatch("update")]
-    public async Task<IActionResult> UpdateAsync([FromBody] Guid userId, Guid authorId)
-    {
-        var user = await _userRepository.Read(userId);
-        if (user == null) return BadRequest();
-        var result = await _courseAuthorRepository.Update(new UpdateCourseAuthorRequestDto(
-            authorId, user.Surname, user.Name, user.Patronymic, user.AltName));
-        return result != null ? Ok(result) : NoContent();
-    }
+        [HttpGet("find/{id}")]
+        public async Task<IActionResult> FindAsync(Guid id)
+        {
+            var result = await _courseAuthorRepository.Read(id);
+            return result != null ? Ok(result) : NoContent();
+        }
 
-    [HttpDelete("delete/{id}")]
-    public async Task<IActionResult> DeleteAsync(Guid id)
-    {
-        var result = await _courseAuthorRepository.Delete(id);
-        return result ? Ok() : NoContent();
+        [HttpPatch("update")]
+        public async Task<IActionResult> UpdateAsync([FromBody] Guid userId, Guid authorId)
+        {
+            var user = await _userRepository.Read(userId);
+            if (user == null) return BadRequest();
+            var result = await _courseAuthorRepository.Update(new UpdateCourseAuthorRequestDto(
+                authorId, user.Surname, user.Name, user.Patronymic, user.AltName));
+            return result != null ? Ok(result) : NoContent();
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteAsync(Guid id)
+        {
+            var result = await _courseAuthorRepository.Delete(id);
+            return result ? Ok() : NoContent();
+        }
     }
 }

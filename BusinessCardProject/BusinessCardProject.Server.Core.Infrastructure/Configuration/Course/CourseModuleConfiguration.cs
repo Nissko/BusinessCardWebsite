@@ -2,35 +2,36 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BusinessCardProject.Server.Core.Infrastructure.Configuration.Course;
-
-public class CourseModuleConfiguration : IEntityTypeConfiguration<CourseModuleEntity>
+namespace BusinessCardProject.Server.Core.Infrastructure.Configuration.Course
 {
-    public void Configure(EntityTypeBuilder<CourseModuleEntity> builder)
+    public class CourseModuleConfiguration : IEntityTypeConfiguration<CourseModuleEntity>
     {
-        builder.ToTable("Modules");
-        builder.HasKey(x => x.Id);
+        public void Configure(EntityTypeBuilder<CourseModuleEntity> builder)
+        {
+            builder.ToTable("Modules");
+            builder.HasKey(x => x.Id);
 
-        builder.Property("_name")
-            .HasColumnName("Name")
-            .IsRequired()
-            .HasMaxLength(200)
-            .HasComment("Название");
+            builder.Property("_name")
+                .HasColumnName("Name")
+                .IsRequired()
+                .HasMaxLength(200)
+                .HasComment("Название");
 
-        builder.Property("_description")
-            .HasColumnName("Description")
-            .HasMaxLength(1000)
-            .HasComment("Описание");
+            builder.Property("_description")
+                .HasColumnName("Description")
+                .HasMaxLength(1000)
+                .HasComment("Описание");
 
-        builder.HasOne(x => x.CourseTheme)
-            .WithMany(x => x.CourseModules)
-            .HasForeignKey(x=>x.CourseThemeId)
-            .OnDelete(DeleteBehavior.SetNull);
+            builder.HasOne(x => x.CourseTheme)
+                .WithMany(x => x.CourseModules)
+                .HasForeignKey(x=>x.CourseThemeId)
+                .OnDelete(DeleteBehavior.SetNull);
 
-        #region Индексы
+            #region Индексы
 
-        builder.HasIndex(x=>x.CourseThemeId);
+            builder.HasIndex(x=>x.CourseThemeId);
 
-        #endregion
+            #endregion
+        }
     }
 }

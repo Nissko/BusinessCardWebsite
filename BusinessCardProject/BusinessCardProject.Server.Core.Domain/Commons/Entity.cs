@@ -1,22 +1,23 @@
-﻿namespace BusinessCardProject.Server.Core.Domain.Commons;
-
-public abstract class Entity
+﻿namespace BusinessCardProject.Server.Core.Domain.Commons
 {
-    Guid _id;
-    public virtual Guid Id
+    public abstract class Entity
     {
-        get
+        Guid _id;
+        public virtual Guid Id
         {
-            return _id;
+            get
+            {
+                return _id;
+            }
+            protected set
+            {
+                _id = value;
+            }
         }
-        protected set
-        {
-            _id = value;
-        }
-    }
 
-    public Entity()
-    {
-        Id = Guid.NewGuid();
+        public Entity()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }

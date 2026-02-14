@@ -95,7 +95,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                     b.ToTable("Modules", "dev_prod");
                 });
 
-            modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseThemeEntity", b =>
+            modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme.CourseThemeEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -148,6 +148,29 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                     b.HasIndex("ProgrammingLanguageId");
 
                     b.ToTable("Themes", "dev_prod");
+                });
+
+            modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme.ThemeRecommendationEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CourseThemeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("_title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("Title")
+                        .HasComment("Рекомендация");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseThemeId");
+
+                    b.ToTable("ThemeRecommendations", "dev_prod");
                 });
 
             modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.Course.ProgrammingLanguageCourseEntity", b =>
@@ -418,7 +441,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
 
             modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseModuleEntity", b =>
                 {
-                    b.HasOne("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseThemeEntity", "CourseTheme")
+                    b.HasOne("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme.CourseThemeEntity", "CourseTheme")
                         .WithMany("CourseModules")
                         .HasForeignKey("CourseThemeId")
                         .OnDelete(DeleteBehavior.SetNull)
@@ -427,7 +450,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                     b.Navigation("CourseTheme");
                 });
 
-            modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseThemeEntity", b =>
+            modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme.CourseThemeEntity", b =>
                 {
                     b.HasOne("BusinessCardProject.Server.Core.Domain.Aggregates.Course.ProgrammingLanguageCourseEntity", "ProgrammingLanguages")
                         .WithMany("CourseThemes")
@@ -436,6 +459,17 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                         .IsRequired();
 
                     b.Navigation("ProgrammingLanguages");
+                });
+
+            modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme.ThemeRecommendationEntity", b =>
+                {
+                    b.HasOne("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme.CourseThemeEntity", "CourseTheme")
+                        .WithMany("ThemeRecommendations")
+                        .HasForeignKey("CourseThemeId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.Navigation("CourseTheme");
                 });
 
             modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.Course.VideoCourseEntity", b =>
@@ -478,9 +512,11 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Persistence.Migrations.
                     b.Navigation("VideoCourses");
                 });
 
-            modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseThemeEntity", b =>
+            modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme.CourseThemeEntity", b =>
                 {
                     b.Navigation("CourseModules");
+
+                    b.Navigation("ThemeRecommendations");
                 });
 
             modelBuilder.Entity("BusinessCardProject.Server.Core.Domain.Aggregates.Course.ProgrammingLanguageCourseEntity", b =>

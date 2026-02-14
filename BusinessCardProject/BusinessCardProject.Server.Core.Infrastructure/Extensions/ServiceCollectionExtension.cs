@@ -11,57 +11,58 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BusinessCardProject.Server.Core.Infrastructure.Extensions;
-
-public static class ServiceCollectionExtension
+namespace BusinessCardProject.Server.Core.Infrastructure.Extensions
 {
-    public static IServiceCollection AddCollectionInfrastructure(this IServiceCollection services,
-        IConfiguration configuration)
+    public static class ServiceCollectionExtension
     {
-        if (services == null)
-            throw new ArgumentNullException(nameof(services));
-
-        services.AddDbContext<ProjectDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("PostgreSqlDatabase")));
-
-        services.AddScoped<IProjectDbContext>(provider => provider.GetService<ProjectDbContext>()
-                                                          ?? throw new InvalidOperationException());
-
-        //Регистрация кастомного Mediator(-a)
-        services.AddScoped<ICustomMediator, CustomMediator>();
-        services.AddScoped<IPasswordHash, PasswordHashService>();
-        
-        var applicationAssembly = typeof(IRequest<>).Assembly;
-
-        foreach (var type in applicationAssembly.GetTypes())
+        public static IServiceCollection AddCollectionInfrastructure(this IServiceCollection services,
+            IConfiguration configuration)
         {
-            foreach (var @interface in type.GetInterfaces())
+            if (services == null)
+                throw new ArgumentNullException(nameof(services));
+
+            services.AddDbContext<ProjectDbContext>(options =>
+                options.UseNpgsql(configuration.GetConnectionString("PostgreSqlDatabase")));
+
+            services.AddScoped<IProjectDbContext>(provider => provider.GetService<ProjectDbContext>()
+                                                              ?? throw new InvalidOperationException());
+
+            //Регистрация кастомного Mediator(-a)
+            services.AddScoped<ICustomMediator, CustomMediator>();
+            services.AddScoped<IPasswordHash, PasswordHashService>();
+        
+            var applicationAssembly = typeof(IRequest<>).Assembly;
+
+            foreach (var type in applicationAssembly.GetTypes())
             {
-                if (@interface.IsGenericType)
+                foreach (var @interface in type.GetInterfaces())
                 {
-                    var definition = @interface.GetGenericTypeDefinition();
-                    if (definition == typeof(IRequestHandler<,>))
+                    if (@interface.IsGenericType)
                     {
-                        services.AddScoped(@interface, type);
-                    }
-                    else if (definition == typeof(INotificationHandler<>))
-                    {
-                        services.AddScoped(@interface, type);
+                        var definition = @interface.GetGenericTypeDefinition();
+                        if (definition == typeof(IRequestHandler<,>))
+                        {
+                            services.AddScoped(@interface, type);
+                        }
+                        else if (definition == typeof(INotificationHandler<>))
+                        {
+                            services.AddScoped(@interface, type);
+                        }
                     }
                 }
             }
+
+            //Репозитории
+            services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
+            services.AddScoped<ICourseThemeRepository, CourseThemeRepository>();
+            services.AddScoped<ICourseModuleRepository, CourseModuleRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICourseAuthorRepository, CourseAuthorRepository>();
+            services.AddScoped<IVideoCourseRepository, VideoCourseRepository>();
+
+            services.AddApplication();
+
+            return services;
         }
-
-        //Репозитории
-        services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
-        services.AddScoped<ICourseThemeRepository, CourseThemeRepository>();
-        services.AddScoped<ICourseModuleRepository, CourseModuleRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<ICourseAuthorRepository, CourseAuthorRepository>();
-        services.AddScoped<IVideoCourseRepository, VideoCourseRepository>();
-
-        services.AddApplication();
-
-        return services;
     }
 }

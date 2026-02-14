@@ -1,9 +1,105 @@
-﻿<MudPaper>
-    <MudText Typo="Typo.h6" Class="mt-2 px-2 py-2" Color="Color.Info">
-        UserComponents находится в разработке
-    </MudText>
+﻿@using ApiEndpoints
+@using ContractualDtos.DTO.User.UserProfile.Dtos
+@using System.Threading
+@using ContractualDtos.DTO.Table
+@inject HttpClient HttpClient
+
+<MudPaper>
+    <MudTable ServerData="ServerReload" Dense="true" Hover="true" Loading="@_isLoading" @ref="_table">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Список пользователей</MudText>
+            <MudSpacer/>
+            <MudTextField T="string" ValueChanged="@(OnSearch)"
+                          Placeholder="Поиск"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search"
+                          IconSize="Size.Small"
+                          Class="mt-0"/>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>
+                <MudTableSortLabel SortLabel="surname" T="UserProfileDtos">ФИО</MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="altname" T="UserProfileDtos">Ник</MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="email" T="UserProfileDtos">Почта</MudTableSortLabel>
+            </MudTh>
+            <MudTh>Роли</MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="createdon" InitialDirection="SortDirection.Descending"
+                                   T="UserProfileDtos">
+                    Дата регистрации
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="ФИО">@context.Surname @context.Name @context.Patronymic</MudTd>
+            <MudTd DataLabel="Ник">@context.AltName</MudTd>
+            <MudTd DataLabel="Почта">@context.Email</MudTd>
+            <MudTd DataLabel="Роли">@string.Join(", ", context.UserRoles.Select(t => t.RoleName))</MudTd>
+            <MudTd DataLabel="Дата регистрации">@context.CreatedOn</MudTd>
+            <MudTd>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled">Изменить</MudButton>
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>Пользователи не найдены</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Загрузка...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="[5, 10, 25, 50]"/>
+        </PagerContent>
+    </MudTable>
 </MudPaper>
 
 @code {
-    
+    private MudTable<UserProfileDtos>? _table;
+    private bool _isLoading = true;
+    private string _searchString = "";
+
+    private async Task<TableData<UserProfileDtos>> ServerReload(TableState state, CancellationToken token)
+    {
+        _isLoading = true;
+
+        try
+        {
+            // Параметры запроса
+            var queryParams = new Dictionary<string, string>
+            {
+                { "page", (state.Page + 1).ToString() },
+                { "pageSize", state.PageSize.ToString() },
+                { "search", _searchString },
+                { "sortBy", state.SortLabel ?? "" },
+                { "sortDirection", state.SortDirection.ToString() }
+            };
+
+            var url = $"{ApiEndpointRoutes.Users.GetAll}?{string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={Uri.EscapeDataString(kvp.Value)}"))}";
+            var response = await HttpClient.GetFromJsonAsync<TableResponse<UserProfileDtos>>(url, token);
+
+            return new TableData<UserProfileDtos>
+            {
+                TotalItems = response?.TotalCount ?? 0,
+                Items = response?.Items ?? []
+            };
+        }
+        catch
+        {
+            return new TableData<UserProfileDtos> { TotalItems = 0, Items = new List<UserProfileDtos>() };
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void OnSearch(string text)
+    {
+        _searchString = text;
+        _table?.ReloadServerData();
+    }
 }

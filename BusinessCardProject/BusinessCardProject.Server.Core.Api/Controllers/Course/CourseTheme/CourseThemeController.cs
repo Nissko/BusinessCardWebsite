@@ -2,55 +2,56 @@
 using ContractualDtos.DTO.Course.CourseTheme.Requests;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BusinessCardProject.Server.Core.Api.Controllers.Course.CourseTheme;
-
-[ApiController]
-[Route("api/[controller]")]
-public class CourseThemeController : ControllerBase
+namespace BusinessCardProject.Server.Core.Api.Controllers.Course.CourseTheme
 {
-    private readonly ICourseThemeRepository _repository;
-
-    public CourseThemeController(ICourseThemeRepository repository)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CourseThemeController : ControllerBase
     {
-        _repository = repository;
-    }
+        private readonly ICourseThemeRepository _repository;
 
-    /// <summary>
-    /// TODO: [ResponseCache(Duration = 600)] использовать при вкл.кэшировании
-    /// </summary>
-    [HttpGet("get")]
-    [ResponseCache(Duration = 300)]
-    public async Task<IActionResult> GetAllAsync()
-    {
-        var result = await _repository.GetAllAsync();
-        return result.Count != 0 ? Ok(result) : NoContent();
-    }
+        public CourseThemeController(ICourseThemeRepository repository)
+        {
+            _repository = repository;
+        }
 
-    [HttpPost("create")]
-    public async Task<IActionResult> CreateAsync([FromBody] CreateCourseThemeRequestDto dto)
-    {
-        var result = await _repository.Create(dto);
-        return result != null ? Created() : BadRequest();
-    }
+        /// <summary>
+        /// TODO: [ResponseCache(Duration = 600)] использовать при вкл.кэшировании
+        /// </summary>
+        [HttpGet("get")]
+        //[ResponseCache(Duration = 300)]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var result = await _repository.GetAllAsync();
+            return result.Count != 0 ? Ok(result) : NoContent();
+        }
 
-    [HttpGet("find/{id}")]
-    public async Task<IActionResult> FindAsync(Guid id)
-    {
-        var result = await _repository.Read(id);
-        return result != null ? Ok(result) : NoContent();
-    }
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateAsync([FromBody] CreateCourseThemeRequestDto dto)
+        {
+            var result = await _repository.Create(dto);
+            return result != null ? Created() : BadRequest();
+        }
 
-    [HttpPatch("update")]
-    public async Task<IActionResult> UpdateAsync([FromBody] UpdateCourseThemeRequestDto dto)
-    {
-        var result = await _repository.Update(dto);
-        return result != null ? Ok(result) : NoContent();
-    }
+        [HttpGet("find/{id}")]
+        public async Task<IActionResult> FindAsync(Guid id)
+        {
+            var result = await _repository.Read(id);
+            return result != null ? Ok(result) : NoContent();
+        }
 
-    [HttpDelete("delete/{id}")]
-    public async Task<IActionResult> DeleteAsync(Guid id)
-    {
-        var result = await _repository.Delete(id);
-        return result ? Ok() : NoContent();
+        [HttpPatch("update")]
+        public async Task<IActionResult> UpdateAsync([FromBody] UpdateCourseThemeRequestDto dto)
+        {
+            var result = await _repository.Update(dto);
+            return result != null ? Ok(result) : NoContent();
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteAsync(Guid id)
+        {
+            var result = await _repository.Delete(id);
+            return result ? Ok() : NoContent();
+        }
     }
 }

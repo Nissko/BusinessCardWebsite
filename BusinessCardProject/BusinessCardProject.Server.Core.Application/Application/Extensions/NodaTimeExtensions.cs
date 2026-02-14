@@ -1,23 +1,24 @@
 ﻿using System.Globalization;
 using NodaTime;
 
-namespace BusinessCardProject.Server.Core.Application.Application.Extensions;
-
-public static class NodaTimeExtensions
+namespace BusinessCardProject.Server.Core.Application.Application.Extensions
 {
-    public static LocalDateTime ToLocalDateTime(this Instant instant)
+    public static class NodaTimeExtensions
     {
-        var systemZone = DateTimeZoneProviders.Tzdb.GetSystemDefault();
-        return instant.InZone(systemZone).LocalDateTime;
-    }
+        public static LocalDateTime ToLocalDateTime(this Instant instant)
+        {
+            var systemZone = DateTimeZoneProviders.Tzdb.GetSystemDefault();
+            return instant.InZone(systemZone).LocalDateTime;
+        }
     
-    public static string ToLocalString(this Instant instant)
-    {
-        return instant.ToLocalDateTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.CurrentCulture);
-    }
+        public static string ToLocalString(this Instant instant)
+        {
+            return instant.ToLocalDateTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.CurrentCulture);
+        }
     
-    public static DateTime ToDateTimeUtc(this Instant instant)
-    {
-        return instant.ToDateTimeUtc();
+        public static DateTime ToDateTimeUtc(this Instant instant)
+        {
+            return instant.ToDateTimeUtc();
+        }
     }
 }

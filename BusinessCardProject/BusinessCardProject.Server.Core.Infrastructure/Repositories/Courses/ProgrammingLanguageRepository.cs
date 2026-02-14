@@ -5,119 +5,120 @@ using ContractualDtos.DTO.Course.ProgrammingLanguageCourse.Dtos;
 using ContractualDtos.DTO.Course.ProgrammingLanguageCourse.Requests;
 using Microsoft.EntityFrameworkCore;
 
-namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses;
-
-public class ProgrammingLanguageRepository : IProgrammingLanguageRepository
+namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
 {
-    private readonly IProjectDbContext _context;
-
-    public ProgrammingLanguageRepository(IProjectDbContext context)
+    public class ProgrammingLanguageRepository : IProgrammingLanguageRepository
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-    }
+        private readonly IProjectDbContext _context;
 
-    public async Task<List<ProgrammingLanguageDtos>> GetAllAsync()
-    {
-        try
+        public ProgrammingLanguageRepository(IProjectDbContext context)
         {
-            var data = await _context.ProgrammingLanguageCourse.ToListAsync();
-            return GetProgrammingLanguageDto(data);
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        catch (Exception ex)
+
+        public async Task<List<ProgrammingLanguageDtos>> GetAllAsync()
         {
-            throw new Exception(ex.Message, ex);
+            try
+            {
+                var data = await _context.ProgrammingLanguageCourse.ToListAsync();
+                return GetProgrammingLanguageDto(data);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
-    }
 
-    public async Task<bool?> Create(CreateProgrammingLanguageRequestDto dto)
-    {
-        try
+        public async Task<bool?> Create(CreateProgrammingLanguageRequestDto dto)
         {
-            var newProgrammingLanguage = new ProgrammingLanguageCourseEntity(dto.Name, 0);
-            _context.ProgrammingLanguageCourse.Add(newProgrammingLanguage);
-            await SaveChanges();
+            try
+            {
+                var newProgrammingLanguage = new ProgrammingLanguageCourseEntity(dto.Name, 0);
+                _context.ProgrammingLanguageCourse.Add(newProgrammingLanguage);
+                await SaveChanges();
 
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
-        catch (Exception ex)
+
+        public async Task<ProgrammingLanguageDtos?> Read(Guid id)
         {
-            throw new Exception(ex.Message, ex);
+            try
+            {
+                var programmingLanguage = await _context.ProgrammingLanguageCourse.FindAsync(id);
+                return programmingLanguage == null ? null : GetProgrammingLanguageDto(programmingLanguage);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
-    }
 
-    public async Task<ProgrammingLanguageDtos?> Read(Guid id)
-    {
-        try
+        public async Task<ProgrammingLanguageDtos?> Update(UpdateProgrammingLanguageRequestDto dto)
         {
-            var programmingLanguage = await _context.ProgrammingLanguageCourse.FindAsync(id);
-            return programmingLanguage == null ? null : GetProgrammingLanguageDto(programmingLanguage);
+            try
+            {
+                var programmingLanguage = await _context.ProgrammingLanguageCourse.FindAsync(dto.Id);
+                if (programmingLanguage == null) return null;
+
+                programmingLanguage.Update(dto.Name);
+                _context.ProgrammingLanguageCourse.Update(programmingLanguage);
+                await SaveChanges();
+
+                return GetProgrammingLanguageDto(programmingLanguage);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
-        catch (Exception ex)
+
+        public async Task<bool> Delete(Guid id)
         {
-            throw new Exception(ex.Message, ex);
-        }
-    }
+            try
+            {
+                var programmingLanguage = await _context.ProgrammingLanguageCourse.FindAsync(id);
 
-    public async Task<ProgrammingLanguageDtos?> Update(UpdateProgrammingLanguageRequestDto dto)
-    {
-        try
+                if (programmingLanguage == null) return false;
+
+                _context.ProgrammingLanguageCourse.Remove(programmingLanguage);
+                await SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        private async Task SaveChanges()
         {
-            var programmingLanguage = await _context.ProgrammingLanguageCourse.FindAsync(dto.Id);
-            if (programmingLanguage == null) return null;
-
-            programmingLanguage.Update(dto.Name);
-            _context.ProgrammingLanguageCourse.Update(programmingLanguage);
-            await SaveChanges();
-
-            return GetProgrammingLanguageDto(programmingLanguage);
+            await _context.SaveChangesAsync(CancellationToken.None);
         }
-        catch (Exception ex)
+
+        /// <summary>
+        /// Формирование DTO для return
+        /// </summary>
+        private static ProgrammingLanguageDtos GetProgrammingLanguageDto(ProgrammingLanguageCourseEntity entity)
         {
-            throw new Exception(ex.Message, ex);
+            return new ProgrammingLanguageDtos(entity.Id, entity.Name, entity.CountSelectedUser);
         }
-    }
 
-    public async Task<bool> Delete(Guid id)
-    {
-        try
+        /// <summary>
+        /// Формирование DTO для return
+        /// </summary>
+        private static List<ProgrammingLanguageDtos> GetProgrammingLanguageDto(List<ProgrammingLanguageCourseEntity> entities)
         {
-            var programmingLanguage = await _context.ProgrammingLanguageCourse.FindAsync(id);
-
-            if (programmingLanguage == null) return false;
-
-            _context.ProgrammingLanguageCourse.Remove(programmingLanguage);
-            await SaveChanges();
-
-            return true;
+            return entities.Select(e => new ProgrammingLanguageDtos(
+                e.Id,
+                e.Name,
+                e.CountSelectedUser
+            )).ToList();
         }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
-    }
-
-    private async Task SaveChanges()
-    {
-        await _context.SaveChangesAsync(CancellationToken.None);
-    }
-
-    /// <summary>
-    /// Формирование DTO для return
-    /// </summary>
-    private static ProgrammingLanguageDtos GetProgrammingLanguageDto(ProgrammingLanguageCourseEntity entity)
-    {
-        return new ProgrammingLanguageDtos(entity.Id, entity.Name, entity.CountSelectedUser);
-    }
-
-    /// <summary>
-    /// Формирование DTO для return
-    /// </summary>
-    private static List<ProgrammingLanguageDtos> GetProgrammingLanguageDto(List<ProgrammingLanguageCourseEntity> entities)
-    {
-        return entities.Select(e => new ProgrammingLanguageDtos(
-            e.Id,
-            e.Name,
-            e.CountSelectedUser
-        )).ToList();
     }
 }

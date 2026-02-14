@@ -1,118 +1,119 @@
 ﻿using BusinessCardProject.Server.Core.Domain.Commons;
 
-namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course;
-
-/// <summary>
-/// Сущность автора курса
-/// </summary>
-public class CourseAuthorEntity : Entity
+namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
 {
-    public CourseAuthorEntity()
+    /// <summary>
+    /// Сущность автора курса
+    /// </summary>
+    public class CourseAuthorEntity : Entity
     {
-        VideoCourses = new HashSet<VideoCourseEntity>();
-    }
+        public CourseAuthorEntity()
+        {
+            VideoCourses = new HashSet<VideoCourseEntity>();
+        }
 
-    public CourseAuthorEntity(string authorName, string authorSurname, string authorPatronymic,
-        string authorNickName) : this()
-    {
-        _authorName = authorName;
-        _authorSurname = authorSurname;
-        _authorPatronymic = authorPatronymic;
-        _authorNickName = authorNickName;
-    }
+        public CourseAuthorEntity(string authorName, string authorSurname, string authorPatronymic,
+            string authorNickName) : this()
+        {
+            _authorName = authorName;
+            _authorSurname = authorSurname;
+            _authorPatronymic = authorPatronymic;
+            _authorNickName = authorNickName;
+        }
 
-    #region Public Properties
+        #region Public Properties
 
-    /// <summary>
-    /// Имя
-    /// </summary>
-    public string Name => _authorName;
+        /// <summary>
+        /// Имя
+        /// </summary>
+        public string Name => _authorName;
 
-    /// <summary>
-    /// Фамилия
-    /// </summary>
-    public string Surname => _authorSurname;
+        /// <summary>
+        /// Фамилия
+        /// </summary>
+        public string Surname => _authorSurname;
 
-    /// <summary>
-    /// Отчество
-    /// </summary>
-    public string Patronymic => _authorPatronymic;
+        /// <summary>
+        /// Отчество
+        /// </summary>
+        public string Patronymic => _authorPatronymic;
 
-    /// <summary>
-    /// Альтернативное имя
-    /// </summary>
-    public string Nickname => _authorNickName;
+        /// <summary>
+        /// Альтернативное имя
+        /// </summary>
+        public string Nickname => _authorNickName;
 
-    /// <summary>
-    /// ФИО
-    /// Формат: Иванов И. И.
-    /// </summary>
-    public string FullName => GetFullName();
+        /// <summary>
+        /// ФИО
+        /// Формат: Иванов И. И.
+        /// </summary>
+        public string FullName => GetFullName();
 
-    #endregion
+        #endregion
 
-    #region Private properties
+        #region Private properties
 
-    /// <summary>
-    /// Имя автора
-    /// </summary>
-    private string _authorName;
+        /// <summary>
+        /// Имя автора
+        /// </summary>
+        private string _authorName;
 
-    /// <summary>
-    /// Фамилия автора
-    /// </summary>
-    private string _authorSurname;
+        /// <summary>
+        /// Фамилия автора
+        /// </summary>
+        private string _authorSurname;
 
-    /// <summary>
-    /// Отчество автора
-    /// </summary>
-    private string _authorPatronymic;
+        /// <summary>
+        /// Отчество автора
+        /// </summary>
+        private string _authorPatronymic;
 
-    /// <summary>
-    /// Никнейм автора
-    /// <remarks>Если автор хочет скрыть ФИО</remarks>
-    /// </summary>
-    private string _authorNickName;
+        /// <summary>
+        /// Никнейм автора
+        /// <remarks>Если автор хочет скрыть ФИО</remarks>
+        /// </summary>
+        private string _authorNickName;
 
-    //TODO: Добавить поле с Guid из таблицы Users
+        //TODO: Добавить поле с Guid из таблицы Users
 
-    #endregion
+        #endregion
 
-    #region virtual
+        #region virtual
 
-    /// <summary>
-    /// Коллекция видеокурсов
-    /// </summary>
-    public virtual ICollection<VideoCourseEntity> VideoCourses { get; private set; }
+        /// <summary>
+        /// Коллекция видеокурсов
+        /// </summary>
+        public virtual ICollection<VideoCourseEntity> VideoCourses { get; private set; }
 
-    #endregion
+        #endregion
 
-    #region fucntions
+        #region fucntions
 
-    public void Update(string surname, string name, string patronymic, string nickname)
-    {
-        _authorSurname = surname;
-        _authorName = name;
-        _authorPatronymic = patronymic;
-        _authorNickName = nickname;
-    }
+        public void Update(string surname, string name, string patronymic, string nickname)
+        {
+            _authorSurname = surname;
+            _authorName = name;
+            _authorPatronymic = patronymic;
+            _authorNickName = nickname;
+        }
     
-    /// <summary>
-    /// Метод для добавления видеокурса
-    /// </summary>
-    public void AddVideoCourse(VideoCourseEntity videoCourse)
-    {
-        VideoCourses.Add(videoCourse);
-    }
+        /// <summary>
+        /// Метод для добавления видеокурса
+        /// </summary>
+        public void AddVideoCourse(VideoCourseEntity videoCourse)
+        {
+            VideoCourses.Add(videoCourse);
+        }
 
-    /// <summary>
-    /// ФИО автора
-    /// </summary>
-    /// <returns>Иванов И. И.</returns>
-    private string GetFullName()
-    {
-        return $"{_authorPatronymic}  {_authorName.First()}. {_authorSurname.First()}.";
-    }
+        /// <summary>
+        /// ФИО автора
+        /// </summary>
+        /// <returns>Иванов И. И.</returns>
+        private string GetFullName()
+        {
+            return $"{_authorPatronymic}  {_authorName.First()}. {_authorSurname.First()}.";
+        }
 
-    #endregion
+        #endregion
+    }
 }

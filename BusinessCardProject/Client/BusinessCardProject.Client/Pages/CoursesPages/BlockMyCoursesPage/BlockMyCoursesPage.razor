@@ -6,7 +6,7 @@
     
     <MudTabs Outlined="true" Position="Position.Left" Rounded="true" Border="true"
              ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6"
-             @bind-ActivePanelIndex="activeIndex">
+             @bind-ActivePanelIndex="_activeIndex">
         <MudTabPanel Text="Платные">
             <MudText>Content One</MudText>
         </MudTabPanel>
@@ -15,10 +15,10 @@
         </MudTabPanel>
     </MudTabs>
     
-    <MudText>@($"Active Index: {activeIndex}")</MudText>
+    <MudText>@($"Active Index: {_activeIndex}")</MudText>
     
 </MudContainer>
 
 @code {
-    int activeIndex = 0;
+    int _activeIndex;
 }

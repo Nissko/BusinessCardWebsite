@@ -2,21 +2,22 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BusinessCardProject.Server.Core.Infrastructure.Configuration.Course;
-
-public class TypeOfCourseConfiguration : IEntityTypeConfiguration<TypeOfCourseEnum>
+namespace BusinessCardProject.Server.Core.Infrastructure.Configuration.Course
 {
-    public void Configure(EntityTypeBuilder<TypeOfCourseEnum> builder)
+    public class TypeOfCourseConfiguration : IEntityTypeConfiguration<TypeOfCourseEnum>
     {
-        builder.ToTable("TypeOfCourses");
+        public void Configure(EntityTypeBuilder<TypeOfCourseEnum> builder)
+        {
+            builder.ToTable("TypeOfCourses");
 
-        builder.Property(o => o.Id)
-            .ValueGeneratedNever();
+            builder.Property(o => o.Id)
+                .ValueGeneratedNever();
 
-        builder.Property(o => o.Name)
-            .HasMaxLength(200)
-            .HasComment("Название типа курса");
+            builder.Property(o => o.Name)
+                .HasMaxLength(200)
+                .HasComment("Название типа курса");
 
-        builder.HasIndex(x => x.Id);
+            builder.HasIndex(x => x.Id);
+        }
     }
 }

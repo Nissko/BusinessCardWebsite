@@ -2,22 +2,23 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BusinessCardProject.Server.Core.Infrastructure.Configuration.Course;
-
-public class ProgrammingLanguageCourseConfiguration : IEntityTypeConfiguration<ProgrammingLanguageCourseEntity>
+namespace BusinessCardProject.Server.Core.Infrastructure.Configuration.Course
 {
-    public void Configure(EntityTypeBuilder<ProgrammingLanguageCourseEntity> builder)
+    public class ProgrammingLanguageCourseConfiguration : IEntityTypeConfiguration<ProgrammingLanguageCourseEntity>
     {
-        builder.ToTable("ProgrammingLanguages");
-        builder.HasKey(x => x.Id);
+        public void Configure(EntityTypeBuilder<ProgrammingLanguageCourseEntity> builder)
+        {
+            builder.ToTable("ProgrammingLanguages");
+            builder.HasKey(x => x.Id);
 
-        builder.Property<string>("_name")
-            .HasColumnName("Name")
-            .IsRequired()
-            .HasComment("Название языка программирования");
+            builder.Property<string>("_name")
+                .HasColumnName("Name")
+                .IsRequired()
+                .HasComment("Название языка программирования");
 
-        builder.Property<int>("_countSelectedUser")
-            .HasColumnName("CountSelectedUser")
-            .HasComment("Количество людей использующий ЯП");
+            builder.Property<int>("_countSelectedUser")
+                .HasColumnName("CountSelectedUser")
+                .HasComment("Количество людей использующий ЯП");
+        }
     }
 }

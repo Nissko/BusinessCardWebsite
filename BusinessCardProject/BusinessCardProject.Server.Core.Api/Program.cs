@@ -3,9 +3,10 @@ using BusinessCardProject.Server.Core.Application.Application.Extensions;
 using BusinessCardProject.Server.Core.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
 /*TODO: вкл.на хостинге*/
 //builder.Services.AddResponseCaching();
+
+ApiEndpointRoutes.Init(builder.Configuration);
 
 builder.Services
     .AddCollectionInfrastructure(builder.Configuration)
@@ -15,15 +16,16 @@ builder.Services
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowBlazorClient",
-        builder => builder.WithOrigins(ApiEndpointRoutes.BaseFrontUrl)
+        policyBuilder => policyBuilder
+            .WithOrigins(
+                ApiEndpointRoutes.BaseFrontUrl.TrimEnd('/')
+            )
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            .AllowCredentials());
 });
 
-// Add services to the container.
 builder.Services.AddControllers();
-
-// Настройка Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -31,38 +33,37 @@ builder.Services.AddSwaggerGen(options =>
     {
         Title = "Business Card Project API",
         Version = "v1",
-        Description = "API для управления бизнес-картами",
+        Description = "API для курсами",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
-            Name = "Ваше имя/команда",
-            Email = "email@example.com"
+            Name = "NisskoDevelop",
+            Email = "skibko.nik@mail.ru"
         }
     });
 });
 
 var app = builder.Build();
 
-// TODO: избавиться от swagger(-a) и переделать на тесты
+app.UseCors("AllowBlazorClient");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "Business Card API v1");
-        options.RoutePrefix = "swagger"; // Доступ по /swagger
+        options.RoutePrefix = "swagger";
         options.DisplayRequestDuration();
         options.EnableTryItOutByDefault();
     });
+    app.UseHttpsRedirection();
 }
 else
 {
-    /*TODO: включить на серваке*/
     app.UseResponseCaching();
-    app.UseRouting();
 }
 
-app.UseCors("AllowBlazorClient");
-app.UseHttpsRedirection();
+app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

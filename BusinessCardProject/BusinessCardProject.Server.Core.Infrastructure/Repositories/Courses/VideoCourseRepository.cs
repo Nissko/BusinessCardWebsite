@@ -7,157 +7,154 @@ using ContractualDtos.DTO.Course.VideoCourse.Requests;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 
-namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses;
-
-public class VideoCourseRepository : IVideoCourseRepository
+namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
 {
-    private readonly IProjectDbContext _context;
-
-    public VideoCourseRepository(IProjectDbContext context)
+    public class VideoCourseRepository : IVideoCourseRepository
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-    }
+        private readonly IProjectDbContext _context;
 
-    public async Task<List<VideoCourseDtos>> GetAllAsync()
-    {
-        try
+        public VideoCourseRepository(IProjectDbContext context)
         {
-            var data = await _context.VideoCourse.ToListAsync();
-            return GetVideoCourseDto(data);
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
-    }
 
-    public async Task<bool?> Create(CreateVideoCourseRequestDto dto)
-    {
-        try
+        public async Task<List<VideoCourseDtos>> GetAllAsync()
         {
-            var dateTimeNow = SystemClock.Instance.GetCurrentInstant();
-            var courseModule = await _context.CourseModule.FindAsync(dto.CourseModuleId);
-            var courseAuthor = await _context.CourseAuthor.FindAsync(dto.CourseAuthorId);
-            if (courseModule == null || courseAuthor == null) return null;
-            var newVideoCourse = new VideoCourseEntity(dto.LinkOnYoutube, dto.LinkOnRutube, dto.LinkOnVkVideo,
-                dto.CourseAuthorId, dto.Name, dto.Description, dto.ImgUrl, dateTimeNow, dto.Price, dto.Discount,
-                dto.IsShow, dto.DisplayOrder, dto.CourseModuleId, dto.IsFree);
+            try
+            {
+                var data = await _context.VideoCourse.ToListAsync();
+                return GetVideoCourseDto(data);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<bool?> Create(CreateVideoCourseRequestDto dto)
+        {
+            try
+            {
+                var dateTimeNow = SystemClock.Instance.GetCurrentInstant();
+                var courseModule = await _context.CourseModule.FindAsync(dto.CourseModuleId);
+                var courseAuthor = await _context.CourseAuthor.FindAsync(dto.CourseAuthorId);
+                if (courseModule == null || courseAuthor == null) return null;
+                var newVideoCourse = new VideoCourseEntity(dto.LinkOnYoutube, dto.LinkOnRutube, dto.LinkOnVkVideo,
+                    dto.CourseAuthorId, dto.Name, dto.Description, dto.ImgUrl, dateTimeNow, dto.Price, dto.Discount,
+                    dto.IsShow, dto.DisplayOrder, dto.CourseModuleId, dto.IsFree);
             
-            _context.VideoCourse.Add(newVideoCourse);
-            await SaveChanges();
+                _context.VideoCourse.Add(newVideoCourse);
+                await SaveChanges();
 
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
-        catch (Exception ex)
+
+        public async Task<VideoCourseDtos?> Read(Guid id)
         {
-            throw new Exception(ex.Message, ex);
+            try
+            {
+                var videoCourse = await _context.VideoCourse.FindAsync(id);
+                return videoCourse == null ? null : GetVideoCourseDto(videoCourse);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
-    }
 
-    public async Task<VideoCourseDtos?> Read(Guid id)
-    {
-        try
+        public async Task<VideoCourseDtos?> Update(UpdateVideoCourseRequestDto dto)
         {
-            var videoCourse = await _context.VideoCourse.FindAsync(id);
-            return videoCourse == null ? null : GetVideoCourseDto(videoCourse);
+            try
+            {
+                var videoCourse = await _context.VideoCourse.FindAsync(dto.Id);
+                if (videoCourse == null) return null;
+
+                videoCourse.Update(dto.LinkOnYoutube, dto.LinkOnRutube, dto.LinkOnVkVideo, dto.CourseAuthorId,
+                    dto.CourseModuleId, dto.Name, dto.Description, dto.ImgUrl, dto.Price, dto.Discount, dto.IsShow,
+                    dto.DisplayOrder, dto.IsFree);
+                _context.VideoCourse.Update(videoCourse);
+                await SaveChanges();
+
+                return GetVideoCourseDto(videoCourse);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
-        catch (Exception ex)
+
+        public async Task<bool> Delete(Guid id)
         {
-            throw new Exception(ex.Message, ex);
-        }
-    }
+            try
+            {
+                var videoCourse = await _context.VideoCourse.FindAsync([id]);
+                if (videoCourse == null) return false;
 
-    public async Task<VideoCourseDtos?> Update(UpdateVideoCourseRequestDto dto)
-    {
-        try
+                _context.VideoCourse.Remove(videoCourse);
+                await SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        private async Task SaveChanges()
         {
-            var videoCourse = await _context.VideoCourse.FindAsync(dto.Id);
-            if (videoCourse == null) return null;
-
-            videoCourse.Update(dto.LinkOnYoutube, dto.LinkOnRutube, dto.LinkOnVkVideo, dto.CourseAuthorId,
-                dto.CourseModuleId, dto.Name, dto.Description, dto.ImgUrl, dto.Price, dto.Discount, dto.IsShow,
-                dto.DisplayOrder, dto.IsFree);
-            _context.VideoCourse.Update(videoCourse);
-            await SaveChanges();
-
-            return GetVideoCourseDto(videoCourse);
+            await _context.SaveChangesAsync(CancellationToken.None);
         }
-        catch (Exception ex)
+
+        /// <summary>
+        /// Формирование DTO для return
+        /// </summary>
+        private static VideoCourseDtos GetVideoCourseDto(VideoCourseEntity e)
         {
-            throw new Exception(ex.Message, ex);
+            return new VideoCourseDtos(
+                e.Id,
+                e.Name,
+                e.Description,
+                e.Img,
+                e.DatePublished.ToLocalString(),
+                e.Price,
+                e.Discount,
+                e.Rate,
+                e.IsFree,
+                e.CourseAuthorId,
+                e.CourseModuleId,
+                e.LinkOnYoutube,
+                e.LinkOnRutube,
+                e.LinkOnVkVideo
+            );
         }
-    }
 
-    public async Task<bool> Delete(Guid id)
-    {
-        try
+        /// <summary>
+        /// Формирование DTOs для return
+        /// </summary>
+        private static List<VideoCourseDtos> GetVideoCourseDto(List<VideoCourseEntity> entities)
         {
-            var videoCourse = await _context.VideoCourse.FindAsync([id]);
-            if (videoCourse == null) return false;
-
-            _context.VideoCourse.Remove(videoCourse);
-            await SaveChanges();
-
-            return true;
+            return entities.Select(e => new VideoCourseDtos(
+                e.Id,
+                e.Name,
+                e.Description,
+                e.Img,
+                e.DatePublished.ToLocalString(),
+                e.Price,
+                e.Discount,
+                e.Rate,
+                e.IsFree,
+                e.CourseAuthorId,
+                e.CourseModuleId,
+                e.LinkOnYoutube,
+                e.LinkOnRutube,
+                e.LinkOnVkVideo
+            )).ToList();
         }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
-    }
-
-    private async Task SaveChanges()
-    {
-        await _context.SaveChangesAsync(CancellationToken.None);
-    }
-
-    /// <summary>
-    /// Формирование DTO для return
-    /// </summary>
-    private static VideoCourseDtos GetVideoCourseDto(VideoCourseEntity e)
-    {
-        return new VideoCourseDtos(
-            e.Id,
-            e.Name,
-            e.Description,
-            e.Img,
-            e.DatePublished.ToLocalString(),
-            e.Price,
-            e.Discount,
-            e.Rate,
-            e.IsFree,
-            e.IsShow,
-            e.DisplayOrder,
-            e.CourseAuthorId,
-            e.CourseModuleId,
-            e.LinkOnYoutube,
-            e.LinkOnRutube,
-            e.LinkOnVkVideo
-        );
-    }
-
-    /// <summary>
-    /// Формирование DTOs для return
-    /// </summary>
-    private static List<VideoCourseDtos> GetVideoCourseDto(List<VideoCourseEntity> entities)
-    {
-        return entities.Select(e => new VideoCourseDtos(
-            e.Id,
-            e.Name,
-            e.Description,
-            e.Img,
-            e.DatePublished.ToLocalString(),
-            e.Price,
-            e.Discount,
-            e.Rate,
-            e.IsFree,
-            e.IsShow,
-            e.DisplayOrder,
-            e.CourseAuthorId,
-            e.CourseModuleId,
-            e.LinkOnYoutube,
-            e.LinkOnRutube,
-            e.LinkOnVkVideo
-        )).ToList();
     }
 }

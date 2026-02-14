@@ -1,21 +1,10 @@
 ﻿@page "/donation-project"
 @using ZXing;
-@using BusinessCardProject.Client.Pages.DonationPage.DonationComponents
 @using MudExtensions
 
 <PageTitle>Помощь проекту</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="my-4">
-    @*<MudText Typo="Typo.body1" Align="Align.Justify">
-        Вы можете поддержать проект с помощью реквизитов, указанных ниже, тем самым вложив средства в его дальнейшее
-        развитие и улучшение.
-    </MudText>
-    <DonationImageComponent/>
-    <MudText Typo="Typo.caption" Align="Align.Justify">
-        Все поступающие средства направляются исключительно на развитие проекта, включая оплату хостинга, поддержку и
-        улучшение контента, а также привлечение дополнительных авторов.
-    </MudText>*@
-
     <MudGrid Class="mt-4">
         <MudItem xs="6" lg="3">
             <MudBarcode Value="https://tips.tips/000463584" BarcodeFormat="BarcodeFormat.QR_CODE" Clickable="true">
@@ -29,14 +18,16 @@
             <MudText Typo="Typo.body1" Class="mb-4">
                 Вы можете поддержать проект с помощью данных реквизитов, тем самым вложив средства в его
                 дальнейшее развитие и улучшение.
-                Ваша поддержка — это лучший сигнал, что то, что мы делаем, действительно ценно. Спасибо, что помогаете нам расти!
+                Ваша поддержка — это лучший сигнал, что то, что мы делаем, действительно ценно. Спасибо, что помогаете
+                нам расти!
             </MudText>
             <MudText Typo="Typo.body1" Class="mb-4">
-                Ваша поддержка — это лучший сигнал, что то, что мы делаем, действительно ценно. Спасибо, что помогаете нам расти!
+                Ваша поддержка — это лучший сигнал, что то, что мы делаем, действительно ценно. Спасибо, что помогаете
+                нам расти!
             </MudText>
-            <MudButton Href="https://tips.tips/000463584" 
-                       Variant="Variant.Text" 
-                       Color="Color.Primary" 
+            <MudButton Href="https://tips.tips/000463584"
+                       Variant="Variant.Text"
+                       Color="Color.Primary"
                        EndIcon="@Icons.Material.Filled.ArrowForward">
                 Поддержать
             </MudButton>
