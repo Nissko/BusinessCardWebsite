@@ -18,7 +18,9 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh>
-                <MudTableSortLabel SortLabel="surname" T="UserProfileDtos">ФИО</MudTableSortLabel>
+                <MudTableSortLabel SortLabel="surname" InitialDirection="SortDirection.Ascending" T="UserProfileDtos">
+                    ФИО
+                </MudTableSortLabel>
             </MudTh>
             <MudTh>
                 <MudTableSortLabel SortLabel="altname" T="UserProfileDtos">Ник</MudTableSortLabel>
@@ -28,21 +30,79 @@
             </MudTh>
             <MudTh>Роли</MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="createdon" InitialDirection="SortDirection.Descending"
-                                   T="UserProfileDtos">
+                <MudTableSortLabel SortLabel="createdon" T="UserProfileDtos">
                     Дата регистрации
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="isactive" T="UserProfileDtos">
+                    Активен
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="isblocked" T="UserProfileDtos">
+                    Блок
                 </MudTableSortLabel>
             </MudTh>
             <MudTh></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="ФИО">@context.Surname @context.Name @context.Patronymic</MudTd>
-            <MudTd DataLabel="Ник">@context.AltName</MudTd>
-            <MudTd DataLabel="Почта">@context.Email</MudTd>
-            <MudTd DataLabel="Роли">@string.Join(", ", context.UserRoles.Select(t => t.RoleName))</MudTd>
-            <MudTd DataLabel="Дата регистрации">@context.CreatedOn</MudTd>
+            <MudTd DataLabel="ФИО">
+                <MudText Typo="Typo.body2">
+                    @context.Surname @context.Name @context.Patronymic
+                </MudText>
+            </MudTd>
+            <MudTd DataLabel="Ник">
+                <MudText Typo="Typo.body2">
+                    @context.AltName
+                </MudText>
+            </MudTd>
+            <MudTd DataLabel="Почта">
+                <MudText Typo="Typo.body2">
+                    @context.Email
+                </MudText>
+            </MudTd>
+            <MudTd DataLabel="Роли">
+                <MudText Typo="Typo.body2">
+                    @string.Join(", ", context.UserRoles.Select(t => t.RoleName))
+                </MudText>
+            </MudTd>
+            <MudTd DataLabel="Дата регистрации">
+                <MudText Typo="Typo.body2">
+                    @context.CreatedOn
+                </MudText>
+            </MudTd>
+            <MudTd DataLabel="Активен">
+                <MudText Align="Align.Center" Typo="Typo.body2">
+                    @(context.IsActive ? "Да" : "Нет")
+                </MudText>
+            </MudTd>
+            <MudTd DataLabel="Блок">
+                <MudText Align="Align.Center" Typo="Typo.body2">
+                    @(context.IsBlocked ? "Да" : "Нет")
+                </MudText>
+            </MudTd>
             <MudTd>
-                <MudButton Color="Color.Primary" Variant="Variant.Filled">Изменить</MudButton>
+                <MudButton Style="width: 100%; margin-bottom: 5px;" Size="Size.Small" Color="Color.Primary"
+                           Variant="Variant.Filled">
+                    Изменить
+                </MudButton>
+                <MudButton Style="width: 100%; margin-bottom: 5px;" Size="Size.Small" Color="Color.Error"
+                           Variant="Variant.Filled">
+                    Удалить
+                </MudButton>
+                @if (context.IsBlocked)
+                {
+                    <MudButton Style="width: 100%;" Color="Color.Warning" Size="Size.Small" Variant="Variant.Filled">
+                        Разблокировать
+                    </MudButton> 
+                }
+                else
+                {
+                    <MudButton Style="width: 100%;" Color="Color.Tertiary" Size="Size.Small" Variant="Variant.Filled">
+                        Заблокировать
+                    </MudButton>
+                }
             </MudTd>
         </RowTemplate>
         <NoRecordsContent>
@@ -52,7 +112,8 @@
             <MudText>Загрузка...</MudText>
         </LoadingContent>
         <PagerContent>
-            <MudTablePager PageSizeOptions="[5, 10, 25, 50]"/>
+            <MudTablePager PageSizeOptions="[5, 10, 25, 50]"
+                           RowsPerPageString="Записей на странице:"/>
         </PagerContent>
     </MudTable>
 </MudPaper>
@@ -102,4 +163,5 @@
         _searchString = text;
         _table?.ReloadServerData();
     }
+
 }

@@ -34,7 +34,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Users
         {
             try
             {
-                var dbQuery = _context.UserProfile.AsQueryable();
+                var dbQuery = _context.UserProfile.AsNoTracking().AsQueryable();
 
                 if (!string.IsNullOrWhiteSpace(search))
                 {
@@ -64,6 +64,14 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Users
                     "createdon" => sortDirection == "Descending"
                         ? dbQuery.OrderByDescending(u => u.DateOfRegistered)
                         : dbQuery.OrderBy(u => u.DateOfRegistered),
+                    
+                    "isactive" => sortDirection == "Descending"
+                        ? dbQuery.OrderByDescending(u => EF.Property<bool>(u, "_isActive"))
+                        : dbQuery.OrderBy(u => EF.Property<bool>(u, "_isActive")),
+                    
+                    "isblocked" => sortDirection == "Descending"
+                        ? dbQuery.OrderByDescending(u => EF.Property<bool>(u, "_isBlocked"))
+                        : dbQuery.OrderBy(u => EF.Property<bool>(u, "_isBlocked")),
 
                     _ => dbQuery.OrderBy(u => u.Surname)
                 };
@@ -72,6 +80,7 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Users
                 var searchData = await dbQuery
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
+                    .AsNoTracking()
                     .ToListAsync();
 
                 return new TableResponse<UserProfileDtos>(GetUserProfileDto(searchData), totalCount);
@@ -262,6 +271,8 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Users
                 e.Email,
                 e.AltName,
                 e.DateOfRegistered.ToLocalString(),
+                e.IsActive,
+                e.IsBlocked,
                 e.Settings,
                 e.UserRoles.Select(ur => new UserRoleDto(
                     ur.UserRole.Name
@@ -284,6 +295,8 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Users
                     e.Email,
                     e.AltName,
                     e.DateOfRegistered.ToLocalString(),
+                    e.IsActive,
+                    e.IsBlocked,
                     e.Settings,
                     e.UserRoles.Select(ur => new UserRoleDto(
                         ur.UserRole.Name

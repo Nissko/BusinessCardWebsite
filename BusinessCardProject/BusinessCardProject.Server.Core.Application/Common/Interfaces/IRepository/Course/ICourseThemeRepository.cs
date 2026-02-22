@@ -21,6 +21,12 @@ namespace BusinessCardProject.Server.Core.Application.Common.Interfaces.IReposit
         /// </summary>
         /// <param name="id">передаваемые параметры из запроса</param>
         Task<DetailedCourseThemeDtos?> Read(Guid id);
+        
+        /// <summary>
+        /// Поиск по языку программирования
+        /// </summary>
+        /// <param name="id">передаваемые параметры из запроса</param>
+        Task<List<DetailedCourseThemeDtos?>> FindByProgramLanguage(Guid id);
 
         /// <summary>
         /// Изменение определенной темы

@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\HomePage\" />
+    <Folder Include="Pages\BasePages\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
@@ -31,6 +31,19 @@
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\images\Donation\QR_Dark.png" />
     <_ContentIncludedByDefault Remove="wwwroot\images\Donation\QR_Light.png" />
+    <_ContentIncludedByDefault Remove="Pages\RatingPage\Rating.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Pages\BasePages\AboutUsPage\AboutUs.razor" />
+    <AdditionalFiles Include="Pages\BasePages\CoursesPages\BlockMyCoursesPage\BlockMyCoursesPage.razor" />
+    <AdditionalFiles Include="Pages\BasePages\CoursesPages\CourseThemesPage\CourseIllustration\CoreIllustrationPage.razor" />
+    <AdditionalFiles Include="Pages\BasePages\CoursesPages\CourseThemesPage\ThemesCoursePage.razor" />
+    <AdditionalFiles Include="Pages\BasePages\DonationPage\Donation.razor" />
+    <AdditionalFiles Include="Pages\BasePages\HomePage\Home.razor" />
+    <AdditionalFiles Include="Pages\BasePages\PoliciesPages\PrivacyPolicy.razor" />
+    <AdditionalFiles Include="Pages\BasePages\PoliciesPages\UserAgreement.razor" />
+    <AdditionalFiles Include="Pages\BasePages\RatingPage\Rating.razor" />
   </ItemGroup>
 
 </Project>

@@ -79,6 +79,28 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
             }
         }
 
+        public async Task<List<DetailedCourseThemeDtos?>> FindByProgramLanguage(Guid id)
+        {
+            try
+            {
+                return (await _context.CourseTheme
+                    .AsNoTracking()
+                    .Where(ct => EF.Property<bool>(ct, "_isActive"))
+                    .Where(pl => pl.ProgrammingLanguageId == id)
+                    .OrderBy(ct => EF.Property<int>(ct, "_displayOrder"))
+                    .Include(tr => tr.ThemeRecommendations)
+                    .Include(cm => cm.CourseModules)
+                    .ThenInclude(vc => vc.VideoCourses)
+                    .Include(pl => pl.ProgrammingLanguages)
+                    .Select(ct => GetCourseThemeDto(ct))
+                    .ToListAsync())!;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
         public async Task<DetailedCourseThemeDtos?> Update(UpdateCourseThemeRequestDto dto)
         {
             try

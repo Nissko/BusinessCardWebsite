@@ -13,6 +13,8 @@ namespace ContractualDtos.DTO.User.UserProfile.Dtos
         string Email,
         string AltName,
         string CreatedOn,
+        bool IsActive,
+        bool IsBlocked,
         UserSetting UserSetting,
         List<UserRoleDto> UserRoles);
 }

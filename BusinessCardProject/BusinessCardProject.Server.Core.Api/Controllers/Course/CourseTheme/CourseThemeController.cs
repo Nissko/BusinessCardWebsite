@@ -39,6 +39,13 @@ namespace BusinessCardProject.Server.Core.Api.Controllers.Course.CourseTheme
             var result = await _repository.Read(id);
             return result != null ? Ok(result) : NoContent();
         }
+        
+        [HttpGet("find-by-language/{id}")]
+        public async Task<IActionResult> FindByProgramLanguageAsync(Guid id)
+        {
+            var result = await _repository.FindByProgramLanguage(id);
+            return result != null ? Ok(result) : NoContent();
+        }
 
         [HttpPatch("update")]
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateCourseThemeRequestDto dto)

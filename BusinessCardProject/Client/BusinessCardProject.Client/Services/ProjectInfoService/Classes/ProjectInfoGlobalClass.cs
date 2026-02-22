@@ -8,7 +8,7 @@
         /// <summary>
         /// Название проекта
         /// </summary>
-        public static string ProjectName => "EasyCSharpStart";
+        public static string ProjectName => "ByteCode";
 
         /// <summary>
         /// Ссылка на сайт

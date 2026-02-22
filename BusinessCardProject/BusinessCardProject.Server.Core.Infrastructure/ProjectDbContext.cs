@@ -66,11 +66,8 @@ namespace BusinessCardProject.Server.Core.Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder
-                .UseNpgsql(
-                    "Server=109.205.58.47;User Id=persProjectUser;Password=7FEpX_wl6g;Port=5432;Database=testDb;",
-                    npgsqlOptions => { npgsqlOptions.UseNodaTime(); })
-                .UseLazyLoadingProxies();
+            //optionsBuilder.UseNpgsql("Server=109.205.58.47;User Id=persProjectUser;Password=7FEpX_wl6g;Port=5432;Database=testDb;", npgsqlOptions => { npgsqlOptions.UseNodaTime(); }).UseLazyLoadingProxies();
+            optionsBuilder.UseNpgsql("Server=localhost;User Id=postgres;Password=0000;Port=5432;Database=postgres;", npgsqlOptions => { npgsqlOptions.UseNodaTime(); }).UseLazyLoadingProxies();
         }
 
         private static DbContextOptions<T> ChangeOptionsType<T>(DbContextOptions options) where T : DbContext
