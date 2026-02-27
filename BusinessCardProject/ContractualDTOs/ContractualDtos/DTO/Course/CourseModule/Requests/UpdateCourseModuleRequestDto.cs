@@ -2,7 +2,6 @@
 {
     public record UpdateCourseModuleRequestDto(
         Guid Id,
-        string Name,
-        string Description,
-        Guid CourseThemeId);
+        string Param,
+        string Value);
 }

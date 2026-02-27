@@ -6,5 +6,7 @@
     public record CreateCourseModuleRequestDto(
         string Name,
         string Description,
+        int DisplayOrder,
+        bool IsShow,
         Guid CourseThemeId);
 }

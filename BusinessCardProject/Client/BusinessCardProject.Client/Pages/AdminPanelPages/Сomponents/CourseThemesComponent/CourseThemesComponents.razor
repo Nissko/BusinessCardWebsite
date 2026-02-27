@@ -30,7 +30,8 @@
                              Class="px-1"/>
         </MudItem>
         <MudItem Style="padding-left: 6px !important;" xs="12" md="12" Class="d-flex">
-            <PreviewComponent CourseTheme="_courseThemes" SelectedCt="@_selectedCt" OnCourseModuleSelected="@HandleModuleItemSelected" />
+            <PreviewComponent CourseTheme="_courseThemes" SelectedCt="@_selectedCt"
+                              OnCourseModuleSelected="@HandleModuleItemSelected"/>
 
             <MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true"
                      ApplyEffectsToContainer="true" PanelClass="pa-6"
@@ -38,20 +39,18 @@
                      Style="width: 50%" Class="px-2 py-2"
                      Elevation="1">
                 <MudTabPanel Text="Основная">
-                    <CourseThemeTreeItemComponent CourseTheme="_courseThemes" 
-                                                  SelectedCt="@_selectedCt" 
-                                                  OnDataChanged="RefreshDataAsync" />
+                    <CourseThemeTreeItemComponent CourseTheme="_courseThemes"
+                                                  SelectedCt="@_selectedCt"
+                                                  OnDataChanged="RefreshDataAsync"/>
                 </MudTabPanel>
                 <MudTabPanel Text="Модули">
-                    <CourseModuleTreeItemComponent CourseModules="_courseThemes?.FirstOrDefault(cm => cm.Id == _selectedCtId)?.CourseModules.ToList()" 
-                                                   SelectedPreviewCourseModuleId="_selectedModulePreviewId"
-                                                   OnDataChanged="RefreshDataAsync" />
+                    <CourseModuleTreeItemComponent
+                        CourseModules="_courseThemes?.FirstOrDefault(cm => cm.Id == _selectedCtId)?.CourseModules.ToList()"
+                        SelectedPreviewCourseModuleId="_selectedModulePreviewId"
+                        OnDataChanged="RefreshDataAsync"/>
                 </MudTabPanel>
                 <MudTabPanel Text="Видео">
                     <MudText>Content 3</MudText>
-                </MudTabPanel>
-                <MudTabPanel Text="Еще чет">
-                    <MudText>Content 4</MudText>
                 </MudTabPanel>
             </MudTabs>
         </MudItem>
@@ -74,6 +73,7 @@
     /// Выбранная тема
     /// </summary>
     private string? _selectedCt;
+
     private Guid _selectedCtId;
 
     /// <summary>
@@ -140,7 +140,7 @@
             : _courseThemes.Select(x => x.Name)
                 .Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase)));
     }
-    
+
     // Установка значения свойству - _selectedCtId
     private void UpdateSelectedCtId()
     {
@@ -157,7 +157,7 @@
             _selectedCtId = Guid.Empty;
         }
     }
-    
+
     // Обновление данных после изменения
     private async Task RefreshDataAsync()
     {
@@ -168,10 +168,11 @@
 
         StateHasChanged();
     }
-    
+
     private void HandleModuleItemSelected(Guid selectedId)
     {
         _selectedModulePreviewId = selectedId;
         StateHasChanged();
     }
+
 }

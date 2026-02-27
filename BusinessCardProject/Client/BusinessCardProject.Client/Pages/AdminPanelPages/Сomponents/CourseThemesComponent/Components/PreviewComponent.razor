@@ -9,17 +9,17 @@
     </MudItem>
     <MudDivider Class="my-2"></MudDivider>
     <MudItem xs="12">
-        <MudTreeView T="string" 
-                     Hover="true" 
+        <MudTreeView T="string"
+                     Hover="true"
                      ExpandOnClick="true">
             @if (CourseTheme != null && !string.IsNullOrEmpty(SelectedCt))
             {
                 if (CourseTheme.First(ctn => ctn.Name == SelectedCt).CourseModules.Any())
                 {
-                    foreach (var module in CourseTheme.First(ctn => ctn.Name == SelectedCt).CourseModules)
+                    foreach (var module in CourseTheme.First(ctn => ctn.Name == SelectedCt).CourseModules.OrderBy(xs => xs.DisplayOrder))
                     {
-                        <MudTreeViewItem Text="@module.Name" 
-                                         TextTypo="Typo.body1" 
+                        <MudTreeViewItem Text="@module.Name"
+                                         TextTypo="Typo.body1"
                                          Class="mb-1"
                                          Value="@module.Id.ToString()"
                                          Expanded="@GetExpandedState(module.Id)"
@@ -68,19 +68,19 @@
 @code {
     private Guid _selectedCmPreviewId;
     private Guid? _expandedModuleId;
-    
+
     [Parameter] public IEnumerable<DetailedCourseThemeDtos>? CourseTheme { get; set; }
     [Parameter] public string? SelectedCt { get; set; }
-    
+
     [Parameter] public EventCallback<Guid> OnCourseModuleSelected { get; set; }
-    
+
     private async Task OnModuleExpandedChanged(Guid moduleId, bool expanded)
     {
         if (expanded)
         {
             _expandedModuleId = moduleId;
             _selectedCmPreviewId = moduleId;
-            
+
             if (OnCourseModuleSelected.HasDelegate)
             {
                 await OnCourseModuleSelected.InvokeAsync(_selectedCmPreviewId);
@@ -92,9 +92,10 @@
             _selectedCmPreviewId = Guid.Empty;
         }
     }
-    
+
     private bool GetExpandedState(Guid moduleId)
     {
         return _expandedModuleId == moduleId;
     }
+
 }

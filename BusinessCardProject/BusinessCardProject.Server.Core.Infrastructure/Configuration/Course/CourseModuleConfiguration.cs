@@ -22,6 +22,16 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Configuration.Course
                 .HasMaxLength(1000)
                 .HasComment("Описание");
 
+            builder.Property("_displayOrder")
+                .HasColumnName("DisplayOrder")
+                .HasDefaultValue(1)
+                .HasComment("Порядок отображения");
+
+            builder.Property("_isShow")
+                .HasColumnName("IsShow")
+                .HasDefaultValue(false)
+                .HasComment("Вывод");
+
             builder.HasOne(x => x.CourseTheme)
                 .WithMany(x => x.CourseModules)
                 .HasForeignKey(x=>x.CourseThemeId)

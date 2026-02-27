@@ -36,13 +36,6 @@ namespace BusinessCardProject.Server.Core.Api.Controllers.Course.CourseModule
             return result != null ? Ok(result) : NoContent();
         }
 
-        [HttpPatch("update")]
-        public async Task<IActionResult> UpdateAsync([FromBody] UpdateCourseModuleRequestDto dto)
-        {
-            var result = await _repository.Update(dto);
-            return result != null ? Ok(result) : NoContent();
-        }
-
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {

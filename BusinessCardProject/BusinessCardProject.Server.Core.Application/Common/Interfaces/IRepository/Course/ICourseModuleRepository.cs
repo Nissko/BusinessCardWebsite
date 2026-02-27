@@ -26,7 +26,7 @@ namespace BusinessCardProject.Server.Core.Application.Common.Interfaces.IReposit
         /// Изменение определенного модуля
         /// </summary>
         /// <param name="dto">передаваемые параметры из запроса</param>
-        Task<DetailedCourseModuleDtos?> Update(UpdateCourseModuleRequestDto dto);
+        Task<bool> Update(UpdateCourseModuleRequestDto dto);
 
         /// <summary>
         /// Удаление определенного модуля

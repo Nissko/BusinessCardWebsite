@@ -40,6 +40,38 @@
                                         },
                                         _backdropClick))"/>
         </MudItem>
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText Class="mb-2"
+                     Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <b>Порядок отображения</b>: @courseModule.DisplayOrder
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(courseModule.Id,
+                                        new DialogParameters<DialogCustomComponent>
+                                        {
+                                            { x => x.LabelTextString, "Порядок отображения" },
+                                            { x => x.NameOfApiKey, $"{nameof(courseModule.DisplayOrder)}" },
+                                            { x => x.InputType, DynamicInputType.Number },
+                                            { x => x.InputValueString, courseModule.DisplayOrder.ToString() }
+                                        },
+                                        _backdropClick))"/>
+        </MudItem>
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText Class="mb-2"
+                     Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <b>Показывать</b>: @(courseModule.IsShow ? "Да" : "Нет")
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(courseModule.Id,
+                                        new DialogParameters<DialogCustomComponent>
+                                        {
+                                            { x => x.LabelTextString, "Показывать" },
+                                            { x => x.NameOfApiKey, $"{nameof(courseModule.IsShow)}" },
+                                            { x => x.InputType, DynamicInputType.Boolean },
+                                            { x => x.InputValueString, courseModule.IsShow.ToString() }
+                                        },
+                                        _backdropClick))"/>
+        </MudItem>
     }
 }
 
@@ -68,4 +100,5 @@
             }
         }
     }
+
 }

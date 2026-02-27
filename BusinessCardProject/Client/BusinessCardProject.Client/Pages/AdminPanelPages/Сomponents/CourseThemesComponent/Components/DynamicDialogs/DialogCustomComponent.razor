@@ -13,6 +13,7 @@
                               Variant="Variant.Outlined"
                               Label="@LabelTextString" 
                               Required="true" 
+                              MaxLength="200"
                               @bind-Value="InputValueString"
                               RequiredError="Значение не должно быть пустым" />
                 break;
@@ -23,7 +24,7 @@
                               Variant="Variant.Outlined"
                               Lines="3"
                               MaxLines="10"
-                              Sizing="InputSizing.Auto"
+                              MaxLength="1000"
                               @bind-Value="InputValueString" />
                 break;
                 
@@ -88,15 +89,19 @@
 
     private int? _currentNumberValue;
     private string? _currentBoolValue;
-    private bool _isLoading = false;
+    private bool _isLoading;
     
     protected override void OnInitialized()
     {
-        if (InputType == DynamicInputType.Number && int.TryParse(InputValueString, out var num))
-            _currentNumberValue = num;
-            
-        if (InputType == DynamicInputType.Boolean && bool.TryParse(InputValueString, out var boolVal))
-            _currentBoolValue = boolVal ? "Да" : "Нет";
+        switch (InputType)
+        {
+            case DynamicInputType.Number when int.TryParse(InputValueString, out var num):
+                _currentNumberValue = num;
+                break;
+            case DynamicInputType.Boolean when bool.TryParse(InputValueString, out var boolVal):
+                _currentBoolValue = boolVal ? "Да" : "Нет";
+                break;
+        }
     }
     
     private void Cancel() => MudDialog?.Cancel();

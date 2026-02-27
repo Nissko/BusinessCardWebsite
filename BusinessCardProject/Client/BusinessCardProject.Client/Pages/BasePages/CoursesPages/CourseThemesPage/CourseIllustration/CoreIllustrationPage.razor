@@ -37,7 +37,7 @@
                     Содержание курса:
                 </MudText>
                 <MudTreeView T="string" Hover="true" ExpandOnClick="true">
-                    @foreach (var module in _course.CourseModules)
+                    @foreach (var module in _course.CourseModules.Where(cms=>cms.IsShow).OrderBy(ord=>ord.DisplayOrder))
                     {
                         <MudTreeViewItem Text="@module.Name" TextTypo="Typo.h4" Class="mb-1">
                             @if (module.VideoCourses.Any())

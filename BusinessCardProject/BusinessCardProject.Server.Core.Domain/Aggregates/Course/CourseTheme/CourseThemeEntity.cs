@@ -98,40 +98,42 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme
             switch (param)
             {
                 case nameof(Name):
-                    _themeName = value; 
+                    _themeName = value;
                     break;
-            
+
                 case nameof(Description):
                     _themeDescription = value;
                     break;
-            
+
                 case nameof(DisplayOrder):
                     if (!int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var displayOrder))
                     {
-                        throw new ArgumentException($"Некорректное значение для {param}: '{value}'. Ожидается целое число.");
+                        throw new ArgumentException($"Некорректное значение для {param}: '{value}'.");
                     }
-            
+
                     _displayOrder = displayOrder;
                     break;
-            
+
                 case nameof(IsActive):
                     if (!bool.TryParse(value, out var isActive))
                     {
-                        throw new ArgumentException($"Некорректное значение для {param}: '{value}'. Ожидается True/False.");
+                        throw new ArgumentException($"Некорректное значение для {param}: '{value}'.");
                     }
+
                     _isActive = isActive;
                     break;
-            
+
                 case nameof(IsFree):
                     if (!bool.TryParse(value, out var isFree))
                     {
-                        throw new ArgumentException($"Некорректное значение для {param}: '{value}'. Ожидается True/False.");
+                        throw new ArgumentException($"Некорректное значение для {param}: '{value}'.");
                     }
+
                     _isFree = isFree;
                     break;
-            
+
                 default:
-                    throw new ArgumentException($"Неизвестный параметр для обновления: '{param}'");
+                    throw new ArgumentException($"Неизвестный параметр для обновления: '{param}'.");
             }
         }
     

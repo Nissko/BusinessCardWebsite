@@ -22,8 +22,10 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
         {
             try
             {
-                var data = await _context.CourseModule.ToListAsync();
-                return GetCourseModuleDto(data);
+                return await _context.CourseModule
+                    .AsNoTracking()
+                    .Select(cm => GetCourseModuleDto(cm))
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -35,7 +37,8 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
         {
             try
             {
-                var newCourseModule = new CourseModuleEntity(dto.Name, dto.Description, dto.CourseThemeId);
+                var newCourseModule = new CourseModuleEntity(dto.Name, dto.Description, dto.CourseThemeId, dto.IsShow,
+                    dto.DisplayOrder);
 
                 var courseTheme = await _context.CourseTheme.FindAsync(dto.CourseThemeId);
                 if (courseTheme == null) return null;
@@ -56,10 +59,10 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
         {
             try
             {
-                var courseModule = await _context.CourseModule.FindAsync(id);
-                if (courseModule == null) return null;
-
-                return GetCourseModuleDto(courseModule);
+                return await _context.CourseModule
+                    .AsNoTracking()
+                    .Select(cm => GetCourseModuleDto(cm))
+                    .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -67,29 +70,18 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
             }
         }
 
-        public async Task<DetailedCourseModuleDtos?> Update(UpdateCourseModuleRequestDto dto)
+        public async Task<bool> Update(UpdateCourseModuleRequestDto dto)
         {
             try
             {
                 var courseModule = await _context.CourseModule.FindAsync(dto.Id);
-                if (courseModule == null) return null;
+                if (courseModule == null) return false;
 
-                if (!courseModule.CourseTheme.Id.Equals(dto.CourseThemeId))
-                {
-                    var courseTheme = await _context.CourseTheme.FindAsync(dto.CourseThemeId);
-                    if (courseTheme == null) return null;
-                
-                    courseModule.Update(dto.Name, dto.Description, courseTheme);
-                }
-                else
-                {
-                    courseModule.Update(dto.Name, dto.Description);
-                }
-
+                courseModule.Update(dto.Param, dto.Value);
                 _context.CourseModule.Update(courseModule);
                 await SaveChanges();
 
-                return GetCourseModuleDto(courseModule);
+                return true;
             }
             catch (Exception ex)
             {
@@ -129,6 +121,8 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
                 entity.Id,
                 entity.Name,
                 entity.Description,
+                entity.DisplayOrder,
+                entity.IsShow,
                 new CourseThemeDtos(
                     entity.CourseTheme.Id,
                     entity.CourseTheme.Name,
@@ -159,6 +153,8 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
                 e.Id,
                 e.Name,
                 e.Description,
+                e.DisplayOrder,
+                e.IsShow,
                 new CourseThemeDtos(
                     e.CourseTheme.Id,
                     e.CourseTheme.Name,

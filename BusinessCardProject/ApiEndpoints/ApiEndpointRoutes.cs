@@ -19,7 +19,7 @@ namespace ApiEndpoints
         /// <summary>
         /// Url для frontend(-a)
         /// </summary>
-        public static string BaseFrontUrl => _configuration["BaseFrontUrl"] ??  "https://localhost:7209/";
+        public static string BaseFrontUrl => _configuration["BaseFrontUrl"] ??  "http://localhost:5111/";
     
         /// <summary>
         /// Url для Production backend(-a)

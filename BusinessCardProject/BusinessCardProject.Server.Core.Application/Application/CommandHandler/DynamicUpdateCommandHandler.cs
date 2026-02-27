@@ -2,6 +2,7 @@
 using BusinessCardProject.Server.Core.Application.Common.Enums;
 using BusinessCardProject.Server.Core.Application.Common.Interfaces.CustomMediator;
 using BusinessCardProject.Server.Core.Application.Common.Interfaces.IRepository.Course;
+using ContractualDtos.DTO.Course.CourseModule.Requests;
 using ContractualDtos.DTO.Course.CourseTheme.Requests;
 
 namespace BusinessCardProject.Server.Core.Application.Application.CommandHandler
@@ -39,8 +40,9 @@ namespace BusinessCardProject.Server.Core.Application.Application.CommandHandler
                         new UpdateCourseThemeRequestDto(recordId, request.FieldApiName, request.Value));
                     return resultCourseThemeUpdate;
                 case nameof(TypeOfEntityType.CourseModule):
-                    return true;
-                    break;
+                    var resultCourseModuleUpdate = await _courseModuleRepository.Update(
+                        new UpdateCourseModuleRequestDto(recordId, request.FieldApiName, request.Value));
+                    return resultCourseModuleUpdate;
                 case nameof(TypeOfEntityType.VideoCourse):
                     return true;
                     break;

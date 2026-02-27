@@ -178,6 +178,8 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
                     e.Id,
                     e.Name,
                     e.Description,
+                    e.DisplayOrder,
+                    e.IsShow,
                     e.VideoCourses.Select(vc => new VideoCourseDtos(
                         vc.Id,
                         vc.Name,
@@ -220,6 +222,8 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
                     cm.Id,
                     cm.Name,
                     cm.Description,
+                    cm.DisplayOrder,
+                    cm.IsShow,
                     cm.VideoCourses.Select(vc => new VideoCourseDtos(
                         vc.Id,
                         vc.Name,

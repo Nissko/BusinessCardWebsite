@@ -9,5 +9,7 @@ namespace ContractualDtos.DTO.Course.CourseModule.Dtos
         Guid Id,
         string Name,
         string Description,
+        int DisplayOrder,
+        bool IsShow,
         CourseThemeDtos CourseTheme);
 }

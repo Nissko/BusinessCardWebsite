@@ -13,10 +13,12 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
             VideoCourses = new HashSet<VideoCourseEntity>();
         }
     
-        public CourseModuleEntity(string name, string description, Guid courseThemeId) :  this()
+        public CourseModuleEntity(string name, string description, Guid courseThemeId, bool isShow, int displayOrder) :  this()
         {
             _name = name;
             _description = description;
+            _isShow = isShow;
+            _displayOrder = displayOrder;
             CourseThemeId = courseThemeId;
         }
     
@@ -31,6 +33,18 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
         /// </summary>
         public string Description => _description;
         private string _description;
+
+        /// <summary>
+        /// Нужно ли выводить
+        /// </summary>
+        public bool IsShow => _isShow;
+        private bool _isShow;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public int DisplayOrder => _displayOrder;
+        private int _displayOrder;
 
         /// <summary>
         /// Тема которой принадлежит модуль
@@ -56,10 +70,32 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course
             CourseTheme = courseTheme;
         }
     
-        public void Update(string name, string description)
+        public void Update(string param, string value)
         {
-            _name = name;
-            _description = description;
+            if (string.IsNullOrEmpty(param))
+                throw new ArgumentException("Имя параметра не может быть пустым", nameof(param));
+
+            switch (param)
+            {
+                case nameof(Name):
+                    _name = value;
+                    break;
+
+                case nameof(Description):
+                    _description = value;
+                    break;
+                
+                case nameof(DisplayOrder):
+                    _displayOrder = int.Parse(value);
+                    break;
+                
+                case nameof(IsShow):
+                    _isShow = bool.Parse(value);
+                    break;
+                
+                default:
+                    throw new ArgumentException($"Неизвестный параметр для обновления: '{param}'.");
+            }
         }
     
         /// <summary>
