@@ -1,76 +1,76 @@
-﻿@using BusinessCardProject.Client.Pages.AdminPanelPages.Сomponents.CourseThemesComponent.Components.DynamicDialogs
+@using BusinessCardProject.Client.Pages.AdminPanelPages.Сomponents.CourseThemesComponent.Components.DynamicDialogs
 @using BusinessCardProject.Client.Pages.AdminPanelPages.Сomponents.CourseThemesComponent.Components.DynamicDialogs.Params
-@using ContractualDtos.DTO.Course.CourseModule.Dtos
+@using ContractualDtos.DTO.Course.VideoCourse.Dtos
 @inject IDialogService Dialog
 
-@if (CourseModules != null && !string.IsNullOrEmpty(SelectedPreviewCourseModuleId.ToString()))
+@if (VideoCourses != null && !string.IsNullOrEmpty(SelectedPreviewCourseModuleId.ToString()))
 {
-    foreach (var courseModule in CourseModules.Where(cm => cm.Id == SelectedPreviewCourseModuleId))
+    foreach (var videoCourse in VideoCourses.Where(cm => cm.Id == SelectedPreviewCourseModuleId))
     {
         <MudItem Class="mb-2 d-flex justify-space-between align-center">
             <MudText>
                 <b>Название</b>:
-                <ul>@courseModule.Name</ul>
+                <ul>@videoCourse.Name</ul>
             </MudText>
             <MudIconButton Icon="@Icons.Material.Rounded.Edit"
-                           OnClick="@(() => OpenDialogAsync(courseModule.Id,
+                           OnClick="@(() => OpenDialogAsync(videoCourse.Id,
                                         new DialogParameters<DialogCustomComponent>
                                         {
                                             { x => x.LabelTextString, "Название" },
-                                            { x => x.NameOfApiKey, $"{nameof(courseModule.Name)}" },
+                                            { x => x.NameOfApiKey, $"{nameof(videoCourse.Name)}" },
                                             { x => x.InputType, DynamicInputType.Text },
-                                            { x => x.InputValueString, courseModule.Name }
+                                            { x => x.InputValueString, videoCourse.Name }
                                         },
                                         _backdropClick))"/>
         </MudItem>
-        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+        @*<MudItem Class="mb-2 d-flex justify-space-between align-center">
             <MudText Class="mb-2"
                      Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                <b>Описание</b>: @courseModule.Description
+                <b>Описание</b>: @videoCourse.Description
             </MudText>
             <MudIconButton Icon="@Icons.Material.Rounded.Edit"
-                           OnClick="@(() => OpenDialogAsync(courseModule.Id,
+                           OnClick="@(() => OpenDialogAsync(videoCourse.Id,
                                         new DialogParameters<DialogCustomComponent>
                                         {
                                             { x => x.LabelTextString, "Описание" },
-                                            { x => x.NameOfApiKey, $"{nameof(courseModule.Description)}" },
+                                            { x => x.NameOfApiKey, $"{nameof(videoCourse.Description)}" },
                                             { x => x.InputType, DynamicInputType.TextArea },
-                                            { x => x.InputValueString, courseModule.Description }
+                                            { x => x.InputValueString, videoCourse.Description }
                                         },
                                         _backdropClick))"/>
         </MudItem>
         <MudItem Class="mb-2 d-flex justify-space-between align-center">
             <MudText Class="mb-2"
                      Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                <b>Порядок отображения</b>: @courseModule.DisplayOrder
+                <b>Порядок отображения</b>: @videoCourse.DisplayOrder
             </MudText>
             <MudIconButton Icon="@Icons.Material.Rounded.Edit"
-                           OnClick="@(() => OpenDialogAsync(courseModule.Id,
+                           OnClick="@(() => OpenDialogAsync(videoCourse.Id,
                                         new DialogParameters<DialogCustomComponent>
                                         {
                                             { x => x.LabelTextString, "Порядок отображения" },
-                                            { x => x.NameOfApiKey, $"{nameof(courseModule.DisplayOrder)}" },
+                                            { x => x.NameOfApiKey, $"{nameof(videoCourse.DisplayOrder)}" },
                                             { x => x.InputType, DynamicInputType.Number },
-                                            { x => x.InputValueString, courseModule.DisplayOrder.ToString() }
+                                            { x => x.InputValueString, videoCourse.DisplayOrder.ToString() }
                                         },
                                         _backdropClick))"/>
         </MudItem>
         <MudItem Class="mb-2 d-flex justify-space-between align-center">
             <MudText Class="mb-2"
                      Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                <b>Показывать</b>: @(courseModule.IsShow ? "Да" : "Нет")
+                <b>Показывать</b>: @(videoCourse.IsShow ? "Да" : "Нет")
             </MudText>
             <MudIconButton Icon="@Icons.Material.Rounded.Edit"
-                           OnClick="@(() => OpenDialogAsync(courseModule.Id,
+                           OnClick="@(() => OpenDialogAsync(videoCourse.Id,
                                         new DialogParameters<DialogCustomComponent>
                                         {
                                             { x => x.LabelTextString, "Показывать" },
-                                            { x => x.NameOfApiKey, $"{nameof(courseModule.IsShow)}" },
+                                            { x => x.NameOfApiKey, $"{nameof(videoCourse.IsShow)}" },
                                             { x => x.InputType, DynamicInputType.Boolean },
-                                            { x => x.InputValueString, courseModule.IsShow.ToString() }
+                                            { x => x.InputValueString, videoCourse.IsShow.ToString() }
                                         },
                                         _backdropClick))"/>
-        </MudItem>
+        </MudItem>*@
     }
 }
 
@@ -78,7 +78,7 @@
     private readonly DialogOptions _backdropClick = new() { BackdropClick = false, FullWidth = true };
 
     [Parameter] public EventCallback OnDataChanged { get; set; }
-    [Parameter] public List<CourseModuleDtos>? CourseModules { get; set; }
+    [Parameter] public List<VideoCourseDtos>? VideoCourses { get; set; }
     [Parameter] public Guid? SelectedPreviewCourseModuleId { get; set; }
 
     private async Task OpenDialogAsync(Guid id, DialogParameters<DialogCustomComponent> parameters, DialogOptions options)
@@ -86,7 +86,7 @@
         const string typeName = "Редактирование";
         parameters.Add(x => x.ButtonTextString, "Изменить");
         parameters.Add(x => x.RecordId, id);
-        parameters.Add(x => x.NameOfApi, TypeOfEntityType.CourseModule);
+        parameters.Add(x => x.NameOfApi, TypeOfEntityType.VideoCourse);
 
         var dialogReference = await Dialog.ShowAsync<DialogCustomComponent>(typeName, parameters, options);
         var dialogResult = await dialogReference.Result;

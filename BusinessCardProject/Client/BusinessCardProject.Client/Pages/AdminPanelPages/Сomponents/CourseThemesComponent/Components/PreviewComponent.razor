@@ -22,14 +22,17 @@
                                          TextTypo="Typo.body1"
                                          Class="mb-1"
                                          Value="@module.Id.ToString()"
-                                         Expanded="@GetExpandedState(module.Id)"
+                                         Expanded="@GetModuleExpandedState(module.Id)"
                                          ExpandedChanged="@((expanded) => OnModuleExpandedChanged(module.Id, expanded))">
                             @if (module.VideoCourses.Any())
                             {
                                 foreach (var (videoCourse, index) in module.VideoCourses.Select((v, i) => (v, i)))
                                 {
                                     <MudTreeViewItem Text="@($"Урок {index + 1}. {videoCourse.Name}")"
-                                                     TextTypo="Typo.body1" Class="mt-1 mb-1">
+                                                     TextTypo="Typo.body1" Class="mt-1 mb-1"
+                                                     Value="@videoCourse.Id.ToString()"
+                                                     Expanded="@GetVideoCourseExpandedState(videoCourse.Id)"
+                                                     ExpandedChanged="@((expanded) => OnVideoCourseExpandedChanged(videoCourse.Id, expanded))">
                                         <MudGrid Class="pt-4 pb-4 pr-7">
                                             <MudItem xs="12" md="3">
                                                 <MudImage Src="images/sweden.jpg"
@@ -67,35 +70,69 @@
 
 @code {
     private Guid _selectedCmPreviewId;
+    private Guid _selectedVcPreviewId;
     private Guid? _expandedModuleId;
+    private Guid? _expandedVideoCourseId;
 
     [Parameter] public IEnumerable<DetailedCourseThemeDtos>? CourseTheme { get; set; }
     [Parameter] public string? SelectedCt { get; set; }
 
     [Parameter] public EventCallback<Guid> OnCourseModuleSelected { get; set; }
+    [Parameter] public EventCallback<Guid> OnVideoCourseSelected { get; set; }
 
+    /// <summary>
+    /// Выбора значения с preview для правой панели
+    /// </summary>
     private async Task OnModuleExpandedChanged(Guid moduleId, bool expanded)
     {
         if (expanded)
         {
             _expandedModuleId = moduleId;
+            _expandedVideoCourseId = null;
             _selectedCmPreviewId = moduleId;
-
-            if (OnCourseModuleSelected.HasDelegate)
-            {
-                await OnCourseModuleSelected.InvokeAsync(_selectedCmPreviewId);
-            }
         }
         else
         {
             _expandedModuleId = null;
             _selectedCmPreviewId = Guid.Empty;
         }
+
+        if (OnCourseModuleSelected.HasDelegate)
+        {
+            await OnCourseModuleSelected.InvokeAsync(_selectedCmPreviewId);
+        }
     }
 
-    private bool GetExpandedState(Guid moduleId)
+    private bool GetModuleExpandedState(Guid moduleId)
     {
         return _expandedModuleId == moduleId;
+    }
+
+    /// <summary>
+    /// Выбора значения с preview для правой панели
+    /// </summary>
+    private async Task OnVideoCourseExpandedChanged(Guid videoId, bool expanded)
+    {
+        if (expanded)
+        {
+            _expandedVideoCourseId = videoId;
+            _selectedVcPreviewId = videoId;
+        }
+        else
+        {
+            _expandedVideoCourseId = null;
+            _selectedVcPreviewId = Guid.Empty;
+        }
+
+        if (OnVideoCourseSelected.HasDelegate)
+        {
+            await OnVideoCourseSelected.InvokeAsync(_selectedVcPreviewId);
+        }
+    }
+
+    private bool GetVideoCourseExpandedState(Guid videoId)
+    {
+        return _expandedVideoCourseId == videoId;
     }
 
 }
