@@ -1,6 +1,7 @@
 ﻿@page "/admin-panel"
-@using BusinessCardProject.Client.Pages.AdminPanelPages.Enum
+@using BusinessCardProject.Client.Pages.AdminPanelPages.Params
 @using BusinessCardProject.Client.Pages.AdminPanelPages.Сomponents
+@using BusinessCardProject.Client.Pages.AdminPanelPages.Сomponents.CourseThemesComponent
 
 <PageTitle>Панель-администратора</PageTitle>
 
@@ -15,15 +16,15 @@
                     <MudListItem Text="Графики"
                                  Icon="@Icons.Material.Rounded.Analytics"
                                  IconColor="Color.Info"
-                                 @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Graphs))"/>
+                                 @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtns.Graphs))"/>
                     <MudListItem Text="Сервер"
                                  Icon="@Icons.Material.Rounded.Storage"
                                  IconColor="Color.Info"
-                                 @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Servers))"/>
+                                 @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtns.Servers))"/>
                     <MudListItem Text="Заказы" 
                                  Icon="@Icons.Material.Rounded.Receipt" 
                                  IconColor="Color.Info"
-                                 @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Orders))"/>
+                                 @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtns.Orders))"/>
                     <MudListItem Text="Настройки" 
                                  Icon="@Icons.Material.Rounded.Settings" 
                                  IconColor="Color.Info">
@@ -31,20 +32,16 @@
                             <MudListItem Text="Пользователи" 
                                          Icon="@Icons.Material.Rounded.People"
                                          IconColor="Color.Success"
-                                         @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Users))"/>
+                                         @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtns.Users))"/>
                             <MudListItem Text="Темы курсов" 
-                                         Icon="@Icons.Material.Rounded.People"
+                                         Icon="@Icons.Material.Rounded.ViewModule"
                                          IconColor="Color.Success"
-                                         @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.CourseThemes))"/>
-                            <MudListItem Text="Модули" 
-                                         Icon="@Icons.Material.Rounded.People"
-                                         IconColor="Color.Success"
-                                         @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.CourseModules))"/>
+                                         @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtns.CourseThemes))"/>
                             @*TODO: Тут будет логирование действий пользователя со стороны Backend(-a)*@
                             <MudListItem Text="Аудит" 
                                          Icon="@Icons.Material.Rounded.Security"
                                          IconColor="Color.Warning"
-                                         @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtnEnum.Audits))"/>
+                                         @onclick="() => ChangeSelectCurrentComponent(nameof(AdminFiltersBtns.Audits))"/>
                         </NestedList>
                     </MudListItem>
                 </MudList>
@@ -71,9 +68,6 @@
                 case "CourseThemes":
                     <CourseThemesComponents/>
                     break;
-                case "CourseModules":
-                    <CourseModulesComponents/>
-                    break;
                 case "Audits":
                     <AuditComponents/>
                     break;
@@ -90,7 +84,7 @@
 </MudContainer>
 
 @code {
-    private string ComponentName { get; set; } = nameof(AdminFiltersBtnEnum.Graphs);
+    private string ComponentName { get; set; } = nameof(AdminFiltersBtns.Graphs);
 
     /// <summary>
     /// Изменение правого меню

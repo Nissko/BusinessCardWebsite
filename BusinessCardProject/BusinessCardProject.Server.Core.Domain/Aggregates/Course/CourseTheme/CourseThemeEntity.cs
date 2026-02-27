@@ -1,4 +1,5 @@
-﻿using BusinessCardProject.Server.Core.Domain.Commons;
+﻿using System.Globalization;
+using BusinessCardProject.Server.Core.Domain.Commons;
 using BusinessCardProject.Server.Core.Domain.Enums.Course;
 
 namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme
@@ -30,13 +31,13 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme
         /// <summary>
         /// Название темы курса
         /// </summary>
-        public string ThemeName => _themeName;
+        public string Name => _themeName;
         private string _themeName;
 
         /// <summary>
         /// Описание темы курса
         /// </summary>
-        public string ThemeDescription => _themeDescription;
+        public string Description => _themeDescription;
         private string _themeDescription;
 
         /// <summary>
@@ -85,33 +86,53 @@ namespace BusinessCardProject.Server.Core.Domain.Aggregates.Course.CourseTheme
 
         #region fucntions
 
-        /// <summary>
-        /// Обновление сущности
-        /// </summary>
-        public void Update(string name, string description, Guid typeOfCourseId,
-            ProgrammingLanguageCourseEntity programmingLanguageId, int displayOrder, bool isActive, bool isFree)
-        {
-            _themeName = name;
-            _themeDescription = description;
-            _typeOfCourseId = TypeOfCourseEnum.FromId(typeOfCourseId);
-            ProgrammingLanguages = programmingLanguageId;
-            _displayOrder = displayOrder;
-            _isActive = isActive;
-            _isFree = isFree;
-        }
 
         /// <summary>
         /// Обновление сущности
         /// </summary>
-        public void Update(string name, string description, Guid typeOfCourseId, int displayOrder, bool isActive,
-            bool isFree)
+        public void Update(string param, string value)
         {
-            _themeName = name;
-            _themeDescription = description;
-            _typeOfCourseId = TypeOfCourseEnum.FromId(typeOfCourseId);
-            _displayOrder = displayOrder;
-            _isActive = isActive;
-            _isFree = isFree;
+            if (string.IsNullOrEmpty(param))
+                throw new ArgumentException("Имя параметра не может быть пустым", nameof(param));
+
+            switch (param)
+            {
+                case nameof(Name):
+                    _themeName = value; 
+                    break;
+            
+                case nameof(Description):
+                    _themeDescription = value;
+                    break;
+            
+                case nameof(DisplayOrder):
+                    if (!int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var displayOrder))
+                    {
+                        throw new ArgumentException($"Некорректное значение для {param}: '{value}'. Ожидается целое число.");
+                    }
+            
+                    _displayOrder = displayOrder;
+                    break;
+            
+                case nameof(IsActive):
+                    if (!bool.TryParse(value, out var isActive))
+                    {
+                        throw new ArgumentException($"Некорректное значение для {param}: '{value}'. Ожидается True/False.");
+                    }
+                    _isActive = isActive;
+                    break;
+            
+                case nameof(IsFree):
+                    if (!bool.TryParse(value, out var isFree))
+                    {
+                        throw new ArgumentException($"Некорректное значение для {param}: '{value}'. Ожидается True/False.");
+                    }
+                    _isFree = isFree;
+                    break;
+            
+                default:
+                    throw new ArgumentException($"Неизвестный параметр для обновления: '{param}'");
+            }
         }
     
         /// <summary>

@@ -32,6 +32,7 @@
     <_ContentIncludedByDefault Remove="wwwroot\images\Donation\QR_Dark.png" />
     <_ContentIncludedByDefault Remove="wwwroot\images\Donation\QR_Light.png" />
     <_ContentIncludedByDefault Remove="Pages\RatingPage\Rating.razor" />
+    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\CourseThemes\Components\UniversalPropertyDialog.razor" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,16 +1,15 @@
-﻿namespace BusinessCardProject.Client.Pages.AdminPanelPages.Enum
+﻿namespace BusinessCardProject.Client.Pages.AdminPanelPages.Params
 {
     /// <summary>
     /// Справочник кнопок в админ-панели
     /// </summary>
-    public enum AdminFiltersBtnEnum
+    public enum AdminFiltersBtns
     {
         Graphs,
         Servers,
         Orders,
         Users,
         CourseThemes,
-        CourseModules,
         Audits
     }
 }

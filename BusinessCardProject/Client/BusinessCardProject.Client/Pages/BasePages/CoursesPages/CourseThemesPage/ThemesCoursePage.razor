@@ -136,7 +136,7 @@
         await BrowserViewportService.SubscribeAsync(Guid.NewGuid(), OnViewportChanged, fireImmediately: true);
 
         _coursers = await HttpClient.GetFromJsonAsync<DetailedCourseThemeDtos[]?>
-            (ApiEndpointRoutes.CourseThemes.GetAll);
+            (ApiEndpointRoutes.CourseThemes.FilteredGetAll);
         
         if (_coursers != null)
         {

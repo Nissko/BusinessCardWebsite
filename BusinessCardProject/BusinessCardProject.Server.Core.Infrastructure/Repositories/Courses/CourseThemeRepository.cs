@@ -12,16 +12,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
 {
-    public class CourseThemeRepository : ICourseThemeRepository
+    public class CourseThemeRepository(IProjectDbContext context) : ICourseThemeRepository
     {
-        private readonly IProjectDbContext _context;
-
-        public CourseThemeRepository(IProjectDbContext context)
-        {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-        }
+        private readonly IProjectDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
         public async Task<List<DetailedCourseThemeDtos>> GetAllAsync()
+        {
+            try
+            {
+                return await _context.CourseTheme
+                    .AsNoTracking()
+                    .OrderBy(ct => EF.Property<int>(ct, "_displayOrder"))
+                    .Include(tr => tr.ThemeRecommendations)
+                    .Include(cm => cm.CourseModules)
+                    .ThenInclude(vc => vc.VideoCourses)
+                    .Include(pl => pl.ProgrammingLanguages)
+                    .Select(ct => GetCourseThemeDto(ct))
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        
+        public async Task<List<DetailedCourseThemeDtos>> FilteredGetAllAsync()
         {
             try
             {
@@ -101,31 +116,18 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
             }
         }
 
-        public async Task<DetailedCourseThemeDtos?> Update(UpdateCourseThemeRequestDto dto)
+        public async Task<bool> Update(UpdateCourseThemeRequestDto dto)
         {
             try
             {
                 var courseTheme = await _context.CourseTheme.FindAsync([dto.Id]);
-                if (courseTheme == null) return null;
+                if (courseTheme == null) return false;
 
-                if (!courseTheme.ProgrammingLanguages.Id.Equals(dto.ProgrammingLanguageId))
-                {
-                    var programLanguage = await _context.ProgrammingLanguageCourse.FindAsync([dto.ProgrammingLanguageId]);
-                    if (programLanguage == null) return null;
-
-                    courseTheme.Update(dto.Name, dto.Description, dto.TypeOfCourseId, programLanguage, dto.DisplayOrder,
-                        dto.IsActive, dto.IsFree);
-                }
-                else
-                {
-                    courseTheme.Update(dto.Name, dto.Description, dto.TypeOfCourseId, dto.DisplayOrder, dto.IsActive,
-                        dto.IsFree);
-                }
-
+                courseTheme.Update(dto.Param, dto.Value);
                 _context.CourseTheme.Update(courseTheme);
                 await SaveChanges();
 
-                return GetCourseThemeDto(courseTheme);
+                return true;
             }
             catch (Exception ex)
             {
@@ -163,8 +165,8 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
         {
             return new DetailedCourseThemeDtos(
                 entity.Id,
-                entity.ThemeName,
-                entity.ThemeDescription,
+                entity.Name,
+                entity.Description,
                 entity.TypeOfCourse.Id,
                 new ProgrammingLanguageDtos(entity.ProgrammingLanguages.Id, entity.ProgrammingLanguages.Name,
                     entity.ProgrammingLanguages.CountSelectedUser),
@@ -205,8 +207,8 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
         {
             return entities.Select(e => new DetailedCourseThemeDtos(
                 e.Id,
-                e.ThemeName,
-                e.ThemeDescription,
+                e.Name,
+                e.Description,
                 e.TypeOfCourse.Id,
                 new ProgrammingLanguageDtos(e.ProgrammingLanguages.Id, e.ProgrammingLanguages.Name,
                     e.ProgrammingLanguages.CountSelectedUser),

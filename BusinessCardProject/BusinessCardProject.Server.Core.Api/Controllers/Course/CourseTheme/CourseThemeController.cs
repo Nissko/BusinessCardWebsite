@@ -18,11 +18,17 @@ namespace BusinessCardProject.Server.Core.Api.Controllers.Course.CourseTheme
         /// <summary>
         /// TODO: [ResponseCache(Duration = 600)] использовать при вкл.кэшировании
         /// </summary>
-        [HttpGet("get")]
-        //[ResponseCache(Duration = 300)]
+        [HttpGet("admin-get-all")]
         public async Task<IActionResult> GetAllAsync()
         {
             var result = await _repository.GetAllAsync();
+            return result.Count != 0 ? Ok(result) : NoContent();
+        }
+
+        [HttpGet("get")]
+        public async Task<IActionResult> FilteredGetAllAsync()
+        {
+            var result = await _repository.FilteredGetAllAsync();
             return result.Count != 0 ? Ok(result) : NoContent();
         }
 
@@ -44,13 +50,6 @@ namespace BusinessCardProject.Server.Core.Api.Controllers.Course.CourseTheme
         public async Task<IActionResult> FindByProgramLanguageAsync(Guid id)
         {
             var result = await _repository.FindByProgramLanguage(id);
-            return result != null ? Ok(result) : NoContent();
-        }
-
-        [HttpPatch("update")]
-        public async Task<IActionResult> UpdateAsync([FromBody] UpdateCourseThemeRequestDto dto)
-        {
-            var result = await _repository.Update(dto);
             return result != null ? Ok(result) : NoContent();
         }
 

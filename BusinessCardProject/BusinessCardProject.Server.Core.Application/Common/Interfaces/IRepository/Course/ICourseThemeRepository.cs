@@ -9,6 +9,11 @@ namespace BusinessCardProject.Server.Core.Application.Common.Interfaces.IReposit
         /// Вывод всех тем
         /// </summary>
         Task<List<DetailedCourseThemeDtos>> GetAllAsync();
+        
+        /// <summary>
+        /// Вывод всех тем
+        /// </summary>
+        Task<List<DetailedCourseThemeDtos>> FilteredGetAllAsync();
 
         /// <summary>
         /// Добавление новой темы
@@ -32,7 +37,7 @@ namespace BusinessCardProject.Server.Core.Application.Common.Interfaces.IReposit
         /// Изменение определенной темы
         /// </summary>
         /// <param name="dto">передаваемые параметры из запроса</param>
-        Task<DetailedCourseThemeDtos?> Update(UpdateCourseThemeRequestDto dto);
+        Task<bool> Update(UpdateCourseThemeRequestDto dto);
 
         /// <summary>
         /// Удаление определенной темы

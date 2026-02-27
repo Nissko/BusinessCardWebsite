@@ -27,11 +27,20 @@ namespace ApiEndpoints
         public static string BaseUrlProd => "http://localhost:5000/api/";
 
         /// <summary>
+        /// Базовые ссылки ядра
+        /// </summary>
+        public static class CoreBase  
+        {
+            public const string DynamicUpdate = "api/Core/dynamic-update";
+        }
+        
+        /// <summary>
         /// Ссылки на темы курсов
         /// </summary>
-        public static class CourseThemes 
+        public static class CourseThemes
         {
-            public static readonly string GetAll = "api/CourseTheme/get";
+            public static readonly string AdminGetAll = "api/CourseTheme/admin-get-all";
+            public static readonly string FilteredGetAll = "api/CourseTheme/get";
             public const string GetById = "api/CourseTheme/find/";
             public const string GetByLanguageId = "api/CourseTheme/find-by-language/";
             public const string Create = "api/CourseTheme/create";

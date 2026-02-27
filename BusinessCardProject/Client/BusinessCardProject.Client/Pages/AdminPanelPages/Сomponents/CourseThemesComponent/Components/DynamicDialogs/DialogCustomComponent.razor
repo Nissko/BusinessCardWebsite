@@ -1,0 +1,151 @@
+﻿@using ApiEndpoints
+@using BusinessCardProject.Client.Pages.AdminPanelPages.Сomponents.CourseThemesComponent.Components.DynamicDialogs.Params
+@using ContractualDtos.DTO.DynamicUpdateEntities
+@inject HttpClient HttpClient
+
+<MudDialog>
+    <DialogContent>
+        @switch (InputType)
+        {
+            case DynamicInputType.Text:
+                <MudTextField T="string"
+                              InputType="MudBlazor.InputType.Text"
+                              Variant="Variant.Outlined"
+                              Label="@LabelTextString" 
+                              Required="true" 
+                              @bind-Value="InputValueString"
+                              RequiredError="Значение не должно быть пустым" />
+                break;
+                
+            case DynamicInputType.TextArea:
+                <MudTextField T="string"
+                              Label="@LabelTextString"
+                              Variant="Variant.Outlined"
+                              Lines="3"
+                              MaxLines="10"
+                              Sizing="InputSizing.Auto"
+                              @bind-Value="InputValueString" />
+                break;
+                
+            case DynamicInputType.Number:
+                <MudNumericField T="int?" 
+                                 Label="@LabelTextString"
+                                 @bind-Value="_currentNumberValue"
+                                 Max="500"
+                                 Min="0"
+                                 Immediate="true" />
+                break;
+                
+            case DynamicInputType.Boolean:
+                var newListSting = new List<string> { "true", "false" };
+                
+                <MudSelect T="string" 
+                           @bind-Value="_currentBoolValue" 
+                           Label="@LabelTextString">
+                    @foreach (var value in newListSting)
+                    { 
+                        <MudSelectItem Value="@value"
+                                       Disabled="@(bool.Parse(InputValueString) == bool.Parse(value))">
+                            @(bool.Parse(value) ? "Да" : "Нет")
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+                break;
+                
+            case DynamicInputType.Select:
+                <MudText>@nameof(DynamicInputType.Select) - в разработке</MudText>
+                break;
+                
+            case DynamicInputType.MultiSelect:
+                <MudText>@nameof(DynamicInputType.MultiSelect) - в разработке</MudText>
+                break;
+                
+            default:
+                <MudText Color="Color.Error">Неподдерживаемый тип ввода: @InputType</MudText>
+                break;
+        }
+    </DialogContent>
+    
+    <DialogActions>
+        <MudButton OnClick="Cancel">Отмена</MudButton>
+        <MudButton Color="Color.Primary" OnClick="UpdateData" Disabled="_isLoading">
+            @(_isLoading ? "Загрузка..." : ButtonTextString)
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+    
+    [Parameter] public required string LabelTextString { get; set; }
+    [Parameter] public required Guid RecordId { get; set; }
+    [Parameter] public required TypeOfEntityType NameOfApi { get; set; }
+    [Parameter] public required string NameOfApiKey { get; set; }
+    [Parameter] public required string ButtonTextString { get; set; }
+    [Parameter] public required DynamicInputType InputType { get; set; }
+    [Parameter] public required string InputValueString { get; set; }
+
+    private int? _currentNumberValue;
+    private string? _currentBoolValue;
+    private bool _isLoading = false;
+    
+    protected override void OnInitialized()
+    {
+        if (InputType == DynamicInputType.Number && int.TryParse(InputValueString, out var num))
+            _currentNumberValue = num;
+            
+        if (InputType == DynamicInputType.Boolean && bool.TryParse(InputValueString, out var boolVal))
+            _currentBoolValue = boolVal ? "Да" : "Нет";
+    }
+    
+    private void Cancel() => MudDialog?.Cancel();
+    
+    private async Task UpdateData()
+    {
+        if (_isLoading) return;
+
+        var valueToSend = InputType switch
+        {
+            DynamicInputType.Number => _currentNumberValue?.ToString(),
+            DynamicInputType.Boolean => _currentBoolValue?.ToLower(),
+            _ => InputValueString
+        };
+        
+        // Валидация
+        if (string.IsNullOrEmpty(valueToSend) && InputType != DynamicInputType.Boolean)
+        {
+            // Можно показать уведомление через Snackbar
+            return;
+        }
+        
+        _isLoading = true;
+        StateHasChanged();
+        
+        try
+        {
+
+            var payloadData = new DynamicClassDto(RecordId, NameOfApi.ToString(), NameOfApiKey, valueToSend);
+            
+            var response = await HttpClient.PutAsJsonAsync(ApiEndpointRoutes.CoreBase.DynamicUpdate, payloadData);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                MudDialog?.Close(DialogResult.Ok(true));
+            }
+            else
+            {
+                // TODO: сообщение об ошибке
+            }
+        }
+        catch (Exception ex)
+        {
+            // TODO: сообщение об ошибке
+        }
+        finally
+        {
+            _isLoading = false;
+            StateHasChanged();
+        }
+    }
+}

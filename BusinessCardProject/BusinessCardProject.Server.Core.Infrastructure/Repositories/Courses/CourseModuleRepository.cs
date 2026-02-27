@@ -131,8 +131,8 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
                 entity.Description,
                 new CourseThemeDtos(
                     entity.CourseTheme.Id,
-                    entity.CourseTheme.ThemeName,
-                    entity.CourseTheme.ThemeDescription,
+                    entity.CourseTheme.Name,
+                    entity.CourseTheme.Description,
                     entity.CourseTheme.TypeOfCourse.Id,
                     new ProgrammingLanguageDtos(
                         entity.CourseTheme.ProgrammingLanguages.Id,
@@ -161,8 +161,8 @@ namespace BusinessCardProject.Server.Core.Infrastructure.Repositories.Courses
                 e.Description,
                 new CourseThemeDtos(
                     e.CourseTheme.Id,
-                    e.CourseTheme.ThemeName,
-                    e.CourseTheme.ThemeDescription,
+                    e.CourseTheme.Name,
+                    e.CourseTheme.Description,
                     e.CourseTheme.TypeOfCourse.Id,
                     new ProgrammingLanguageDtos(
                         e.CourseTheme.ProgrammingLanguages.Id,
