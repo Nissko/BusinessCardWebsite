@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "UserService.Proto";
+
+// Сервис для управления пользователями
+service UserGrpcService {
+  // Создание пользователя
+  rpc CreateUser(CreateUserRequest) returns (UserBooleanResponse);
+  // Изменение пользовательских данных
+  rpc UpdateUser(UpdateUserRequest) returns (UserBooleanResponse);
+  // Выдача авторских прав
+  rpc CreateAuthorUser(CreateAuthorRequest) returns (UserAuthorInfoResponse);
+  // Получение пользователя
+  rpc GetUser(GetUserRequest) returns (UserInfoResponse);
+  // Получение пользователей через поиск
+  //rpc GetUsersFromSearch() returns ();
+}
+
+message CreateUserRequest{
+  // Фамилия
+  string surname = 1;
+  // Имя
+  string name = 2;
+  // Никнейм
+  string nickName = 3;
+  // Почта
+  string email = 4;
+}
+
+message UpdateUserRequest{
+  // Идентификатор пользователя
+  string user_id = 1;
+  // Фамилия
+  optional string surname = 2;
+  // Имя
+  optional string name = 3;
+  // Отчество
+  optional string nickName = 4;
+  // Почта
+  optional string email = 5;
+}
+
+message CreateAuthorRequest{
+  // Идентификатор пользователя
+  string user_id = 1;
+}
+
+message GetUserRequest{
+  // Идентификатор пользователя
+  string user_id = 1;
+}
+
+message UserInfoResponse{
+  string user_id = 1;
+  string surname = 2;
+  string name = 3;
+  string nickname = 4;
+  string email = 5;
+  bool isAuthor = 6;
+  google.protobuf.Timestamp createdAt = 7;
+  optional google.protobuf.Timestamp updatedAt = 8;
+  optional google.protobuf.Timestamp deletedAt = 9;
+}
+
+message UserBooleanResponse{
+  bool success = 1;
+}
+
+message UserAuthorInfoResponse{
+  string author_id = 1;
+  UserInfoResponse user = 2;
+}

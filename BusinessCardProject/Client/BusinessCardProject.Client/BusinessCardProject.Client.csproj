@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ApiEndpoints\ApiEndpoints.csproj" />
-    <ProjectReference Include="..\..\ContractualDTOs\ContractualDtos\ContractualDtos.csproj" />
   </ItemGroup>
 
   <ItemGroup>

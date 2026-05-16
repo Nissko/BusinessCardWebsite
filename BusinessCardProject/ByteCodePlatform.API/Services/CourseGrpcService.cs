@@ -1,0 +1,205 @@
+using ByteCodePlatform.API.ProtoMappers.Course.Contents;
+using ByteCodePlatform.API.ProtoMappers.Course.Modules;
+using ByteCodePlatform.API.ProtoMappers.ProgramLanguages;
+using ByteCodePlatform.API.ProtoMappers.Themes;
+using ByteCodePlatform.Application.Application.Extensions;
+using ByteCodePlatform.Application.Common.Interfaces.Repositories;
+using CourseService.Proto;
+using Grpc.Core;
+using UpdateCourseContentRequest = CourseService.Proto.UpdateCourseContentRequest;
+using UpdateCourseModuleRequest = CourseService.Proto.UpdateCourseModuleRequest;
+using UpdateCourseThemeRequest = CourseService.Proto.UpdateCourseThemeRequest;
+
+namespace ByteCodePlatform.API.Services
+{
+    public class CourseGrpcService : CourseService.Proto.CourseGrpcService.CourseGrpcServiceBase
+    {
+        private readonly ICourseRepository _courseService;
+
+        public CourseGrpcService(ICourseRepository courseService)
+        {
+            _courseService = courseService ?? throw new ArgumentNullException(nameof(courseService));
+        }
+
+        #region ProgrammingLanguage
+
+        public override async Task<ProgrammingLanguagesInfoResponse> GetProgrammingLanguages(
+            GetProgrammingLanguagesRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var programmingLanguages = await _courseService.GetProgrammingLanguages();
+                return new()
+                {
+                    ProgrammingLanguages = { programmingLanguages.ToProtoProgramLanguageInfoList() }
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        #endregion
+
+        #region CourseTheme
+
+        public override async Task<CourseThemeInfoResponse> AddCourseTheme(AddCourseThemeRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                var newCourseTheme = await _courseService.AddCourseTheme(new(
+                    request.ProgrammingLanguageId.ToGuid(), request.AuthorId.ToGuid(), request.Name,
+                    request.Description,
+                    request.AvatarUrl, request.Price.ToDecimal(), request.OldPrice.ToDecimalOrNull()));
+                return newCourseTheme.ToProtoCourseThemeInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        public override async Task<CourseThemesInfoResponse> GetCourseThemes(GetCourseThemesRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                var courseThemes = await _courseService.GetCourseThemes();
+                return new()
+                {
+                    CourseThemes = { courseThemes.ToProtoCourseThemeInfoList() }
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        public override async Task<CourseThemeInfoResponse> UpdateCourseTheme(UpdateCourseThemeRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                var updateCourseTheme = await _courseService.UpdateCourseTheme(new(request.Id.ToGuid(),
+                    request.ProgrammingLanguageId.ToGuidOrNull(), request.Name, request.Description, request.AvatarUrl,
+                    request.Price.ToDecimal(), request.OldPrice.ToDecimalOrNull(), request.IsShow,
+                    request.DisplayOrder));
+                return updateCourseTheme.ToProtoCourseThemeInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        #endregion
+
+        #region CourseModule
+
+        public override async Task<CourseModuleInfoResponse> AddCourseModule(AddCourseModuleRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                var newCourseModule = await _courseService
+                    .AddCourseModule(
+                        new(request.CourseThemeId.ToGuid(), request.Name));
+                return newCourseModule.ToProtoCourseModuleInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        public override async Task<CourseModulesInfoResponse> GetCourseModules(GetCourseModulesRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                var courseModules = await _courseService.GetCourseModules();
+                return new()
+                {
+                    CourseModules = { courseModules.ToProtoCourseModuleInfoList() }
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        public override async Task<CourseModuleInfoResponse> UpdateCourseModule(UpdateCourseModuleRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                var updateCourseModule = await _courseService.UpdateCourseModule(new(request.Id.ToGuid(),
+                    request.CourseThemeId.ToGuid(), request.Name, request.IsShow, request.DisplayOrder));
+                return updateCourseModule.ToProtoCourseModuleInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        #endregion
+
+        #region CourseContent
+
+        public override async Task<CourseContentInfoResponse> AddCourseContent(AddCourseContentRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                var newCourseContent = await _courseService.AddCourseContent(
+                    new(request.CourseModuleId.ToGuid(), request.Name, request.LinkOnRutube,
+                        request.LinkOnVk, request.LinkOnYoutube, request.ImgUrl));
+                return newCourseContent.ToProtoCourseContentInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        public override async Task<CourseContentsInfoResponse> GetCourseContents(GetCourseContentsRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                var courseContents = await _courseService.GetCourseContents();
+                return new()
+                {
+                    CourseContents = { courseContents.ToProtoCourseContentInfoList() }
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        public override async Task<CourseContentInfoResponse> UpdateCourseContent(UpdateCourseContentRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                var updateCourseContent = await _courseService.UpdateCourseContent(new(request.Id.ToGuid(),
+                    request.CourseModuleId.ToGuid(), request.Name, request.LinkOnRutube, request.LinkOnVk,
+                    request.LinkOnYoutube, request.ImgUrl, request.IsShow, request.DisplayOrder));
+                return updateCourseContent.ToProtoCourseContentInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        #endregion
+    }
+}

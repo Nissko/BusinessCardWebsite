@@ -1,4 +1,4 @@
-﻿@using ApiEndpoints
+﻿@*@using ApiEndpoints
 @inject HttpClient HttpClient
 @using ContractualDtos.DTO.Course.CourseTheme.Dtos
 @page "/course/{id:guid}"
@@ -58,7 +58,7 @@
                                                     @videoCourse.Description
                                                 </MudText>
                                             </MudItem>
-                                            @*TODO: возможно надо сделать: pt-3*@
+                                            $1$TODO: возможно надо сделать: pt-3#1#
                                             <MudItem xs="12" md="3" Class="pt-2 d-flex align-center">
                                                 <MudButton Class="mt-2" Style="width: 100%;" Color="Color.Primary"
                                                            Variant="Variant.Filled">
@@ -101,4 +101,4 @@
             ($"{ApiEndpointRoutes.CourseThemes.GetById}{Id}");
     }
 
-}
+}*@

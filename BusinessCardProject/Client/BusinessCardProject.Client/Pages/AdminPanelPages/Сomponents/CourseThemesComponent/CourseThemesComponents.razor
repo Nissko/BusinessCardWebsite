@@ -1,17 +1,17 @@
-﻿@using ApiEndpoints
+﻿@*@using ApiEndpoints
 @using BusinessCardProject.Client.Pages.AdminPanelPages.Сomponents.CourseThemesComponent.Components
 @using BusinessCardProject.Client.Pages.AdminPanelPages.Сomponents.CourseThemesComponent.Components.ComponentItems
 @using ContractualDtos.DTO.Course.CourseTheme.Dtos
 @inject HttpClient HttpClient
 @using ContractualDtos.DTO.Course.ProgrammingLanguageCourse.Dtos
 
-@*
+$1$
 
     - Добавить поддержку изменения свойств (displayOrder, isVisible, isShow)
     - Выбор темы курса через Select(-ы), а не через MudTabPanel, с возможностью выбора языка, либо же поиск из всех
     - Сделать добавление модулей отсюда, также добавление видеоуроков
     - При добавлении нового курса, он автоматически становится выбранным (isVisible = False)
-*@
+#1#
 
 <MudContainer>
     <MudGrid>
@@ -213,4 +213,4 @@
         StateHasChanged();
     }
 
-}
+}*@

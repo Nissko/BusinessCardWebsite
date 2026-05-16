@@ -16,7 +16,7 @@ builder.Services.AddSingleton<UserSettingService>();
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri("https://localhost:7284/") });
+builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new("https://localhost:7284/") });
 //builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(ApiEndpointRoutes.BaseUrlProd) });
 
 await builder.Build().RunAsync();

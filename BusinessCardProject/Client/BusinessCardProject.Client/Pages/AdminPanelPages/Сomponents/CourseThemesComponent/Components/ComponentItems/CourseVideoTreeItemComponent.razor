@@ -1,4 +1,4 @@
-@using BusinessCardProject.Client.Pages.AdminPanelPages.Сomponents.CourseThemesComponent.Components.DynamicDialogs
+@*@using BusinessCardProject.Client.Pages.AdminPanelPages.Сomponents.CourseThemesComponent.Components.DynamicDialogs
 @using BusinessCardProject.Client.Pages.AdminPanelPages.Сomponents.CourseThemesComponent.Components.DynamicDialogs.Params
 @using ContractualDtos.DTO.Course.VideoCourse.Dtos
 @inject IDialogService Dialog
@@ -23,7 +23,7 @@
                                         },
                                         _backdropClick))"/>
         </MudItem>
-        @*<MudItem Class="mb-2 d-flex justify-space-between align-center">
+        $1$<MudItem Class="mb-2 d-flex justify-space-between align-center">
             <MudText Class="mb-2"
                      Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 <b>Описание</b>: @videoCourse.Description
@@ -70,7 +70,7 @@
                                             { x => x.InputValueString, videoCourse.IsShow.ToString() }
                                         },
                                         _backdropClick))"/>
-        </MudItem>*@
+        </MudItem>#1#
     }
 }
 
@@ -100,4 +100,4 @@
         }
     }
 
-}
+}*@

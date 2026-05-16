@@ -1,5 +1,4 @@
 ﻿@using BusinessCardProject.Client.Services.ProjectInfoService
-@using BusinessCardProject.Client.Services.ProjectInfoService.Objects
 @inject UserSettingService UserSetting
 
 <MudItem Class="d-flex justify-space-between align-center px-2 py-2 h-100"
@@ -124,7 +123,7 @@
         if (UserSetting.Settings.VideoPlatform is null)
         {
             //TODO: Сделать загрузку UserSettings из БД
-            UserSetting.Settings.VideoPlatform = new UserSettingsList();
+            UserSetting.Settings.VideoPlatform = new();
             UserSetting.Settings.VideoPlatform.SetPlatform(0);
             await UserSetting.SaveAsync();
         }
