@@ -1,12 +1,13 @@
 using ByteCodePlatform.Domain.Common;
 using ByteCodePlatform.Domain.Entities.Course.Module;
+using ByteCodePlatform.Domain.Enums;
 using NodaTime;
 
 namespace ByteCodePlatform.Domain.Entities.Course.Theme
 {
     public class CourseThemeEntity : Entity
     {
-        public CourseThemeEntity(string name, string description, string avatarUrl, decimal price, decimal? oldPrice,
+        public CourseThemeEntity(string name, string description, string avatarUrl, double price, double? oldPrice,
             Guid programmingLanguageCategoryId, Guid authorId, Instant createdAt, Instant? updatedAt = null)
         {
             Name = name;
@@ -40,12 +41,12 @@ namespace ByteCodePlatform.Domain.Entities.Course.Theme
         /// <summary>
         /// Цена
         /// </summary>
-        public decimal Price { get; private set; }
+        public double Price { get; private set; }
 
         /// <summary>
         /// Старая цена из которой идет расчет скидки
         /// </summary>
-        public decimal? OldPrice { get; private set; }
+        public double? OldPrice { get; private set; }
 
         /// <summary>
         /// Дата добавления
@@ -72,7 +73,7 @@ namespace ByteCodePlatform.Domain.Entities.Course.Theme
         public virtual ICollection<CourseModuleEntity> CourseModules { get; private set; }
         public virtual ICollection<CourseThemeFieldPropertyEntity> ThemeFieldProperties { get; private set; }
 
-        public void Update(string? name, string? description, string? avatarUrl, decimal? price, decimal? oldPrice,
+        public void Update(string? name, string? description, string? avatarUrl, double? price, double? oldPrice,
             Guid? programmingLanguageCategoryId)
         {
             Name = string.IsNullOrEmpty(name) ? Name : name;
@@ -82,6 +83,13 @@ namespace ByteCodePlatform.Domain.Entities.Course.Theme
             OldPrice = oldPrice ?? OldPrice;
             ProgrammingLanguageCategoryId = programmingLanguageCategoryId ?? ProgrammingLanguageCategoryId;
             UpdatedAt = SystemClock.Instance.GetCurrentInstant();
+        }
+
+        public bool GetIsFreeProperty()
+        {
+            return bool.Parse(ThemeFieldProperties
+                .FirstOrDefault(x => x.FieldPropertyTypeId == FieldPropertyTypesEnum.IsFree)?
+                .Value ?? string.Empty);
         }
     }
 }

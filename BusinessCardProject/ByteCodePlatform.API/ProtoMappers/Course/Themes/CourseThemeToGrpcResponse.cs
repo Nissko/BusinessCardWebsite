@@ -1,9 +1,9 @@
-using ByteCodePlatform.API.ProtoMappers.ProgramLanguages;
 using ByteCodePlatform.Application.Application.Extensions;
 using CourseService.Proto;
+using Dtos.DTO.Course.ProgramLanguage;
 using Dtos.DTO.Course.Theme;
 
-namespace ByteCodePlatform.API.ProtoMappers.Themes
+namespace ByteCodePlatform.API.ProtoMappers.Course.Themes
 {
     public static class CourseThemeToGrpcResponse
     {
@@ -15,10 +15,10 @@ namespace ByteCodePlatform.API.ProtoMappers.Themes
                 Name = dto.Name,
                 Description = dto.Description,
                 AvatarUrl = dto.AvatarUrl,
-                Price = dto.Price.ToDouble(),
-                OldPrice = dto.OldPrice.ToDoubleOrNull(),
+                Price = dto.Price,
+                OldPrice = dto.OldPrice ?? 0,
                 CreatedAt = dto.CreatedAt.ToTimestamp(),
-                UpdatedAt = dto.UpdatedAt?.ToTimestamp(),
+                UpdatedAt = dto.UpdatedAt?.ToTimestamp() ?? null,
                 Author = new()
                 {
                     AuthorId = dto.Author.AuthorId.ToString(),
@@ -29,13 +29,7 @@ namespace ByteCodePlatform.API.ProtoMappers.Themes
                 },
                 ProgrammingLanguage = new()
                 {
-                    Id = dto.ProgrammingLanguage.Id.ToString(),
-                    Name = dto.ProgrammingLanguage.Name,
-                    CourseThemes =
-                    {
-                        dto.ProgrammingLanguage.CourseThemes
-                            .ToProtoLightCourseThemeInfoInfoList()
-                    }
+                    Id = dto.ProgrammingLanguage.Id.ToString()
                 }
             };
         }
@@ -44,6 +38,21 @@ namespace ByteCodePlatform.API.ProtoMappers.Themes
             this List<CourseThemeDto> dtos)
         {
             return dtos.Select(ToProtoCourseThemeInfo).ToList();
+        }
+        
+        public static LightCourseThemeInfo ToProtoLightCourseThemeInfo(this LightCourseThemeDto dto)
+        {
+            return new()
+            {
+                Id = dto.Id.ToString(),
+                Name = dto.Name
+            };
+        }
+
+        public static List<LightCourseThemeInfo> ToProtoLightCourseThemeInfoList(
+            this List<LightCourseThemeDto> dtos)
+        {
+            return dtos.Select(ToProtoLightCourseThemeInfo).ToList();
         }
     }
 }

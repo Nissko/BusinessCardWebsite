@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
 {
     [DbContext(typeof(ByteCodeCoreDbContext))]
-    [Migration("20260512165824_Migration_ByteCode_Core_0.0.2")]
-    partial class Migration_ByteCode_Core_002
+    [Migration("20260518045038_Migration_ByteCode_Core_0.0.1")]
+    partial class Migration_ByteCode_Core_001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,7 +59,7 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                     b.ToTable("Authors", "bytecode_core");
                 });
 
-            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.CourseContentEntity", b =>
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Content.CourseContentEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -108,7 +108,33 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                     b.ToTable("CourseContents", "bytecode_core");
                 });
 
-            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.CourseModuleEntity", b =>
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Content.CourseContentFieldPropertyEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CourseContentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("FieldPropertyTypeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasComment("Значение");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseContentId");
+
+                    b.HasIndex("FieldPropertyTypeId");
+
+                    b.ToTable("CourseContentFieldProperties", "bytecode_core");
+                });
+
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Module.CourseModuleEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -137,7 +163,50 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                     b.ToTable("CourseModules", "bytecode_core");
                 });
 
-            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.CourseThemeEntity", b =>
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Module.CourseModuleFieldPropertyEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CourseModuleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("FieldPropertyTypeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasComment("Значение");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseModuleId");
+
+                    b.HasIndex("FieldPropertyTypeId");
+
+                    b.ToTable("CourseModuleFieldProperties", "bytecode_core");
+                });
+
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.ProgrammingLanguageCategoryEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)")
+                        .HasComment("Название модуля");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProgrammingLanguageCategories", "bytecode_core");
+                });
+
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Theme.CourseThemeEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -165,12 +234,12 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                         .HasColumnType("text")
                         .HasComment("Название");
 
-                    b.Property<decimal?>("OldPrice")
-                        .HasColumnType("numeric")
+                    b.Property<double?>("OldPrice")
+                        .HasColumnType("double precision")
                         .HasComment("Старая цена");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric")
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision")
                         .HasComment("Текущая цена");
 
                     b.Property<Guid>("ProgrammingLanguageCategoryId")
@@ -189,21 +258,51 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                     b.ToTable("CourseThemes", "bytecode_core");
                 });
 
-            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.ProgrammingLanguageCategoryEntity", b =>
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Theme.CourseThemeFieldPropertyEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Name")
+                    b.Property<Guid>("CourseThemeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("FieldPropertyTypeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Value")
                         .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)")
-                        .HasComment("Название модуля");
+                        .HasColumnType("text")
+                        .HasComment("Значение");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProgrammingLanguageCategories", "bytecode_core");
+                    b.HasIndex("CourseThemeId");
+
+                    b.HasIndex("FieldPropertyTypeId");
+
+                    b.ToTable("CourseThemeFieldProperties", "bytecode_core");
+                });
+
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.FieldPropertyTypeEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasComment("Описание свойства");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasComment("Название свойства");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FieldPropertyTypes", "bytecode_core");
                 });
 
             modelBuilder.Entity("ByteCodePlatform.Domain.Entities.UserEntity", b =>
@@ -260,7 +359,7 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                     b.HasIndex("NickName")
                         .IsUnique();
 
-                    b.ToTable("Users", "bytecode_core");
+                    b.ToTable("UsersService", "bytecode_core");
                 });
 
             modelBuilder.Entity("ByteCodePlatform.Domain.Entities.AuthorEntity", b =>
@@ -274,9 +373,9 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.CourseContentEntity", b =>
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Content.CourseContentEntity", b =>
                 {
-                    b.HasOne("ByteCodePlatform.Domain.Entities.Course.CourseModuleEntity", "CourseModule")
+                    b.HasOne("ByteCodePlatform.Domain.Entities.Course.Module.CourseModuleEntity", "CourseModule")
                         .WithMany("Contents")
                         .HasForeignKey("CourseModuleId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -285,9 +384,28 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                     b.Navigation("CourseModule");
                 });
 
-            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.CourseModuleEntity", b =>
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Content.CourseContentFieldPropertyEntity", b =>
                 {
-                    b.HasOne("ByteCodePlatform.Domain.Entities.Course.CourseThemeEntity", "CourseTheme")
+                    b.HasOne("ByteCodePlatform.Domain.Entities.Course.Content.CourseContentEntity", "CourseContent")
+                        .WithMany("ContentFieldProperties")
+                        .HasForeignKey("CourseContentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ByteCodePlatform.Domain.Entities.FieldPropertyTypeEntity", "FieldPropertyType")
+                        .WithMany("CourseContent")
+                        .HasForeignKey("FieldPropertyTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CourseContent");
+
+                    b.Navigation("FieldPropertyType");
+                });
+
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Module.CourseModuleEntity", b =>
+                {
+                    b.HasOne("ByteCodePlatform.Domain.Entities.Course.Theme.CourseThemeEntity", "CourseTheme")
                         .WithMany("CourseModules")
                         .HasForeignKey("CourseThemeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -296,7 +414,26 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                     b.Navigation("CourseTheme");
                 });
 
-            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.CourseThemeEntity", b =>
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Module.CourseModuleFieldPropertyEntity", b =>
+                {
+                    b.HasOne("ByteCodePlatform.Domain.Entities.Course.Module.CourseModuleEntity", "CourseModule")
+                        .WithMany("ModuleFieldProperties")
+                        .HasForeignKey("CourseModuleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ByteCodePlatform.Domain.Entities.FieldPropertyTypeEntity", "FieldPropertyType")
+                        .WithMany("CourseModule")
+                        .HasForeignKey("FieldPropertyTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CourseModule");
+
+                    b.Navigation("FieldPropertyType");
+                });
+
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Theme.CourseThemeEntity", b =>
                 {
                     b.HasOne("ByteCodePlatform.Domain.Entities.AuthorEntity", "Author")
                         .WithMany("Courses")
@@ -315,24 +452,61 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                     b.Navigation("ProgrammingLanguageCategory");
                 });
 
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Theme.CourseThemeFieldPropertyEntity", b =>
+                {
+                    b.HasOne("ByteCodePlatform.Domain.Entities.Course.Theme.CourseThemeEntity", "CourseTheme")
+                        .WithMany("ThemeFieldProperties")
+                        .HasForeignKey("CourseThemeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ByteCodePlatform.Domain.Entities.FieldPropertyTypeEntity", "FieldPropertyType")
+                        .WithMany("CourseTheme")
+                        .HasForeignKey("FieldPropertyTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CourseTheme");
+
+                    b.Navigation("FieldPropertyType");
+                });
+
             modelBuilder.Entity("ByteCodePlatform.Domain.Entities.AuthorEntity", b =>
                 {
                     b.Navigation("Courses");
                 });
 
-            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.CourseModuleEntity", b =>
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Content.CourseContentEntity", b =>
                 {
-                    b.Navigation("Contents");
+                    b.Navigation("ContentFieldProperties");
                 });
 
-            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.CourseThemeEntity", b =>
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Module.CourseModuleEntity", b =>
                 {
-                    b.Navigation("CourseModules");
+                    b.Navigation("Contents");
+
+                    b.Navigation("ModuleFieldProperties");
                 });
 
             modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.ProgrammingLanguageCategoryEntity", b =>
                 {
                     b.Navigation("CoursesThemes");
+                });
+
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.Course.Theme.CourseThemeEntity", b =>
+                {
+                    b.Navigation("CourseModules");
+
+                    b.Navigation("ThemeFieldProperties");
+                });
+
+            modelBuilder.Entity("ByteCodePlatform.Domain.Entities.FieldPropertyTypeEntity", b =>
+                {
+                    b.Navigation("CourseContent");
+
+                    b.Navigation("CourseModule");
+
+                    b.Navigation("CourseTheme");
                 });
 
             modelBuilder.Entity("ByteCodePlatform.Domain.Entities.UserEntity", b =>

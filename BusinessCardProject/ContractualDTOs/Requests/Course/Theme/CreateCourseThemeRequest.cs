@@ -6,6 +6,6 @@ namespace Requests.Course.Theme
         string Name,
         string Description,
         string AvatarUrl,
-        decimal Price,
-        decimal? OldPrice);
+        double Price,
+        double? OldPrice);
 }

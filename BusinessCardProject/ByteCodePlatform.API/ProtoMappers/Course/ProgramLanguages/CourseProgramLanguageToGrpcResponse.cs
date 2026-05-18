@@ -1,7 +1,7 @@
 using CourseService.Proto;
 using Dtos.DTO.Course.ProgramLanguage;
 
-namespace ByteCodePlatform.API.ProtoMappers.ProgramLanguages
+namespace ByteCodePlatform.API.ProtoMappers.Course.ProgramLanguages
 {
     public static class CourseProgramLanguageToGrpcResponse
     {
@@ -11,7 +11,7 @@ namespace ByteCodePlatform.API.ProtoMappers.ProgramLanguages
             {
                 Id = dto.Id.ToString(),
                 Name = dto.Name,
-                CourseThemes = { dto.CourseThemes.ToProtoLightCourseThemeInfoInfoList() }
+                CourseThemes = { dto.CourseThemes.ToProtoLightCourseThemeProgramLanguagesList() }
             };
         }
 
@@ -21,7 +21,7 @@ namespace ByteCodePlatform.API.ProtoMappers.ProgramLanguages
             return dtos.Select(ToProtoProgramLanguageInfo).ToList();
         }
     
-        public static LightCourseThemeInfo ToProtoLightCourseThemeInfoInfo(this LightCourseThemeDto dto)
+        public static LightCourseThemeInfo ToProtoLightCourseThemeProgramLanguages(this LightCourseThemeDto dto)
         {
             return new()
             {
@@ -30,10 +30,10 @@ namespace ByteCodePlatform.API.ProtoMappers.ProgramLanguages
             };
         }
 
-        public static List<LightCourseThemeInfo> ToProtoLightCourseThemeInfoInfoList(
+        public static List<LightCourseThemeInfo> ToProtoLightCourseThemeProgramLanguagesList(
             this List<LightCourseThemeDto> dtos)
         {
-            return dtos.Select(ToProtoLightCourseThemeInfoInfo).ToList();
+            return dtos.Select(ToProtoLightCourseThemeProgramLanguages).ToList();
         }
     }
 }

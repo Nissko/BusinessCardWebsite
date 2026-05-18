@@ -7,6 +7,7 @@ namespace ByteCodePlatform.Domain.Extensions.Course
     {
         private const string DefaultIsShow = "false";
         private const string DefaultDisplayOrder = "10";
+        private const string DefaultIsFree = "false";
         
         /// <summary>
         /// Получение свойства по типу
@@ -23,6 +24,7 @@ namespace ByteCodePlatform.Domain.Extensions.Course
         {
             properties.Add(new(DefaultIsShow, FieldPropertyTypesEnum.IsShow, themeId));
             properties.Add(new(DefaultDisplayOrder, FieldPropertyTypesEnum.DisplayOrder, themeId));
+            properties.Add(new(DefaultIsFree, FieldPropertyTypesEnum.IsFree, themeId));
         }
     
         /// <summary>
@@ -40,6 +42,10 @@ namespace ByteCodePlatform.Domain.Extensions.Course
             if (courseThemeFieldProperties.All(x => x.FieldPropertyTypeId != FieldPropertyTypesEnum.IsShow))
                 throw new(
                     $"Required property '{FieldPropertyTypesEnum.IsShow}' not found");
+            
+            if (courseThemeFieldProperties.All(x => x.FieldPropertyTypeId != FieldPropertyTypesEnum.IsFree))
+                throw new(
+                    $"Required property '{FieldPropertyTypesEnum.IsFree}' not found");
             
             return true;
         }

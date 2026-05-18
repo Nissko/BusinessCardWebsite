@@ -1,7 +1,7 @@
 using ByteCodePlatform.API.ProtoMappers.Course.Contents;
 using ByteCodePlatform.API.ProtoMappers.Course.Modules;
-using ByteCodePlatform.API.ProtoMappers.ProgramLanguages;
-using ByteCodePlatform.API.ProtoMappers.Themes;
+using ByteCodePlatform.API.ProtoMappers.Course.ProgramLanguages;
+using ByteCodePlatform.API.ProtoMappers.Course.Themes;
 using ByteCodePlatform.Application.Application.Extensions;
 using ByteCodePlatform.Application.Common.Interfaces.Repositories;
 using CourseService.Proto;
@@ -52,7 +52,7 @@ namespace ByteCodePlatform.API.Services
                 var newCourseTheme = await _courseService.AddCourseTheme(new(
                     request.ProgrammingLanguageId.ToGuid(), request.AuthorId.ToGuid(), request.Name,
                     request.Description,
-                    request.AvatarUrl, request.Price.ToDecimal(), request.OldPrice.ToDecimalOrNull()));
+                    request.AvatarUrl, request.Price, request.OldPrice));
                 return newCourseTheme.ToProtoCourseThemeInfo();
             }
             catch (Exception ex)
@@ -83,10 +83,12 @@ namespace ByteCodePlatform.API.Services
         {
             try
             {
+                double? price = request.HasPrice ? request.Price : null;
+                double? oldPrice = request.HasOldPrice ? request.OldPrice : null;
+
                 var updateCourseTheme = await _courseService.UpdateCourseTheme(new(request.Id.ToGuid(),
-                    request.ProgrammingLanguageId.ToGuidOrNull(), request.Name, request.Description, request.AvatarUrl,
-                    request.Price.ToDecimal(), request.OldPrice.ToDecimalOrNull(), request.IsShow,
-                    request.DisplayOrder));
+                    request.ProgrammingLanguageId.ToGuidOrNull(), request.Name, request.Description, request.AvatarUrl, 
+                    price, oldPrice, request.IsShow, request.DisplayOrder, request.IsFree));
                 return updateCourseTheme.ToProtoCourseThemeInfo();
             }
             catch (Exception ex)
@@ -138,7 +140,7 @@ namespace ByteCodePlatform.API.Services
             try
             {
                 var updateCourseModule = await _courseService.UpdateCourseModule(new(request.Id.ToGuid(),
-                    request.CourseThemeId.ToGuid(), request.Name, request.IsShow, request.DisplayOrder));
+                    request.CourseThemeId.ToGuidOrNull(), request.Name, request.IsShow, request.DisplayOrder));
                 return updateCourseModule.ToProtoCourseModuleInfo();
             }
             catch (Exception ex)
@@ -190,7 +192,7 @@ namespace ByteCodePlatform.API.Services
             try
             {
                 var updateCourseContent = await _courseService.UpdateCourseContent(new(request.Id.ToGuid(),
-                    request.CourseModuleId.ToGuid(), request.Name, request.LinkOnRutube, request.LinkOnVk,
+                    request.CourseModuleId.ToGuidOrNull(), request.Name, request.LinkOnRutube, request.LinkOnVk,
                     request.LinkOnYoutube, request.ImgUrl, request.IsShow, request.DisplayOrder));
                 return updateCourseContent.ToProtoCourseContentInfo();
             }

@@ -8,7 +8,7 @@ namespace ByteCodePlatform.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
-            builder.ToTable("Users");
+            builder.ToTable("UsersService");
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Surname)

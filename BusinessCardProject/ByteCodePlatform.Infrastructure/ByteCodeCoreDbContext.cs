@@ -5,6 +5,7 @@ using ByteCodePlatform.Domain.Entities.Course.Content;
 using ByteCodePlatform.Domain.Entities.Course.Module;
 using ByteCodePlatform.Domain.Entities.Course.Theme;
 using ByteCodePlatform.Infrastructure.Configuration;
+using ByteCodePlatform.Infrastructure.Configuration.FieldProperties;
 using Microsoft.EntityFrameworkCore;
 
 namespace ByteCodePlatform.Infrastructure
@@ -51,6 +52,7 @@ namespace ByteCodePlatform.Infrastructure
             modelBuilder.ApplyConfiguration(new CourseModuleConfiguration());
             modelBuilder.ApplyConfiguration(new CourseContentConfiguration());
 
+            modelBuilder.ApplyConfiguration(new FieldPropertyTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CourseThemeConfiguration());
             modelBuilder.ApplyConfiguration(new CourseModuleConfiguration());
             modelBuilder.ApplyConfiguration(new CourseContentConfiguration());

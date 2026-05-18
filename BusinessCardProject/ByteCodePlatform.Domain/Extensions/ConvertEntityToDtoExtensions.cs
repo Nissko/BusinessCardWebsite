@@ -44,7 +44,7 @@ namespace ByteCodePlatform.Domain.Extensions
                 e.DeletedAt ?? null
             )).ToList();
         }
-        
+
         public static UserAuthorDto GetUserAuthorDto(this AuthorEntity e)
         {
             return new UserAuthorDto(e.Id, e.User.GetUserDto());
@@ -77,6 +77,18 @@ namespace ByteCodePlatform.Domain.Extensions
             )).ToList();
         }
 
+        public static LightProgrammingLanguageDto GetLightProgrammingLanguageDto(
+            this ProgrammingLanguageCategoryEntity e)
+        {
+            return new(e.Id);
+        }
+
+        public static List<LightProgrammingLanguageDto> GetLightProgrammingLanguageDtos(
+            this IEnumerable<ProgrammingLanguageCategoryEntity> en)
+        {
+            return en.Select(e => new LightProgrammingLanguageDto(e.Id)).ToList();
+        }
+
         #endregion
 
         #region CourseTheme
@@ -88,12 +100,13 @@ namespace ByteCodePlatform.Domain.Extensions
                 e.Name,
                 e.Description,
                 e.AvatarUrl,
+                e.GetIsFreeProperty(),
                 e.Price,
                 e.OldPrice,
                 e.CreatedAt,
-                e.UpdatedAt,
+                e.UpdatedAt ?? null,
                 e.Author.GetUserAuthorDto(),
-                e.ProgrammingLanguageCategory.GetProgrammingLanguageDto()
+                e.ProgrammingLanguageCategory.GetLightProgrammingLanguageDto()
             );
         }
 
@@ -105,13 +118,25 @@ namespace ByteCodePlatform.Domain.Extensions
                 e.Name,
                 e.Description,
                 e.AvatarUrl,
+                e.GetIsFreeProperty(),
                 e.Price,
                 e.OldPrice,
                 e.CreatedAt,
-                e.UpdatedAt,
+                e.UpdatedAt ?? null,
                 new(e.AuthorId, e.Author.User.GetUserDto()),
-                e.ProgrammingLanguageCategory.GetProgrammingLanguageDto())
+                e.ProgrammingLanguageCategory.GetLightProgrammingLanguageDto())
             ).ToList();
+        }
+        
+        public static LightCourseThemeDto GetLightCourseThemeDto(this CourseThemeEntity e)
+        {
+            return new(e.Id, e.Name);
+        }
+
+        public static List<LightCourseThemeDto> GetLightCourseThemeDtos(
+            this IEnumerable<CourseThemeEntity> en)
+        {
+            return en.Select(e => new LightCourseThemeDto(e.Id, e.Name)).ToList();
         }
 
         #endregion
@@ -124,8 +149,8 @@ namespace ByteCodePlatform.Domain.Extensions
                 e.Id,
                 e.Name,
                 e.CreatedAt,
-                e.UpdatedAt,
-                e.CourseTheme.GetCourseThemeDto()
+                e.UpdatedAt ?? null,
+                e.CourseTheme.GetLightCourseThemeDto()
             );
         }
 
@@ -136,11 +161,22 @@ namespace ByteCodePlatform.Domain.Extensions
                 e.Id,
                 e.Name,
                 e.CreatedAt,
-                e.UpdatedAt,
-                e.CourseTheme.GetCourseThemeDto())
+                e.UpdatedAt ?? null,
+                e.CourseTheme.GetLightCourseThemeDto())
             ).ToList();
         }
         
+        public static LightCourseModuleDto GetLightCourseModuleDto(this CourseModuleEntity e)
+        {
+            return new(e.Id);
+        }
+
+        public static List<LightCourseModuleDto> GetLightCourseModuleDtos(
+            this IEnumerable<CourseModuleEntity> en)
+        {
+            return en.Select(e => new LightCourseModuleDto(e.Id)).ToList();
+        }
+
         #endregion
 
         #region CourseContent
@@ -155,8 +191,8 @@ namespace ByteCodePlatform.Domain.Extensions
                 e.LinkOnYouTube,
                 e.ImgUrl,
                 e.CreatedAt,
-                e.UpdatedAt,
-                e.CourseModule.GetCourseModuleDto()
+                e.UpdatedAt ?? null,
+                e.CourseModule.GetLightCourseModuleDto()
             );
         }
 
@@ -171,11 +207,11 @@ namespace ByteCodePlatform.Domain.Extensions
                 e.LinkOnYouTube,
                 e.ImgUrl,
                 e.CreatedAt,
-                e.UpdatedAt,
-                e.CourseModule.GetCourseModuleDto()
+                e.UpdatedAt ?? null,
+                e.CourseModule.GetLightCourseModuleDto()
             )).ToList();
         }
-        
+
         #endregion
     }
 }

@@ -18,8 +18,8 @@ namespace ByteCodePlatform.API.ProtoMappers.Course.Contents
                 LinkYoutube = dto.LinkYoutube,
                 ImgUrl = dto.ImgUrl,
                 CreatedAt = dto.CreatedAt.ToTimestamp(),
-                UpdatedAt = dto.UpdatedAt?.ToTimestamp(),
-                Module = dto.Module.ToProtoCourseModuleInfo()
+                UpdatedAt = dto.UpdatedAt?.ToTimestamp() ?? null,
+                Module = dto.Module.ToProtoLightCourseModuleInfo()
             };
         }
 

@@ -1,4 +1,3 @@
-using Dtos.DTO.Course.Module;
 using NodaTime;
 
 namespace Dtos.DTO.Course.Content
@@ -12,5 +11,5 @@ namespace Dtos.DTO.Course.Content
         string ImgUrl,
         Instant CreatedAt,
         Instant? UpdatedAt,
-        CourseModuleDto Module);
+        LightCourseModuleDto Module);
 }

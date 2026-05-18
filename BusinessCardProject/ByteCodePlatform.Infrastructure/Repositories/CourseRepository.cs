@@ -81,13 +81,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
 
             return orderedThemes.GetCourseThemeDtos();
         }
-
-        /// <summary>
-        /// TODO: Fix Update Price (цена устанавливается в 0, если не передавать цену) 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        
         public async Task<CourseThemeDto> UpdateCourseTheme(UpdateCourseThemeRequest request)
         {
             var theme = await _dbContext.CourseTheme.FirstOrDefaultAsync(x => x.Id == request.Id) ??
@@ -100,9 +94,11 @@ namespace ByteCodePlatform.Infrastructure.Repositories
 
             var isShow = theme.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.IsShow);
             var displayOrder = theme.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder);
+            var isFree = theme.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.IsFree);
 
             isShow?.UpdateValue(request.IsShow?.ToString());
             displayOrder?.UpdateValue(request.DisplayOrder?.ToString());
+            isFree?.UpdateValue(request.IsFree?.ToString());
 
             _dbContext.CourseTheme.Update(theme);
             await _dbContext.SaveChangesAsync(CancellationToken.None);
@@ -119,11 +115,14 @@ namespace ByteCodePlatform.Infrastructure.Repositories
         /// </summary>
         public async Task<CourseModuleDto> AddCourseModule(CreateCourseModuleRequest request)
         {
-            var newModule = new CourseModuleEntity(request.Name, request.CourseThemeId,
+            var courseTheme = await _dbContext.CourseTheme.FirstOrDefaultAsync(x => x.Id == request.CourseThemeId) ??
+                              throw new Exception("Course theme not found");
+            var newModule = new CourseModuleEntity(request.Name, courseTheme.Id,
                 SystemClock.Instance.GetCurrentInstant());
             newModule.ModuleFieldProperties.SetDefault(newModule.Id);
 
             _dbContext.CourseModule.Add(newModule);
+            await _dbContext.CourseModuleFieldProperty.AddRangeAsync(newModule.ModuleFieldProperties);
             await _dbContext.SaveChangesAsync(CancellationToken.None);
 
             return newModule.GetCourseModuleDto();
@@ -152,7 +151,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
                          throw new("Course module not found");
             module.Update(request.Name, request.CourseThemeId);
 
-            if (module.ModuleFieldProperties.CheckProperties())
+            if (!module.ModuleFieldProperties.CheckProperties())
                 throw new("Course module properties are not allowed");
 
             var isShow = module.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.IsShow);
@@ -176,12 +175,16 @@ namespace ByteCodePlatform.Infrastructure.Repositories
         /// </summary>
         public async Task<CourseContentDto> AddCourseContent(CreateCourseContentRequest request)
         {
+            var courseModule = await _dbContext.CourseModule
+                                   .FirstOrDefaultAsync(x => x.Id == request.CourseModuleId) ??
+                               throw new Exception("Course module not found");
             var newContent = new CourseContentEntity(request.Name, request.LinkOnRutube, request.LinkOnVk,
                 request.LinkOnYoutube, request.ImgUrl, SystemClock.Instance.GetCurrentInstant(),
-                request.CourseModuleId);
+                courseModule.Id);
             newContent.ContentFieldProperties.SetDefault(newContent.Id);
 
             _dbContext.CourseContent.Add(newContent);
+            await _dbContext.CourseContentFieldProperty.AddRangeAsync(newContent.ContentFieldProperties);
             await _dbContext.SaveChangesAsync(CancellationToken.None);
 
             return newContent.GetCourseContentDto();
@@ -206,12 +209,14 @@ namespace ByteCodePlatform.Infrastructure.Repositories
 
         public async Task<CourseContentDto> UpdateCourseContent(UpdateCourseContentRequest request)
         {
+            var courseModule = await _dbContext.CourseModule.FirstOrDefaultAsync(x => x.Id == request.CourseModuleId) ??
+                               null;
             var content = await _dbContext.CourseContent.FirstOrDefaultAsync(x => x.Id == request.Id) ??
                           throw new("Course content not found");
             content.Update(request.Name, request.LinkOnRutube, request.LinkOnVk, request.LinkOnYoutube, request.ImgUrl,
-                request.CourseModuleId);
+                courseModule?.Id);
 
-            if (content.ContentFieldProperties.CheckProperties())
+            if (!content.ContentFieldProperties.CheckProperties())
                 throw new("Course content properties are not allowed");
 
             var isShow = content.ContentFieldProperties.GetProperty(FieldPropertyTypesEnum.IsShow);

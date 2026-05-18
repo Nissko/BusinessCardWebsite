@@ -31,16 +31,18 @@ namespace ByteCodePlatform.Domain.Extensions.Course
         /// <summary>
         /// Проверка наличия свойств
         /// </summary>
-        public static bool CheckProperties(this IEnumerable<CourseContentFieldPropertyEntity> courseContentFieldProperties)
+        public static bool CheckProperties(this IEnumerable<CourseContentFieldPropertyEntity> properties)
         {
-            var properties = courseContentFieldProperties.ToList();
-            if (!properties.Any()) throw new("Properties cannot be empty");
+            var courseContentFieldProperties = properties.ToList();
+            if (!courseContentFieldProperties.Any()) throw new("Properties cannot be empty");
 
-            if (properties.All(x => x.FieldPropertyTypeId != FieldPropertyTypesEnum.DisplayOrder))
-                throw new($"Required property '{FieldPropertyTypesEnum.DisplayOrder}' not found");
+            if (courseContentFieldProperties.All(x => x.FieldPropertyTypeId != FieldPropertyTypesEnum.DisplayOrder))
+                throw new(
+                    $"Required property '{FieldPropertyTypesEnum.DisplayOrder}' not found");
 
-            if (properties.All(x => x.FieldPropertyTypeId != FieldPropertyTypesEnum.IsShow))
-                throw new($"Required property '{FieldPropertyTypesEnum.IsShow}' not found");
+            if (courseContentFieldProperties.All(x => x.FieldPropertyTypeId != FieldPropertyTypesEnum.IsShow))
+                throw new(
+                    $"Required property '{FieldPropertyTypesEnum.IsShow}' not found");
             
             return true;
         }

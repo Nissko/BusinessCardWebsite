@@ -231,12 +231,12 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                         .HasColumnType("text")
                         .HasComment("Название");
 
-                    b.Property<decimal?>("OldPrice")
-                        .HasColumnType("numeric")
+                    b.Property<double?>("OldPrice")
+                        .HasColumnType("double precision")
                         .HasComment("Старая цена");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric")
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision")
                         .HasComment("Текущая цена");
 
                     b.Property<Guid>("ProgrammingLanguageCategoryId")
@@ -289,15 +289,17 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasComment("Описание свойства");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasComment("Название свойства");
 
                     b.HasKey("Id");
 
-                    b.ToTable("FieldPropertyTypeEntity", "bytecode_core");
+                    b.ToTable("FieldPropertyTypes", "bytecode_core");
                 });
 
             modelBuilder.Entity("ByteCodePlatform.Domain.Entities.UserEntity", b =>
@@ -354,7 +356,7 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                     b.HasIndex("NickName")
                         .IsUnique();
 
-                    b.ToTable("Users", "bytecode_core");
+                    b.ToTable("UsersService", "bytecode_core");
                 });
 
             modelBuilder.Entity("ByteCodePlatform.Domain.Entities.AuthorEntity", b =>

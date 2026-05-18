@@ -1,4 +1,4 @@
-using Dtos.DTO.Course.Theme;
+using Dtos.DTO.Course.ProgramLanguage;
 using NodaTime;
 
 namespace Dtos.DTO.Course.Module
@@ -8,5 +8,5 @@ namespace Dtos.DTO.Course.Module
         string Name,
         Instant CreatedAt,
         Instant? UpdatedAt,
-        CourseThemeDto Theme);
+        LightCourseThemeDto Theme);
 }

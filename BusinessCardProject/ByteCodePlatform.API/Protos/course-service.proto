@@ -62,6 +62,7 @@ message UpdateCourseThemeRequest{
   optional double OldPrice = 7;
   optional bool IsShow = 8;
   optional int32 DisplayOrder = 9;
+  optional bool IsFree = 10;
 }
 message AddCourseModuleRequest{
   string CourseThemeId = 1;
@@ -115,7 +116,8 @@ message CourseThemeInfoResponse{
   google.protobuf.Timestamp CreatedAt = 7;
   optional google.protobuf.Timestamp UpdatedAt = 8;
   UserAuthorInfo Author = 9;
-  ProgrammingLanguageInfoResponse ProgrammingLanguage = 10;
+  LightProgrammingLanguageInfo ProgrammingLanguage = 10;
+  bool IsFree = 11;
 }
 message CourseThemesInfoResponse{
   repeated CourseThemeInfoResponse CourseThemes = 1;
@@ -125,7 +127,7 @@ message CourseModuleInfoResponse{
   string Name = 2;
   google.protobuf.Timestamp CreatedAt = 3;
   google.protobuf.Timestamp UpdatedAt = 4;
-  CourseThemeInfoResponse Theme = 5;
+  LightCourseThemeInfo Theme = 5;
 }
 message CourseModulesInfoResponse{
   repeated CourseModuleInfoResponse CourseModules = 1;
@@ -139,7 +141,7 @@ message CourseContentInfoResponse{
   string ImgUrl = 6;
   google.protobuf.Timestamp CreatedAt = 7;
   optional google.protobuf.Timestamp UpdatedAt = 8;
-  CourseModuleInfoResponse Module = 9;
+  LightCourseModuleInfo Module = 9;
 }
 message CourseContentsInfoResponse{
   repeated CourseContentInfoResponse CourseContents = 1;
@@ -149,6 +151,12 @@ message CourseContentsInfoResponse{
 message LightCourseThemeInfo{
   string Id = 1;
   string Name = 2;
+}
+message LightProgrammingLanguageInfo{
+  string Id = 1;
+}
+message LightCourseModuleInfo{
+  string Id = 1;
 }
 message UserAuthorInfo{
   string AuthorId = 1;

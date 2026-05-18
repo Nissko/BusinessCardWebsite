@@ -17,17 +17,5 @@ namespace ByteCodePlatform.Application.Application.Extensions
         
         public static Guid? ToGuidOrNull(this string id) =>
             Guid.TryParse(id, out var guid) ? guid : null;
-
-        public static decimal? ToDecimalOrNull(this Double value) =>
-            decimal.TryParse(value.ToString(), out var result) ? result : null;
-        
-        public static decimal ToDecimal(this Double value) =>
-            decimal.TryParse(value.ToString(), out var result) ? result : 0;
-
-        public static double ToDoubleOrNull(this Decimal? value) =>
-            double.TryParse(value.ToString(), out var result) ? result : 0;
-
-        public static double ToDouble(this Decimal value) =>
-            double.TryParse(value.ToString(), out var result) ? result : 0;
     }
 }
