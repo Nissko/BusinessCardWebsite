@@ -5,13 +5,34 @@ using UserGrpcService = ByteCodePlatform.API.Services.UserGrpcService;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorClient", policy =>
+    {
+        policy
+            .WithOrigins("https://localhost:7209")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .WithExposedHeaders(
+                "Grpc-Status",
+                "Grpc-Message",
+                "Grpc-Encoding",
+                "Grpc-Accept-Encoding",
+                "Content-Type"
+            );
+    });
+});
+
 builder.Services.AddGrpc();
-builder.Services
-    .AddCollectionInfrastructure(builder.Configuration)
+builder.Services.AddCollectionInfrastructure(builder.Configuration)
     .AddApplication();
 
 var app = builder.Build();
+
+app.UseRouting();
+app.UseCors("AllowBlazorClient");
+app.UseGrpcWeb();
+
 app.MapGrpcService<UserGrpcService>().EnableGrpcWeb();
 app.MapGrpcService<CourseGrpcService>().EnableGrpcWeb();
 

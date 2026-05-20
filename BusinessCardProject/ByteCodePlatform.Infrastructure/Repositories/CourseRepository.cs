@@ -6,6 +6,7 @@ using ByteCodePlatform.Domain.Entities.Course.Theme;
 using ByteCodePlatform.Domain.Enums;
 using ByteCodePlatform.Domain.Extensions;
 using ByteCodePlatform.Domain.Extensions.Course;
+using Dtos.DTO.Course;
 using Dtos.DTO.Course.Content;
 using Dtos.DTO.Course.Module;
 using Dtos.DTO.Course.ProgramLanguage;
@@ -21,6 +22,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
 {
     public class CourseRepository : ICourseRepository
     {
+        private const string Servicename = "CourseGrpcService";
         private readonly IByteCodeCoreDbContext _dbContext;
         private readonly IMediator _mediator;
 
@@ -29,9 +31,22 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
+        
+        public Task<CheckGrpcCourseTimingDto> CheckGrpcCourseTiming()
+        {
+            try
+            {
+                var dateTimeNow = SystemClock.Instance.GetCurrentInstant();
+                return Task.FromResult(new CheckGrpcCourseTimingDto(dateTimeNow, true, Servicename));
+            }
+            catch (Exception exception)
+            {
+                return Task.FromException<CheckGrpcCourseTimingDto>(exception);
+            }
+        }
 
         #region ProgrammingLanguage
-
+        
         public async Task<List<ProgrammingLanguageDto>> GetProgrammingLanguages()
         {
             var programmingLanguages = await _dbContext.ProgrammingLanguageCategory.ToListAsync();

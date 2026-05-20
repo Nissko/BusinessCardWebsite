@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{2A5E48
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{02217D61-9364-4118-989A-D19AAA270FEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessCardProject.Client", "Client\BusinessCardProject.Client\BusinessCardProject.Client.csproj", "{8A755DDE-8D1F-4177-9438-F9DD82CAB081}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ByteCodePlatform.Client", "Client\ByteCodePlatform.Client\ByteCodePlatform.Client.csproj", "{8A755DDE-8D1F-4177-9438-F9DD82CAB081}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{9D52F980-2D9C-4BE6-AF0A-259887208C76}"
 EndProject

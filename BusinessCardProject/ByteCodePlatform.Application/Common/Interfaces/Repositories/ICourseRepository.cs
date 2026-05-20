@@ -1,3 +1,4 @@
+using Dtos.DTO.Course;
 using Dtos.DTO.Course.Content;
 using Dtos.DTO.Course.Module;
 using Dtos.DTO.Course.ProgramLanguage;
@@ -10,6 +11,12 @@ namespace ByteCodePlatform.Application.Common.Interfaces.Repositories
 {
     public interface ICourseRepository
     {
+        
+        /// <summary>
+        /// Проверка состояния gRPC
+        /// </summary>
+        Task<CheckGrpcCourseTimingDto> CheckGrpcCourseTiming();
+        
         #region ProgrammingLanguage
 
         /// <summary>

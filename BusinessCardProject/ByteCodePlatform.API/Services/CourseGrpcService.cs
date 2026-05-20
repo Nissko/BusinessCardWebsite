@@ -21,6 +21,19 @@ namespace ByteCodePlatform.API.Services
             _courseService = courseService ?? throw new ArgumentNullException(nameof(courseService));
         }
 
+        public override async Task<CheckGrpcCourseTimingResponse> CheckGrpcCourseTiming(
+            CheckGrpcCourseTimingRequest request, ServerCallContext context)
+        {
+            var resultCheck = await _courseService.CheckGrpcCourseTiming();
+
+            return new CheckGrpcCourseTimingResponse
+            {
+                DateTime = resultCheck.DateTime.ToTimestamp(),
+                Health = resultCheck.Health,
+                GrpcService = resultCheck.GrpcServiceName
+            };
+        }
+
         #region ProgrammingLanguage
 
         public override async Task<ProgrammingLanguagesInfoResponse> GetProgrammingLanguages(
@@ -87,7 +100,7 @@ namespace ByteCodePlatform.API.Services
                 double? oldPrice = request.HasOldPrice ? request.OldPrice : null;
 
                 var updateCourseTheme = await _courseService.UpdateCourseTheme(new(request.Id.ToGuid(),
-                    request.ProgrammingLanguageId.ToGuidOrNull(), request.Name, request.Description, request.AvatarUrl, 
+                    request.ProgrammingLanguageId.ToGuidOrNull(), request.Name, request.Description, request.AvatarUrl,
                     price, oldPrice, request.IsShow, request.DisplayOrder, request.IsFree));
                 return updateCourseTheme.ToProtoCourseThemeInfo();
             }
