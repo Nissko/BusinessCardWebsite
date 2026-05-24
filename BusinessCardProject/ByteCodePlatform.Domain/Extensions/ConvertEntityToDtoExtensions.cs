@@ -15,44 +15,28 @@ namespace ByteCodePlatform.Domain.Extensions
     {
         #region User
 
-        public static UserDto GetUserDto(this UserEntity e)
+        public static UserCoreDto GetUserCoreDto(this UserEntity e)
         {
             return new(
-                e.Id,
-                e.Surname,
-                e.Name,
-                e.NickName,
-                e.Email,
-                e.IsAuthor,
-                e.CreatedAt,
-                e.UpdatedAt ?? null,
-                e.DeletedAt ?? null
+                e.UserId
             );
         }
 
-        public static List<UserDto> GetUserDto(this List<UserEntity> en)
+        public static List<UserCoreDto> GetUserCoreDto(this List<UserEntity> en)
         {
-            return en.Select(e => new UserDto(
-                e.Id,
-                e.Surname,
-                e.Name,
-                e.NickName,
-                e.Email,
-                e.IsAuthor,
-                e.CreatedAt,
-                e.UpdatedAt ?? null,
-                e.DeletedAt ?? null
+            return en.Select(e => new UserCoreDto(
+                e.UserId
             )).ToList();
         }
 
         public static UserAuthorDto GetUserAuthorDto(this AuthorEntity e)
         {
-            return new UserAuthorDto(e.Id, e.User.GetUserDto());
+            return new UserAuthorDto(e.Id, e.User.GetUserCoreDto());
         }
 
         public static List<UserAuthorDto> GetUserAuthorDto(this List<AuthorEntity> en)
         {
-            return en.Select(e => new UserAuthorDto(e.Id, e.User.GetUserDto())).ToList();
+            return en.Select(e => new UserAuthorDto(e.Id, e.User.GetUserCoreDto())).ToList();
         }
 
         #endregion
@@ -123,7 +107,7 @@ namespace ByteCodePlatform.Domain.Extensions
                 e.OldPrice,
                 e.CreatedAt,
                 e.UpdatedAt ?? null,
-                new(e.AuthorId, e.Author.User.GetUserDto()),
+                new(e.AuthorId, e.Author.User.GetUserCoreDto()),
                 e.ProgrammingLanguageCategory.GetLightProgrammingLanguageDto())
             ).ToList();
         }

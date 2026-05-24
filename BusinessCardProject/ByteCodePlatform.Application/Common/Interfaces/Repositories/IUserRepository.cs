@@ -8,21 +8,11 @@ namespace ByteCodePlatform.Application.Common.Interfaces.Repositories
         /// <summary>
         /// Создание пользователя
         /// </summary>
-        Task<bool> CreateUser(CreateUserRequest request);
-
-        /// <summary>
-        /// Изменение пользовательских данных
-        /// </summary>
-        Task<bool> UpdateUser(UpdateUserRequest request);
-
+        Task<bool> CreateUser(Guid userId);
+        
         /// <summary>
         /// Выдача авторских прав
         /// </summary>
         Task<UserAuthorDto> CreateAuthorUser(CreateAuthorRequest request);
-
-        /// <summary>
-        /// Получение пользователя
-        /// </summary>
-        Task<UserDto> GetUser(Guid userId);
     }
 }

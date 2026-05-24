@@ -46,19 +46,11 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                 schema: "bytecode_core",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Surname = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false, comment: "Фамилия"),
-                    Name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false, comment: "Имя"),
-                    NickName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, comment: "Ник"),
-                    Email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false, comment: "Почта"),
-                    IsAuthor = table.Column<bool>(type: "boolean", nullable: false, comment: "Является ли автором"),
-                    CreatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: false, comment: "Дата регистрации"),
-                    UpdatedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: true, comment: "Дата изменения"),
-                    DeletedAt = table.Column<Instant>(type: "timestamp with time zone", nullable: true, comment: "Дата удаления")
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UsersService", x => x.Id);
+                    table.PrimaryKey("PK_UsersService", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -80,7 +72,7 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                         column: x => x.UserId,
                         principalSchema: "bytecode_core",
                         principalTable: "UsersService",
-                        principalColumn: "Id",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -322,20 +314,6 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                 schema: "bytecode_core",
                 table: "CourseThemes",
                 column: "ProgrammingLanguageCategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersService_Email",
-                schema: "bytecode_core",
-                table: "UsersService",
-                column: "Email",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersService_NickName",
-                schema: "bytecode_core",
-                table: "UsersService",
-                column: "NickName",
-                unique: true);
         }
 
         /// <inheritdoc />

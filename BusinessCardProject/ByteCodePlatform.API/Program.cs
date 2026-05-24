@@ -1,5 +1,8 @@
+using System.Security.Cryptography;
 using ByteCodePlatform.Application.Application.Extensions;
 using ByteCodePlatform.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using CourseGrpcService = ByteCodePlatform.API.Services.CourseGrpcService;
 using UserGrpcService = ByteCodePlatform.API.Services.UserGrpcService;
 
@@ -27,11 +30,40 @@ builder.Services.AddGrpc();
 builder.Services.AddCollectionInfrastructure(builder.Configuration)
     .AddApplication();
 
+var publicKeyPath = Path.Combine(AppContext.BaseDirectory, "certs", "public_key.pem");
+var pemContent = File.ReadAllText(publicKeyPath);
+
+var rsa = RSA.Create();
+rsa.ImportFromPem(pemContent);
+
+System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = "https://localhost:7241/auth",
+            ValidateAudience = true,
+            ValidAudience = "grpc-services",
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero,
+            IssuerSigningKey = new RsaSecurityKey(rsa),
+            ValidAlgorithms = ["RS256"],
+            RoleClaimType = "role"
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 app.UseRouting();
 app.UseCors("AllowBlazorClient");
 app.UseGrpcWeb();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGrpcService<UserGrpcService>().EnableGrpcWeb();
 app.MapGrpcService<CourseGrpcService>().EnableGrpcWeb();

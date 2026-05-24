@@ -1,4 +1,4 @@
 namespace Dtos.DTO.User
 {
-    public record UserAuthorDto(Guid AuthorId, UserDto UserInfo);
+    public record UserAuthorDto(Guid AuthorId, UserCoreDto UserInfo);
 }

@@ -72,8 +72,6 @@ namespace ByteCodePlatform.Infrastructure
             optionsBuilder.UseNpgsql(
                 "Server=193.42.115.251;User Id=nikita;Password=qwertyaib12345678;Port=5432;Database=bytecodeDb;",
                 npgsqlOptions => { npgsqlOptions.UseNodaTime(); }).UseLazyLoadingProxies();
-            //optionsBuilder.UseNpgsql("Server=localhost;User Id=postgres;Password=0000;Port=5432;Database=bytecodeDb;",
-            //npgsqlOptions => { npgsqlOptions.UseNodaTime(); }).UseLazyLoadingProxies();
         }
 
         private static DbContextOptions<T> ChangeOptionsType<T>(DbContextOptions options) where T : DbContext

@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
 {
     [DbContext(typeof(ByteCodeCoreDbContext))]
-    [Migration("20260518045038_Migration_ByteCode_Core_0.0.1")]
+    [Migration("20260524154759_Migration_ByteCode_Core_0.0.1")]
     partial class Migration_ByteCode_Core_001
     {
         /// <inheritdoc />
@@ -307,57 +307,11 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
 
             modelBuilder.Entity("ByteCodePlatform.Domain.Entities.UserEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Instant>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasComment("Дата регистрации");
-
-                    b.Property<Instant?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasComment("Дата удаления");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasComment("Почта");
-
-                    b.Property<bool>("IsAuthor")
-                        .HasColumnType("boolean")
-                        .HasComment("Является ли автором");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
-                        .HasComment("Имя");
-
-                    b.Property<string>("NickName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasComment("Ник");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
-                        .HasComment("Фамилия");
-
-                    b.Property<Instant?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasComment("Дата изменения");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("NickName")
-                        .IsUnique();
+                    b.HasKey("UserId");
 
                     b.ToTable("UsersService", "bytecode_core");
                 });

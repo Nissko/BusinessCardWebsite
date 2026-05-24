@@ -2,7 +2,6 @@ using ByteCodePlatform.Application.Application.Extensions;
 using ByteCodePlatform.Application.Common.Interfaces;
 using ByteCodePlatform.Application.Common.Interfaces.Repositories;
 using ByteCodePlatform.Infrastructure.Repositories;
-using ByteCodePlatform.Infrastructure.Secure.Service;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -26,7 +25,6 @@ namespace ByteCodePlatform.Infrastructure.Extensions
             
             //Регистрация сервисов
             services.AddScoped<IMediator, Mediator>();
-            services.AddScoped<IPasswordHash, PasswordHashService>();
             
             //Репозитории
             services.AddScoped<IByteCodeCoreDbContext, ByteCodeCoreDbContext>();

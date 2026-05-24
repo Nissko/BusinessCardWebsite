@@ -23,9 +23,6 @@ namespace ByteCodePlatform.API.ProtoMappers.Course.Themes
                 {
                     AuthorId = dto.Author.AuthorId.ToString(),
                     UserId = dto.Author.UserInfo.Id.ToString(),
-                    Surname = dto.Author.UserInfo.Surname,
-                    Name = dto.Author.UserInfo.Name,
-                    NickName = dto.Author.UserInfo.NickName
                 },
                 ProgrammingLanguage = new()
                 {

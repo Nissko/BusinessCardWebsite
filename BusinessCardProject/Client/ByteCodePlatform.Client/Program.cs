@@ -1,7 +1,6 @@
 using BusinessCardProject.Client;
 using BusinessCardProject.Client.Services.ProjectInfoService;
 using CourseService.Proto;
-using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

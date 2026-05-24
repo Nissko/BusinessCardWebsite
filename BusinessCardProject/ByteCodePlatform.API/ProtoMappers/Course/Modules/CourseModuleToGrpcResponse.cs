@@ -1,4 +1,3 @@
-using ByteCodePlatform.API.ProtoMappers.Course.ProgramLanguages;
 using ByteCodePlatform.API.ProtoMappers.Course.Themes;
 using ByteCodePlatform.Application.Application.Extensions;
 using CourseService.Proto;

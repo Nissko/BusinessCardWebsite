@@ -9,7 +9,6 @@
     <ItemGroup>
       <ProjectReference Include="..\ByteCodePlatform.Application\ByteCodePlatform.Application.csproj" />
       <ProjectReference Include="..\ByteCodePlatform.Domain\ByteCodePlatform.Domain.csproj" />
-      <ProjectReference Include="..\ByteCodePlatform.Infrastructure.Secure\ByteCodePlatform.Infrastructure.Secure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
