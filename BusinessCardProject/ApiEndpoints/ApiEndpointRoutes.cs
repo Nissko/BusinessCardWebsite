@@ -10,11 +10,6 @@ namespace ApiEndpoints
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
-    
-        /// <summary>
-        /// Url для backend(-a)
-        /// </summary>
-        public static string BaseUrl => _configuration["BaseUrl"] ??  "https://localhost:7284/";
 
         /// <summary>
         /// Url для frontend(-a)

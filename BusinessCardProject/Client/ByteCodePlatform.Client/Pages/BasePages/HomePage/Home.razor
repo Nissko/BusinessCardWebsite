@@ -1,117 +1,14 @@
 ﻿@page "/"
 @page "/home"
-@using CourseService.Proto
-@using Grpc.Core
-@inject CourseGrpcService.CourseGrpcServiceClient Client
+@using BusinessCardProject.Client.Pages.BasePages.HomePage.Components
 
 <PageTitle>Главная страница</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Medium">
-    <MudText Typo="Typo.h4" GutterBottom="true" Class="mt-4 mb-4" Style="font-weight: bold">
-        Главная страница, переделать её!
-    </MudText>
-    
-    @*@if (isLoading)
-    {
-        <div class="alert alert-info">🔄 Загрузка данных...</div>
-    }
-    else if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <div class="alert alert-danger">
-            ⚠️ Ошибка: @errorMessage
-            <button class="btn btn-sm btn-outline-dark ms-2" @onclick="LoadData">Повторить</button>
-        </div>
-    }
-    else if (ThemesInfoResponses?.Any() == true)
-    {
-        <div class="themes-container">
-            @foreach (var theme in ThemesInfoResponses)
-            {
-                $1$ 🔑 @key критически важен для производительности списков #1#
-                <div @key="theme.Id" class="theme-card p-3 mb-3 border rounded">
-                    <h5>[@theme.Id] @theme.Name</h5>
-                    <p><strong>Цена:</strong> @theme.Price</p>
-                    <p><strong>Автор:</strong> @theme.Author.Surname @theme.Author.Name (@theme.Author.NickName)</p>
-                </div>
-            }
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-secondary">📭 Темы не найдены</div>
-    }*@
-    
-    <div class="themes-container">
-        <div class="theme-card p-3 mb-3 border rounded">
-            <h5>@_checkGrpcCourseTimingResponse.DateTime</h5>
-            <h5>@_checkGrpcCourseTimingResponse.GrpcService</h5>
-            <h5>@_checkGrpcCourseTimingResponse.Health</h5>
-        </div>
-    </div>
-
-    @*В будующем можно рассказать о достижениях*@
-    @*В будующем можно рассказать о себе*@
+	<AboutMeHomePageComponent />
+	<AboutLanguagesHomePageComponent />
 </MudContainer>
 
-@code
-{
-    private List<CourseThemeInfoResponse> ThemesInfoResponses = new();
-    private CheckGrpcCourseTimingResponse _checkGrpcCourseTimingResponse = new();
-    private bool isLoading = true;
-    private string? errorMessage;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        await LoadData();
-    }
-
-    private async Task LoadData()
-    {
-        isLoading = true;
-        errorMessage = null;
-
-        try
-        {
-            /*var request = new GetCourseThemesRequest();
-            // Таймаут защитит от вечной загрузки при проблемах с сетью
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(60));
-            
-            var response = await Client.GetCourseThemesAsync(request, cancellationToken: cts.Token);
-            ThemesInfoResponses = response.CourseThemes.ToList();
-            Console.WriteLine(response);*/
-
-            var secondRequest = new CheckGrpcCourseTimingRequest();
-            using var secondCts = new CancellationTokenSource(TimeSpan.FromSeconds(60));
-            
-            var secondResponse = await Client.CheckGrpcCourseTimingAsync(secondRequest, cancellationToken: secondCts.Token);
-            _checkGrpcCourseTimingResponse = secondResponse;
-            Console.WriteLine(secondResponse);
-        }
-        catch (RpcException ex) when (ex.StatusCode == StatusCode.Unavailable)
-        {
-            errorMessage = "Сервис временно недоступен. Проверьте, запущен ли API-сервер.";
-            Console.Error.WriteLine($"gRPC Unavailable: {ex.Status.Detail}");
-        }
-        catch (RpcException ex)
-        {
-            errorMessage = $"gRPC ошибка: {ex.Status.Detail}";
-            Console.Error.WriteLine($"gRPC Error: {ex}");
-        }
-        catch (OperationCanceledException)
-        {
-            errorMessage = "Превышено время ожидания ответа от сервера.";
-        }
-        catch (Exception ex)
-        {
-            errorMessage = $"Непредвиденная ошибка: {ex.Message}";
-            Console.Error.WriteLine($"Unexpected Error: {ex}");
-        }
-        finally
-        {
-            isLoading = false;
-            // StateHasChanged() не обязателен здесь, так как блейзор отслеживает асинхронные задачи,
-            // но в сложных сценариях его можно вызвать явно.
-        }
-    }
+@code{
+	
 }

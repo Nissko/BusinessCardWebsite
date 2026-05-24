@@ -33,14 +33,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ApiEndpoints\ApiEndpoints.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\images\Donation\QR_Dark.png" />
     <_ContentIncludedByDefault Remove="wwwroot\images\Donation\QR_Light.png" />
     <_ContentIncludedByDefault Remove="Pages\RatingPage\Rating.razor" />
     <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\CourseThemes\Components\UniversalPropertyDialog.razor" />
+    <_ContentIncludedByDefault Remove="publish\web.config" />
+    <_ContentIncludedByDefault Remove="publish\ByteCodePlatform.Client.staticwebassets.endpoints.json" />
+    <_ContentIncludedByDefault Remove="publish\emcc-props.json" />
+    <_ContentIncludedByDefault Remove="publish\wwwroot\_framework\blazor.boot.json" />
   </ItemGroup>
 
   <ItemGroup>

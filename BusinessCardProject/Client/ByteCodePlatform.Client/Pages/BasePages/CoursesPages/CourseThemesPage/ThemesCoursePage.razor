@@ -1,8 +1,7 @@
-﻿@*
-@inject HttpClient HttpClient
+﻿@inject HttpClient HttpClient
 @inject IBrowserViewportService BrowserViewportService
-@using ApiEndpoints
-@using ContractualDtos.DTO.Course.CourseTheme.Dtos
+@using CourseService.Proto
+@inject CourseGrpcService.CourseGrpcServiceClient CourseGrpc
 @inject NavigationManager NavManager
 @page "/courses"
 
@@ -23,10 +22,10 @@
                         </MudCardHeader>
                         <MudCardContent>
                             <div class="d-flex justify-center pb-3">
-                                $1$TODO:сделать изменение через признак из бд#1#
-                                <MudText Typo="Typo.h3">@(course.IsFree ? "Бесплатно" : "100$")</MudText>
+                                @*TODO:сделать изменение через признак из бд*@
+                                <MudText Typo="Typo.h3">@(course.IsFree ? "Бесплатно" : course.Price)</MudText>
                             </div>
-                            <MudList T="string" Class="mx-auto mt-4" Style="width:300px;">
+                            @*<MudList T="string" Class="mx-auto mt-4" Style="width:300px;">
                                 @if (course.CourseThemeRecommendation.Any())
                                 {
                                     @foreach (var themeRecommendation in course.CourseThemeRecommendation)
@@ -48,14 +47,14 @@
                                         3
                                     </MudListItem>
                                 }
-                            </MudList>
+                            </MudList>*@
                         </MudCardContent>
                         <MudCardActions Class="d-flex justify-center">
-                            $1$TODO:сделать изменение через признак с БД#1#
-                            <MudButton @onclick="@(_ => NavToTaskSelectPage(course.Id))" Variant="Variant.Filled"
+                            @*TODO:сделать изменение через признак с БД*@
+                            <MudButton @onclick="@(_ => NavToTaskSelectPage(Guid.Parse(course.Id)))" Variant="Variant.Filled"
                                        Color="Color.Primary" Size="Size.Large"
                                        Style="width:50%;">
-                                @(course.IsFree ? "Изучить" : "Подробнее")
+                                @(course.IsFree ? "Изучить" : "Купить")
                             </MudButton>
                         </MudCardActions>
                         @if (course.IsFree)
@@ -124,7 +123,7 @@
     /// <summary>
     /// Темы курсов из БД
     /// </summary>
-    private DetailedCourseThemeDtos[]? _coursers;
+    private List<CourseThemeInfoResponse> _coursers = new();
 
     private Breakpoint _currentBreakpoint;
     private const int SkeletonCnt = 0;
@@ -136,13 +135,19 @@
         // Подписываемся на изменения размера окна
         await BrowserViewportService.SubscribeAsync(Guid.NewGuid(), OnViewportChanged, fireImmediately: true);
 
-        _coursers = await HttpClient.GetFromJsonAsync<DetailedCourseThemeDtos[]?>
-            (ApiEndpointRoutes.CourseThemes.FilteredGetAll);
+        _coursers = await GetThemes();
         
-        if (_coursers != null)
+        if (_coursers.Any())
         {
             await BrowserViewportService.UnsubscribeAsync(Guid.NewGuid());
         }
+    }
+
+    public async Task<List<CourseThemeInfoResponse>> GetThemes()
+    {
+        var request = new GetCourseThemesRequest();
+        var result = await CourseGrpc.GetCourseThemesAsync(request);
+        return result.CourseThemes.ToList();
     }
     
     /// <summary>
@@ -186,4 +191,3 @@
         NavManager.NavigateTo($"/course/{themeId}");
     }
 }
-*@
