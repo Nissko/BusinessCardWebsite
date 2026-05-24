@@ -6,12 +6,14 @@ using ByteCodePlatform.Application.Application.Extensions;
 using ByteCodePlatform.Application.Common.Interfaces.Repositories;
 using CourseService.Proto;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using UpdateCourseContentRequest = CourseService.Proto.UpdateCourseContentRequest;
 using UpdateCourseModuleRequest = CourseService.Proto.UpdateCourseModuleRequest;
 using UpdateCourseThemeRequest = CourseService.Proto.UpdateCourseThemeRequest;
 
 namespace ByteCodePlatform.API.Services
 {
+    [Authorize]
     public class CourseGrpcService : CourseService.Proto.CourseGrpcService.CourseGrpcServiceBase
     {
         private readonly ICourseRepository _courseService;
