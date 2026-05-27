@@ -54,6 +54,7 @@ namespace Services.AuthService.Presentation.Services
             }
         }
 
+        [AllowAnonymous]
         public override async Task<RefreshTokenResponse> RefreshToken(RefreshTokenRequest request,
             ServerCallContext context)
         {
@@ -86,6 +87,7 @@ namespace Services.AuthService.Presentation.Services
             }
         }
         
+        [AllowAnonymous]
         public override async Task<LogoutResponse> Logout(LogoutRequest request, ServerCallContext context)
         {
             try

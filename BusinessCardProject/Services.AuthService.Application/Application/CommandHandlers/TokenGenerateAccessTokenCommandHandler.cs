@@ -36,7 +36,7 @@ namespace Services.AuthService.Application.Application.CommandHandlers
                 claims.AddRange(userRoles.Select(userRole => new Claim("role", userRole)));
 
                 var token = new JwtSecurityToken(
-                    issuer: "https://localhost:7241/auth",
+                    issuer: "https://bytecode.splinterkeenetic.netcraze.club/auth",
                     audience: "grpc-services",
                     claims: claims,
                     expires: DateTime.UtcNow.Add(AccessTokenLifetime),

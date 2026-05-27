@@ -8,11 +8,27 @@ using UserService.Proto;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorClient", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5111")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .WithExposedHeaders(
+                "Grpc-Status",
+                "Grpc-Message",
+                "Grpc-Encoding",
+                "Grpc-Accept-Encoding",
+                "Content-Type"
+            );
+    });
+});
 
 builder.Services.AddGrpcClient<UserGrpcService.UserGrpcServiceClient>(options =>
 {
-    options.Address = new Uri(builder.Configuration["GrpcServices:UserServiceUrl"]
-                              ?? "https://localhost:5002");
+    options.Address = new Uri(builder.Configuration["GrpcServices:CoreServiceUrl"] ?? throw new Exception("Grpc services url is missing"));
 });
 
 builder.Services.AddGrpc();
@@ -51,7 +67,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = "https://localhost:7241/auth",
+            ValidIssuer = "https://bytecode.splinterkeenetic.netcraze.club/auth",
             ValidateAudience = true,
             ValidAudience = "grpc-services",
             ValidateLifetime = true,
@@ -67,9 +83,15 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 app.UseRouting();
+app.UseCors("AllowBlazorClient");
+app.UseGrpcWeb();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGrpcService<AuthService>();
+app.MapGrpcService<AuthService>().EnableGrpcWeb();
 
 app.Run();
+
+/*
+ * TODO: сделать MiddleWare проверку на существование токенов
+ */

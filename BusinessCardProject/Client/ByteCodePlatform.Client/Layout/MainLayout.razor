@@ -1,8 +1,11 @@
-﻿@using BusinessCardProject.Client.Services.ProjectInfoService
+﻿@using BusinessCardProject.Client.Services.AuthUserService
+@using BusinessCardProject.Client.Services.ProjectInfoService
 @using BusinessCardProject.Client.Services.ProjectInfoService.Classes
 @inherits LayoutComponentBase
 @inject UserSettingService UserSetting
 @implements IDisposable
+@inject ClientAuthService ClientAuth
+@inject NavigationManager NavManager
 
 <MudThemeProvider Theme="_theme" IsDarkMode="UserSetting.Settings.IsDark"/>
 <MudPopoverProvider/>
@@ -44,12 +47,15 @@
                          ForceLoad="false">
             </MudMenuItem>
 
-            <MudMenuItem Icon="@Icons.Material.Rounded.AdminPanelSettings"
-                         IconColor="Color.Success"
-                         Label="Админ-панель"
-                         Href="/admin-panel"
-                         ForceLoad="false">
-            </MudMenuItem>
+            @if (_clientIsAuth)
+            {
+                <MudMenuItem Icon="@Icons.Material.Rounded.AdminPanelSettings"
+                             IconColor="Color.Success"
+                             Label="Админ-панель"
+                             Href="/admin-panel"
+                             ForceLoad="false">
+                </MudMenuItem>
+            }
 
             <MudDivider/>
 
@@ -67,17 +73,22 @@
 
             <MudDivider/>
 
-            <MudMenuItem Href="/"
-                         ForceLoad
-                         Icon="@Icons.Material.Rounded.Login"
-                         IconColor="Color.Info"
-                         Label="Вход"/>
-
-            <MudMenuItem Href="/"
-                         ForceLoad
-                         Icon="@Icons.Material.Rounded.Logout"
-                         IconColor="Color.Info"
-                         Label="Выход"/>
+            @if (!_clientIsAuth)
+            {
+                <MudMenuItem OnClick="ClientActivityLogin"
+                             ForceLoad
+                             Icon="@Icons.Material.Rounded.Login"
+                             IconColor="Color.Info"
+                             Label="Вход"/>
+            }
+            else
+            {
+                <MudMenuItem OnClick="ClientActivityLogout"
+                             ForceLoad
+                             Icon="@Icons.Material.Rounded.Logout"
+                             IconColor="Color.Info"
+                             Label="Выход"/>
+            }
         </MudMenu>
     </MudAppBar>
     <MudDrawer id="nav-drawer" @bind-Open="UserSetting.Settings.IsDrawerOpen" Breakpoint="Breakpoint.None"
@@ -95,10 +106,19 @@
     //Переменные фреймворка по умолчанию
     private Color _color;
     private MudTheme? _theme;
+    private bool _clientIsAuth;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+        _clientIsAuth = !string.IsNullOrEmpty(ClientAuth.GetToken());
+        if (_clientIsAuth)
+        {
+            /*TODO: написать метод для проверки токена,
+             если он истек, то отзывать его и перенаправлять на авторизацию*/
+        }
+
         /*Инициализация глобальных настроек пользователя*/
         if (UserSetting.Settings.UpdateTime == null)
         {
@@ -106,8 +126,11 @@
             UserSetting.Settings.UpdateTime = DateTime.Now;
             await UserSetting.SaveAsync();
         }
+
         //TODO: Сделать загрузку UserSettings из БД
         UserSetting.OnChange += StateHasChanged;
+
+        #region Код фреймворка
 
         _color = UserSetting.Settings.IsDark ? Color.Info : Color.Dark;
         _theme = new()
@@ -116,6 +139,8 @@
             PaletteDark = _darkPalette,
             LayoutProperties = new()
         };
+
+        #endregion
     }
 
     #region Код фреймворка по умолчанию
@@ -135,7 +160,7 @@
     {
         UserSetting.Settings.IsDark = !UserSetting.Settings.IsDark;
         _color = UserSetting.Settings.IsDark ? Color.Info : Color.Dark;
-        
+
         await UserSetting.SaveAsync();
     }
 
@@ -191,4 +216,17 @@
     {
         UserSetting.OnChange -= StateHasChanged;
     }
+
+    private void ClientActivityLogout()
+    {
+        _ = ClientAuth.Logout(ClientAuth.GetToken());
+        _clientIsAuth = false;
+        ClientActivityLogin();
+    }
+
+    private void ClientActivityLogin()
+    {
+        NavManager.NavigateTo("/login");
+    }
+
 }

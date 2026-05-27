@@ -4,6 +4,7 @@ using ByteCodePlatform.API.ProtoMappers.Course.ProgramLanguages;
 using ByteCodePlatform.API.ProtoMappers.Course.Themes;
 using ByteCodePlatform.Application.Application.Extensions;
 using ByteCodePlatform.Application.Common.Interfaces.Repositories;
+using ByteCodePlatform.Domain.Enums;
 using CourseService.Proto;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +28,7 @@ namespace ByteCodePlatform.API.Services
             CheckGrpcCourseTimingRequest request, ServerCallContext context)
         {
             var resultCheck = await _courseService.CheckGrpcCourseTiming();
-
+            
             return new CheckGrpcCourseTimingResponse
             {
                 DateTime = resultCheck.DateTime.ToTimestamp(),
@@ -38,6 +39,7 @@ namespace ByteCodePlatform.API.Services
 
         #region ProgrammingLanguage
 
+        [AllowAnonymous]
         public override async Task<ProgrammingLanguagesInfoResponse> GetProgrammingLanguages(
             GetProgrammingLanguagesRequest request, ServerCallContext context)
         {
@@ -59,6 +61,7 @@ namespace ByteCodePlatform.API.Services
 
         #region CourseTheme
 
+        [Authorize(Roles = UserRoleStaticEnum.Admin)]
         public override async Task<CourseThemeInfoResponse> AddCourseTheme(AddCourseThemeRequest request,
             ServerCallContext context)
         {
@@ -76,6 +79,7 @@ namespace ByteCodePlatform.API.Services
             }
         }
 
+        [AllowAnonymous]
         public override async Task<CourseThemesInfoResponse> GetCourseThemes(GetCourseThemesRequest request,
             ServerCallContext context)
         {
@@ -93,6 +97,7 @@ namespace ByteCodePlatform.API.Services
             }
         }
 
+        [Authorize(Roles = UserRoleStaticEnum.Admin)]
         public override async Task<CourseThemeInfoResponse> UpdateCourseTheme(UpdateCourseThemeRequest request,
             ServerCallContext context)
         {
@@ -116,6 +121,7 @@ namespace ByteCodePlatform.API.Services
 
         #region CourseModule
 
+        [Authorize(Roles = UserRoleStaticEnum.Admin)]
         public override async Task<CourseModuleInfoResponse> AddCourseModule(AddCourseModuleRequest request,
             ServerCallContext context)
         {
@@ -132,6 +138,7 @@ namespace ByteCodePlatform.API.Services
             }
         }
 
+        [AllowAnonymous]
         public override async Task<CourseModulesInfoResponse> GetCourseModules(GetCourseModulesRequest request,
             ServerCallContext context)
         {
@@ -149,6 +156,7 @@ namespace ByteCodePlatform.API.Services
             }
         }
 
+        [Authorize(Roles = UserRoleStaticEnum.Admin)]
         public override async Task<CourseModuleInfoResponse> UpdateCourseModule(UpdateCourseModuleRequest request,
             ServerCallContext context)
         {
@@ -168,6 +176,7 @@ namespace ByteCodePlatform.API.Services
 
         #region CourseContent
 
+        [Authorize(Roles = UserRoleStaticEnum.Admin)]
         public override async Task<CourseContentInfoResponse> AddCourseContent(AddCourseContentRequest request,
             ServerCallContext context)
         {
@@ -184,6 +193,7 @@ namespace ByteCodePlatform.API.Services
             }
         }
 
+        [AllowAnonymous]
         public override async Task<CourseContentsInfoResponse> GetCourseContents(GetCourseContentsRequest request,
             ServerCallContext context)
         {
@@ -201,6 +211,7 @@ namespace ByteCodePlatform.API.Services
             }
         }
 
+        [Authorize(Roles = UserRoleStaticEnum.Admin)]
         public override async Task<CourseContentInfoResponse> UpdateCourseContent(UpdateCourseContentRequest request,
             ServerCallContext context)
         {

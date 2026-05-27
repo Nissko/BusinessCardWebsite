@@ -13,7 +13,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowBlazorClient", policy =>
     {
         policy
-            .WithOrigins("https://localhost:7209")
+            .WithOrigins("http://localhost:5111")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .WithExposedHeaders(
@@ -43,7 +43,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = "https://localhost:7241/auth",
+            ValidIssuer = "https://bytecode.splinterkeenetic.netcraze.club/auth",
             ValidateAudience = true,
             ValidAudience = "grpc-services",
             ValidateLifetime = true,
@@ -61,17 +61,14 @@ var app = builder.Build();
 app.UseRouting();
 app.UseCors("AllowBlazorClient");
 app.UseGrpcWeb();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGrpcService<UserGrpcService>().EnableGrpcWeb();
 app.MapGrpcService<CourseGrpcService>().EnableGrpcWeb();
 
-app.MapGet("/", () => Results.Ok(new 
-{ 
-    status = "healthy", 
-    timestamp = DateTime.UtcNow,
-}));
-
 app.Run();
+
+/*
+ * TODO: сделать чтобы при добавлении автора ставился признак пользователю
+ */
