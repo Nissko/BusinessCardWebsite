@@ -32,7 +32,7 @@
       <ProjectReference Include="..\Services.AuthService.Application\Services.AuthService.Application.csproj" />
       <ProjectReference Include="..\Services.AuthService.Infrastructure\Services.AuthService.Infrastructure.csproj" />
     </ItemGroup>
-
+    
     <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>

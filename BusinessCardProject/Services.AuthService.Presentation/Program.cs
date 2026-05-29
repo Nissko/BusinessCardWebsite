@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
 using Services.AuthService.Application.Application.Extensions;
 using Services.AuthService.Infrastructure.Extensions;
@@ -7,13 +8,21 @@ using Services.AuthService.Presentation.Services;
 using UserService.Proto;
 
 var builder = WebApplication.CreateBuilder(args);
+   
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5012, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+    });
+});
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowBlazorClient", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5111")
+            .WithOrigins(builder.Configuration["GrpcServices:ClientUrl"] ?? throw new Exception("Grpc services url is missing"))
             .AllowAnyMethod()
             .AllowAnyHeader()
             .WithExposedHeaders(

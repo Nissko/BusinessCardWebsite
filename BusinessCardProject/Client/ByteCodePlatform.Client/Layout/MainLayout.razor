@@ -12,21 +12,20 @@
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 <MudLayout>
-    @*TODO: Elevation=0, оставить или изменить*@
     @*TODO: Переделать под телефоны верхнюю менюшку*@
     <MudAppBar Elevation="0">
         <MudIconButton Icon="@Icons.Material.Rounded.Menu" Color="Color.Inherit" Edge="Edge.Start"
                        OnClick="@(_ => DrawerToggle())"/>
         <MudLink Href="" Underline="Underline.None">
             <MudText Typo="Typo.h4" Class="mr-3" Style="font-weight: bold" Color="@_color">
-                @ProjectInfoGlobalClass.ProjectName
+                @ProjectInfoGlobalClass.ProjectName.ToUpperInvariant()
             </MudText>
         </MudLink>
-        <MudLink Href="/courses" Underline="Underline.None">
+        @*<MudLink Href="/courses" Underline="Underline.None">
             <MudText Typo="Typo.h6" Class="mr-3" Style="font-weight: bold" Color="@_color">
                 Курсы
             </MudText>
-        </MudLink>
+        </MudLink>*@
         <MudLink Href="/about-us" Underline="Underline.None">
             <MudText Typo="Typo.h6" Style="font-weight: bold" Color="@_color">
                 О проекте

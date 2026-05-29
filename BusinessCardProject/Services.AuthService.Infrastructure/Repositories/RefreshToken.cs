@@ -26,8 +26,15 @@ namespace Services.AuthService.Infrastructure.Repositories
             if (expiresAt <= SystemClock.Instance.GetCurrentInstant())
                 throw new ArgumentException("Expiration date must be in the future", nameof(expiresAt));
 
+            /*TODO: Борьба с мульти-устройствами --> возможно надо убрать*/
+            var oldTokens = _context.RefreshToken.Where(x => x.UserId == Guid.Parse(userId)).ToList();
+            foreach (var oldToken in oldTokens)
+            {
+                oldToken.ChangeIsRevoked(true);
+                _context.RefreshToken.Update(oldToken);
+            }
+            
             var tokenHash = HashToken(refreshToken);
-
             var newRefreshToken = new RefreshTokenEntity(
                 tokenHash: tokenHash,
                 userId: Guid.Parse(userId),

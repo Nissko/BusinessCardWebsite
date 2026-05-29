@@ -1,4 +1,5 @@
 @page "/login"
+@layout EmptyAuthLayout
 @using BusinessCardProject.Client.Services.AuthUserService
 @using FluentValidation
 @using Severity = MudBlazor.Severity
@@ -6,8 +7,8 @@
 @inject NavigationManager NavManager
 @inject ISnackbar Snackbar
 
-<MudContainer MaxWidth="MaxWidth.Small" Class="mt-6">
-    <MudCard Class="mx-auto" MaxWidth="500px">
+<MudContainer MaxWidth="MaxWidth.Small">
+    <MudCard Class="mx-auto rounded-xl h-100vh" MaxWidth="500px" Style="padding: 14px;">
         <MudCardContent>
             <MudText Typo="Typo.h5" Class="mb-4">Вход в систему</MudText>
         
@@ -71,11 +72,9 @@
 
     private async Task HandleLogin()
     {
-        // Сбрасываем предыдущую ошибку
         _showError = false;
         _errorMessage = "";
         
-        // Валидация формы
         await _form.Validate();
         
         if (!_form.IsValid)
@@ -124,14 +123,12 @@
         }
     }
 
-    // 🔹 Модель для формы
     public class LoginModel
     {
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
     }
 
-    // 🔹 Валидатор FluentValidation
     public class LoginModelFluentValidator : AbstractValidator<LoginModel>
     {
         public LoginModelFluentValidator()
@@ -147,18 +144,14 @@
                 .MinimumLength(6).WithMessage("Минимум 6 символов");
         }
 
-        // 🔹 Метод для MudForm Validation
+   
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {
             var context = new ValidationContext<LoginModel>((LoginModel)model);
-    
-            // 🔹 В старых версиях нет IncludeProperties, поэтому валидируем всё и фильтруем вручную
             var result = await ValidateAsync(context);
-    
             if (result.IsValid)
                 return [];
     
-            // Фильтруем ошибки только для нужного свойства
             return result.Errors
                 .Where(e => e.PropertyName == propertyName || string.IsNullOrEmpty(propertyName))
                 .Select(e => e.ErrorMessage);

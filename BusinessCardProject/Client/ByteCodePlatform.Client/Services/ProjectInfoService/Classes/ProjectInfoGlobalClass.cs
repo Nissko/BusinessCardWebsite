@@ -8,12 +8,12 @@
         /// <summary>
         /// Название проекта
         /// </summary>
-        public static string ProjectName => "ByteCode";
+        public static string ProjectName => "БайтКод";
 
         /// <summary>
         /// Ссылка на сайт
         /// </summary>
-        public static string ProjectLink => "DomainName.Ru";
+        public static string ProjectLink => "https://it-bytecode.splinterkeenetic.netcraze.club/";
     
         /// <summary>
         /// Мое имя
@@ -33,7 +33,7 @@
         /// <summary>
         /// Контактная почта
         /// </summary>
-        public static string ProjectOwnerEmail => "skibko.nik@mail.ru";
+        public static string ProjectOwnerEmail => "mail@nikita-skibko.ru";
 
         /// <summary>
         /// ИНН

@@ -1,4 +1,4 @@
-using AuthGrpcService.Proto;
+using AuthorizationService.Proto;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
 
@@ -16,12 +16,13 @@ namespace BusinessCardProject.Client.Services.AuthUserService
         public async Task<bool> Login(string email, string password)
         {
             var handler = new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler());
-            var channel = GrpcChannel.ForAddress("http://localhost:5012", new GrpcChannelOptions
-            {
-                HttpHandler = handler
-            });
+            var channel = GrpcChannel.ForAddress("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService",
+                new GrpcChannelOptions
+                {
+                    HttpHandler = handler
+                });
 
-            var client = new AuthGrpcService.Proto.AuthGrpcService.AuthGrpcServiceClient(channel);
+            var client = new AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient(channel);
 
             try
             {
@@ -44,12 +45,13 @@ namespace BusinessCardProject.Client.Services.AuthUserService
         public async Task<bool> RefreshToken(string refreshToken)
         {
             var handler = new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler());
-            var channel = GrpcChannel.ForAddress("http://localhost:5012", new GrpcChannelOptions
-            {
-                HttpHandler = handler
-            });
+            var channel = GrpcChannel.ForAddress("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService",
+                new GrpcChannelOptions
+                {
+                    HttpHandler = handler
+                });
 
-            var client = new AuthGrpcService.Proto.AuthGrpcService.AuthGrpcServiceClient(channel);
+            var client = new AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient(channel);
 
             try
             {
@@ -72,12 +74,13 @@ namespace BusinessCardProject.Client.Services.AuthUserService
         public async Task<bool> Logout(string? refreshToken)
         {
             var handler = new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler());
-            var channel = GrpcChannel.ForAddress("http://localhost:5012", new GrpcChannelOptions
-            {
-                HttpHandler = handler
-            });
+            var channel = GrpcChannel.ForAddress("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService",
+                new GrpcChannelOptions
+                {
+                    HttpHandler = handler
+                });
 
-            var client = new AuthGrpcService.Proto.AuthGrpcService.AuthGrpcServiceClient(channel);
+            var client = new AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient(channel);
 
             try
             {

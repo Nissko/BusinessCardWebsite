@@ -2,18 +2,27 @@ using System.Security.Cryptography;
 using ByteCodePlatform.Application.Application.Extensions;
 using ByteCodePlatform.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
 using CourseGrpcService = ByteCodePlatform.API.Services.CourseGrpcService;
 using UserGrpcService = ByteCodePlatform.API.Services.UserGrpcService;
 
 var builder = WebApplication.CreateBuilder(args);
+     
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5221, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+    });
+});
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowBlazorClient", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5111")
+            .WithOrigins(builder.Configuration["GrpcServices:ClientUrl"] ?? throw new Exception("Grpc services url is missing"))
             .AllowAnyMethod()
             .AllowAnyHeader()
             .WithExposedHeaders(

@@ -15,7 +15,7 @@ using UpdateCourseThemeRequest = CourseService.Proto.UpdateCourseThemeRequest;
 namespace ByteCodePlatform.API.Services
 {
     [Authorize]
-    public class CourseGrpcService : CourseService.Proto.CourseGrpcService.CourseGrpcServiceBase
+    public class CourseGrpcService : CourseService.Proto.CourseService.CourseServiceBase
     {
         private readonly ICourseRepository _courseService;
 

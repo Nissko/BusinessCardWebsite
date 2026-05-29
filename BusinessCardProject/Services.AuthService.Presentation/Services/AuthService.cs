@@ -1,4 +1,4 @@
-using AuthGrpcService.Proto;
+using AuthorizationService.Proto;
 using Grpc.Core;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +11,7 @@ using Services.AuthService.Domain.Enums;
 namespace Services.AuthService.Presentation.Services
 {
     [Authorize]
-    public class AuthService : AuthGrpcService.Proto.AuthGrpcService.AuthGrpcServiceBase
+    public class AuthService : AuthorizationService.Proto.AuthorizationService.AuthorizationServiceBase
     {
         private readonly IMediator _mediator;
         private readonly IRefreshToken _refreshToken;

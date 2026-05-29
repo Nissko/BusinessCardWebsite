@@ -1,6 +1,6 @@
 {
-  "name": "BusinessCardProject.Client",
-  "short_name": "BusinessCardProject.Client",
+  "name": "БайтКод",
+  "short_name": "БайтКод",
   "id": "./",
   "start_url": "./",
   "display": "standalone",

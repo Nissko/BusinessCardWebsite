@@ -1,4 +1,5 @@
 using BusinessCardProject.Client;
+using BusinessCardProject.Client.Services;
 using BusinessCardProject.Client.Services.AuthUserService;
 using BusinessCardProject.Client.Services.ProjectInfoService;
 using CourseService.Proto;
@@ -25,9 +26,9 @@ builder.Services.AddScoped<ClientAuthService>();
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddGrpcClient<CourseGrpcService.CourseGrpcServiceClient>(options =>
+builder.Services.AddGrpcClient<CourseService.Proto.CourseService.CourseServiceClient>(options =>
     {
-        options.Address = new Uri("http://localhost:5221");
+        options.Address = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/CourseGrpcService");
     })
     .ConfigurePrimaryHttpMessageHandler(sp =>
     {

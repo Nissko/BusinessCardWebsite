@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 ENV ASPNETCORE_URLS=http://+:5221
-ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_ENVIRONMENT=Prod
 EXPOSE 5221
 
-ENTRYPOINT ["dotnet", "SecureChatUserMicroService.API.dll"]
+ENTRYPOINT ["dotnet", "ByteCodePlatform.API.dll"]

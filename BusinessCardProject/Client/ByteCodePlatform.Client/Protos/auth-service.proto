@@ -1,12 +1,12 @@
 syntax = "proto3";
-package auth;
+package AuthGrpcService;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
-option csharp_namespace = "AuthGrpcService.Proto";
+option csharp_namespace = "AuthorizationService.Proto";
 
-service AuthGrpcService {
+service AuthorizationService {
   rpc Login (LoginRequest) returns (LoginResponse);
   rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
   rpc Logout (LogoutRequest) returns (LogoutResponse);

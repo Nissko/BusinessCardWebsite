@@ -1,4 +1,5 @@
 syntax = "proto3";
+package CourseGrpcService;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
@@ -7,7 +8,7 @@ option csharp_namespace = "CourseService.Proto";
 
 // Сервис для управления курсами
 //TODO: доделать
-service CourseGrpcService {
+service CourseService {
   rpc CheckGrpcCourseTiming(CheckGrpcCourseTimingRequest)
       returns(CheckGrpcCourseTimingResponse);
   // Вывод ЯП
