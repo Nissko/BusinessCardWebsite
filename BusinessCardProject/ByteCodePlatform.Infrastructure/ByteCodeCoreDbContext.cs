@@ -70,7 +70,7 @@ namespace ByteCodePlatform.Infrastructure
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(
-                "Server=193.42.115.251;User Id=nikita;Password=qwertyaib12345678;Port=5432;Database=bytecodeDb;",
+                "Server=192.168.1.130;User Id=nikita;Password=qwertyaib12345678;Port=5432;Database=bytecodeDb;",
                 npgsqlOptions => { npgsqlOptions.UseNodaTime(); }).UseLazyLoadingProxies();
         }
 
