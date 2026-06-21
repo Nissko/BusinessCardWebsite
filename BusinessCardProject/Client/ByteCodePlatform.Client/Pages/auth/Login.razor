@@ -1,0 +1,12 @@
+@page "/login"
+@layout EmptyAuthLayout
+@using BusinessCardProject.Client.App.layouts
+@using BusinessCardProject.Client.Features.auth.login_form
+
+<MudContainer MaxWidth="MaxWidth.Small">
+    <LoginForm OnRegisterClick="@(() => NavManager.NavigateTo("/register"))" />
+</MudContainer>
+
+@code {
+    [Inject] private NavigationManager NavManager { get; set; } = null!;
+}

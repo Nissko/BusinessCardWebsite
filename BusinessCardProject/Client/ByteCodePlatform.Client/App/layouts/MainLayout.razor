@@ -1,0 +1,15 @@
+﻿@inherits LayoutComponentBase
+@using BusinessCardProject.Client.App.providers
+@using BusinessCardProject.Client.Widgets.header
+@using BusinessCardProject.Client.Widgets.sidebar
+
+<MudLayout>
+    <ThemeProviders />
+    
+    <Header></Header>
+    <Sidebar />
+    
+    <MudMainContent Class="pt-16 pa-4">
+        @Body
+    </MudMainContent>
+</MudLayout>

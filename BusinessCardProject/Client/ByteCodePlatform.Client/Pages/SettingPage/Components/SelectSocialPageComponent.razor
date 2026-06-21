@@ -1,5 +1,5 @@
-﻿@using BusinessCardProject.Client.Services.ProjectInfoService
-@inject UserSettingService UserSetting
+﻿@using BusinessCardProject.Client.Entities.Services.ProjectInfo
+@inject UserSettingService UserSettingService
 
 <MudItem Class="d-flex justify-space-between align-center px-2 py-2 h-100"
          Style="min-height: 74px;">
@@ -53,15 +53,15 @@
     protected override async Task OnInitializedAsync()
     {
         //Инициализация кэша локального хранилища
-        if (UserSetting.Settings.VideoPlatform == null)
+        if (UserSettingService.Settings.VideoPlatform == null)
         {
             await InitUserSettingList();
         }
 
         //Получение значения из кэша
-        if (UserSetting.Settings.VideoPlatform != null)
+        if (UserSettingService.Settings.VideoPlatform != null)
         {
-            SetValueFromCache(UserSetting.Settings.VideoPlatform.Platform);
+            SetValueFromCache(UserSettingService.Settings.VideoPlatform.Platform);
         }
 
         await base.OnInitializedAsync();
@@ -90,22 +90,22 @@
                 case nameof(SocialPageSwitch1):
                 {
                     SocialPageSwitch1 = true;
-                    UserSetting.Settings.VideoPlatform?.SetPlatform(0);
-                    await UserSetting.SaveAsync();
+                    UserSettingService.Settings.VideoPlatform?.SetPlatform(0);
+                    await UserSettingService.SaveAsync();
                     break;
                 }
                 case nameof(SocialPageSwitch2):
                 {
                     SocialPageSwitch2 = true; 
-                    UserSetting.Settings.VideoPlatform?.SetPlatform(1);
-                    await UserSetting.SaveAsync();
+                    UserSettingService.Settings.VideoPlatform?.SetPlatform(1);
+                    await UserSettingService.SaveAsync();
                     break;
                 }
                 case nameof(SocialPageSwitch3):
                 {
                     SocialPageSwitch3 = true; 
-                    UserSetting.Settings.VideoPlatform?.SetPlatform(2);
-                    await UserSetting.SaveAsync();
+                    UserSettingService.Settings.VideoPlatform?.SetPlatform(2);
+                    await UserSettingService.SaveAsync();
                     break;
                 }
             }
@@ -119,13 +119,13 @@
     /// </summary>
     private async Task InitUserSettingList()
     {
-        await UserSetting.LoadAsync();
-        if (UserSetting.Settings.VideoPlatform is null)
+        await UserSettingService.LoadAsync();
+        if (UserSettingService.Settings.VideoPlatform is null)
         {
             //TODO: Сделать загрузку UserSettings из БД
-            UserSetting.Settings.VideoPlatform = new();
-            UserSetting.Settings.VideoPlatform.SetPlatform(0);
-            await UserSetting.SaveAsync();
+            UserSettingService.Settings.VideoPlatform = new();
+            UserSettingService.Settings.VideoPlatform.SetPlatform(0);
+            await UserSettingService.SaveAsync();
         }
     }
 
@@ -134,10 +134,11 @@
     /// </summary>
     private void SetValueFromCache(int platformFromCache)
     {
-        _ = platformFromCache == 0
-            ? SocialPageSwitch1 = true
-            : platformFromCache == 1
-                ? SocialPageSwitch2 = true
-                : SocialPageSwitch3 = true;
+        _ = platformFromCache switch
+        {
+            0 => SocialPageSwitch1 = true,
+            1 => SocialPageSwitch2 = true,
+            _ => SocialPageSwitch3 = true
+        };
     }
 }

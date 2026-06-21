@@ -30,7 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Entities\Services\" />
     <Folder Include="Pages\BasePages\" />
+    <Folder Include="Pages\base\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
@@ -43,6 +45,8 @@
     <_ContentIncludedByDefault Remove="publish\ByteCodePlatform.Client.staticwebassets.endpoints.json" />
     <_ContentIncludedByDefault Remove="publish\emcc-props.json" />
     <_ContentIncludedByDefault Remove="publish\wwwroot\_framework\blazor.boot.json" />
+    <_ContentIncludedByDefault Remove="Pages\BasePages\HomePage\Components\AboutLanguagesHomePageComponent.razor" />
+    <_ContentIncludedByDefault Remove="Pages\BasePages\HomePage\Components\AboutMeHomePageComponent.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,16 +55,9 @@
     <AdditionalFiles Include="Pages\BasePages\CoursesPages\CourseThemesPage\CourseIllustration\CoreIllustrationPage.razor" />
     <AdditionalFiles Include="Pages\BasePages\CoursesPages\CourseThemesPage\ThemesCoursePage.razor" />
     <AdditionalFiles Include="Pages\BasePages\DonationPage\Donation.razor" />
-    <AdditionalFiles Include="Pages\BasePages\HomePage\Home.razor" />
     <AdditionalFiles Include="Pages\BasePages\PoliciesPages\PrivacyPolicy.razor" />
     <AdditionalFiles Include="Pages\BasePages\PoliciesPages\UserAgreement.razor" />
     <AdditionalFiles Include="Pages\BasePages\RatingPage\Rating.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Protobuf Include="Protos\auth-service.proto" GrpcServices="Client" />
-    <Protobuf Include="Protos\course-service.proto"  GrpcServices="Client" />
-    <Protobuf Include="Protos\user-service.proto"  GrpcServices="Client" />
   </ItemGroup>
   
   <ItemGroup>
@@ -75,12 +72,18 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\appsettings.Prod.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Protobuf Include="Entities\Protos\auth-service.proto">
+      <Generator>MSBuild:Compile</Generator>
+    </Protobuf>
+    <Protobuf Include="Entities\Protos\course-service.proto">
+      <Generator>MSBuild:Compile</Generator>
+    </Protobuf>
+    <Protobuf Include="Entities\Protos\user-service.proto">
+      <Generator>MSBuild:Compile</Generator>
+    </Protobuf>
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,29 @@
+﻿@using BusinessCardProject.Client.Entities.Services.ProjectInfo
+@using BusinessCardProject.Client.Shared.config.theme
+@implements IDisposable
+
+@inject UserSettingService UserSettingService
+
+<MudThemeProvider Theme="@Theme" IsDarkMode="@UserSettingService.Settings.IsDark"/>
+<MudPopoverProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+@code {
+    private static MudTheme Theme => new()
+    {
+        PaletteLight = Palettes.Light,
+        PaletteDark = Palettes.Dark,
+        LayoutProperties = new LayoutProperties()
+    };
+
+    protected override void OnInitialized()
+    {
+        UserSettingService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        UserSettingService.OnChange -= StateHasChanged;
+    }
+}
