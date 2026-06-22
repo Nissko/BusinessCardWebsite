@@ -28,38 +28,6 @@
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Entities\Services\" />
-    <Folder Include="Pages\BasePages\" />
-    <Folder Include="wwwroot\images\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\images\Donation\QR_Dark.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\images\Donation\QR_Light.png" />
-    <_ContentIncludedByDefault Remove="Pages\RatingPage\Rating.razor" />
-    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\CourseThemes\Components\UniversalPropertyDialog.razor" />
-    <_ContentIncludedByDefault Remove="publish\web.config" />
-    <_ContentIncludedByDefault Remove="publish\ByteCodePlatform.Client.staticwebassets.endpoints.json" />
-    <_ContentIncludedByDefault Remove="publish\emcc-props.json" />
-    <_ContentIncludedByDefault Remove="publish\wwwroot\_framework\blazor.boot.json" />
-    <_ContentIncludedByDefault Remove="Pages\BasePages\HomePage\Components\AboutLanguagesHomePageComponent.razor" />
-    <_ContentIncludedByDefault Remove="Pages\BasePages\HomePage\Components\AboutMeHomePageComponent.razor" />
-    <_ContentIncludedByDefault Remove="Pages\SettingPage\Components\SelectProgrammingLanguageComponent.razor" />
-    <_ContentIncludedByDefault Remove="Pages\SettingPage\Components\SelectSocialPageComponent.razor" />
-    <_ContentIncludedByDefault Remove="Pages\SettingPage\Setting.razor" />
-    <_ContentIncludedByDefault Remove="Pages\BasePages\policy\Policy.razor" />
-    <_ContentIncludedByDefault Remove="Pages\BasePages\policy\UserAgreementPolicy.razor" />
-    <_ContentIncludedByDefault Remove="Pages\BasePages\RatingPage\Rating.razor" />
-    <_ContentIncludedByDefault Remove="Pages\BasePages\CoursesPages\BlockMyCoursesPage\BlockMyCoursesPage.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="Pages\BasePages\AboutUsPage\AboutUs.razor" />
-    <AdditionalFiles Include="Pages\BasePages\CoursesPages\CourseThemesPage\CourseIllustration\CoreIllustrationPage.razor" />
-    <AdditionalFiles Include="Pages\BasePages\DonationPage\Donation.razor" />
-  </ItemGroup>
   
   <ItemGroup>
     <Content Update="Dockerfile">
