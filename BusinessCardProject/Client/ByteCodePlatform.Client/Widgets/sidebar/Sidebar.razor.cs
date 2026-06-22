@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace BusinessCardProject.Client.Widgets.sidebar
 {
-    public partial class Sidebar : IDisposable
+    public partial class Sidebar : ComponentBase, IDisposable
     {
         [Inject] private UserSettingService UserSettingService { get; set; } = null!;
 

@@ -4,7 +4,7 @@ using MudBlazor;
 
 namespace BusinessCardProject.Client.Widgets.header
 {
-    public partial class Header : IDisposable
+    public partial class Header : ComponentBase, IDisposable
     {
         [Inject] private UserSettingService UserSettingService { get; set; } = null!;
 

@@ -6,7 +6,7 @@ using MudBlazor;
 
 namespace BusinessCardProject.Client.Features.toggle_theme
 {
-    public partial class ThemeToggle : IDisposable
+    public partial class ThemeToggle : ComponentBase, IDisposable
     {
         [Inject] private UserSettingService UserSettingService { get; set; } = null!;
         [Inject] private IJSRuntime Js { get; set; } = null!;
