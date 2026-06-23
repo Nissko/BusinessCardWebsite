@@ -97,6 +97,7 @@ namespace ByteCodePlatform.API.Services
             }
         }
 
+        [AllowAnonymous]
         public override async Task<CourseThemeInfoResponse> GetCourseTheme(GetCourseThemeRequest request, ServerCallContext context)
         {
             try
@@ -169,6 +170,7 @@ namespace ByteCodePlatform.API.Services
             }
         }
 
+        [AllowAnonymous]
         public override async Task<CourseModulesInfoResponse> GetCourseModulesFromCourse(GetCourseModulesFromCourseRequest request, ServerCallContext context)
         {
             try
@@ -240,6 +242,7 @@ namespace ByteCodePlatform.API.Services
             }
         }
 
+        [AllowAnonymous]
         public override async Task<CourseContentsInfoResponse> GetCourseContentsFromModuleId(GetCourseContentsFromModuleIdRequest request, ServerCallContext context)
         {
             try

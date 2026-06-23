@@ -26,7 +26,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddGrpcClient<CourseService.Proto.CourseService.CourseServiceClient>(options =>
     {
-        options.Address = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/CourseGrpcService");
+        options.Address = new Uri("https://localhost:7117");
+        //options.Address = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/CourseGrpcService");
     })
     .ConfigurePrimaryHttpMessageHandler(sp =>
     {

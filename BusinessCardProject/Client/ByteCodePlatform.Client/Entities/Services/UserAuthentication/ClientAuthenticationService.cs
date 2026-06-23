@@ -7,7 +7,8 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
     public class ClientAuthenticationService
     {
         private readonly TokenStore _tokenStore;
-        private const string AddressLink = "https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService";
+        private const string AddressLink = "https://localhost:7241";
+        //private const string AddressLink = "https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService";
 
         public ClientAuthenticationService(TokenStore tokenStore)
         {

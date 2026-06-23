@@ -8,12 +8,17 @@ using Services.AuthService.Presentation.Services;
 using UserService.Proto;
 
 var builder = WebApplication.CreateBuilder(args);
-   
+
+var port = int.Parse(builder.Configuration["GrpcServices:ListenPort"] ?? throw new Exception("Port is missing"));
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(5012, listenOptions =>
+    options.ListenAnyIP(port, listenOptions =>
     {
         listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+        if (builder.Environment.IsDevelopment())
+        { 
+            listenOptions.UseHttps();
+        }
     });
 });
 
@@ -96,6 +101,11 @@ app.UseCors("AllowBlazorClient");
 app.UseGrpcWeb();
 app.UseAuthentication();
 app.UseAuthorization();
+
+if (builder.Environment.IsDevelopment())
+{ 
+    app.UseHttpsRedirection();
+}
 
 app.MapGrpcService<AuthService>().EnableGrpcWeb();
 
