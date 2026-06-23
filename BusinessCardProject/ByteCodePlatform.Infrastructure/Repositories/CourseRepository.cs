@@ -236,7 +236,24 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             var contents = await _dbContext.CourseContent.ToListAsync();
             if (contents.Any(theme => !theme.ContentFieldProperties.CheckProperties()))
             {
-                throw new("Course theme properties are not allowed");
+                throw new("Course content properties are not allowed");
+            }
+
+            var orderedContents = contents.Where(x =>
+                    string.Equals(x.ContentFieldProperties
+                        .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
+                .OrderBy(x => x.ContentFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value)
+                .ThenBy(x => x.CreatedAt).ToList();
+
+            return orderedContents.GetCourseContentDtos();
+        }
+
+        public async Task<List<CourseContentDto>> GetCourseContentsFromModuleId(Guid moduleId)
+        {
+            var contents = await _dbContext.CourseContent.Where(x=>x.CourseModuleId == moduleId).ToListAsync();
+            if (contents.Any(theme => !theme.ContentFieldProperties.CheckProperties()))
+            {
+                throw new("Course content properties are not allowed");
             }
 
             var orderedContents = contents.Where(x =>

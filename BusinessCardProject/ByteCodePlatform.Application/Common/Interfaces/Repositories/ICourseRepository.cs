@@ -85,6 +85,11 @@ namespace ByteCodePlatform.Application.Common.Interfaces.Repositories
         /// Вывод контента курсов
         /// </summary>
         Task<List<CourseContentDto>> GetCourseContents();
+        
+        /// <summary>
+        /// Вывод контента модуля
+        /// </summary>
+        Task<List<CourseContentDto>> GetCourseContentsFromModuleId(Guid moduleId);
 
         /// <summary>
         /// Изменение контента курса

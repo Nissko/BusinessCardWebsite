@@ -240,6 +240,22 @@ namespace ByteCodePlatform.API.Services
             }
         }
 
+        public override async Task<CourseContentsInfoResponse> GetCourseContentsFromModuleId(GetCourseContentsFromModuleIdRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var courseContents = await _courseService.GetCourseContentsFromModuleId(request.ModuleId.ToGuid());
+                return new()
+                {
+                    CourseContents = { courseContents.ToProtoCourseContentInfoList() }
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
         [Authorize(Roles = UserRoleStaticEnum.Admin)]
         public override async Task<CourseContentInfoResponse> UpdateCourseContent(UpdateCourseContentRequest request,
             ServerCallContext context)

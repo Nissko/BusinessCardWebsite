@@ -7,6 +7,7 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
     public class ClientAuthenticationService
     {
         private readonly TokenStore _tokenStore;
+        private const string AddressLink = "https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService";
 
         public ClientAuthenticationService(TokenStore tokenStore)
         {
@@ -16,7 +17,7 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
         public async Task<bool> Login(string email, string password)
         {
             var handler = new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler());
-            var channel = GrpcChannel.ForAddress("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService",
+            var channel = GrpcChannel.ForAddress(AddressLink,
                 new GrpcChannelOptions
                 {
                     HttpHandler = handler
@@ -45,7 +46,7 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
         public async Task<bool> RefreshToken(string refreshToken)
         {
             var handler = new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler());
-            var channel = GrpcChannel.ForAddress("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService",
+            var channel = GrpcChannel.ForAddress(AddressLink,
                 new GrpcChannelOptions
                 {
                     HttpHandler = handler
@@ -74,7 +75,7 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
         public async Task<bool> Logout(string? refreshToken)
         {
             var handler = new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler());
-            var channel = GrpcChannel.ForAddress("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService",
+            var channel = GrpcChannel.ForAddress(AddressLink,
                 new GrpcChannelOptions
                 {
                     HttpHandler = handler

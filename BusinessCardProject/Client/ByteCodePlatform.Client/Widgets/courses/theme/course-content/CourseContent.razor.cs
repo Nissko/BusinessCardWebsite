@@ -11,7 +11,6 @@ namespace BusinessCardProject.Client.Widgets.courses.theme.course_content
         public CourseService.Proto.CourseService.CourseServiceClient CourseGrpc { get; set; } = null!;
         private CourseModulesInfoResponse? CourseModules { get; set; }
         
-
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();

@@ -44,6 +44,9 @@ service CourseService {
   // Вывод контента курсов
   rpc GetCourseContents(GetCourseContentsRequest)
       returns(CourseContentsInfoResponse);
+  // Вывод контента курсов модуля
+  rpc GetCourseContentsFromModuleId(GetCourseContentsFromModuleIdRequest)
+      returns(CourseContentsInfoResponse);
   // Изменение контента курса
   rpc UpdateCourseContent(UpdateCourseContentRequest)
       returns(CourseContentInfoResponse);
@@ -101,6 +104,9 @@ message AddCourseContentRequest{
   string ImgUrl = 6;
 }
 message GetCourseContentsRequest{}
+message GetCourseContentsFromModuleIdRequest{
+  string ModuleId = 1;
+}
 message UpdateCourseContentRequest{
   string Id = 1;
   optional string CourseModuleId = 2;
