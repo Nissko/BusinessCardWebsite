@@ -97,6 +97,19 @@ namespace ByteCodePlatform.API.Services
             }
         }
 
+        public override async Task<CourseThemeInfoResponse> GetCourseTheme(GetCourseThemeRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var courseTheme = await _courseService.GetCourseTheme(request.Id.ToGuid());
+                return courseTheme.ToProtoCourseThemeInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
         [Authorize(Roles = UserRoleStaticEnum.Admin)]
         public override async Task<CourseThemeInfoResponse> UpdateCourseTheme(UpdateCourseThemeRequest request,
             ServerCallContext context)
@@ -145,6 +158,22 @@ namespace ByteCodePlatform.API.Services
             try
             {
                 var courseModules = await _courseService.GetCourseModules();
+                return new()
+                {
+                    CourseModules = { courseModules.ToProtoCourseModuleInfoList() }
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        public override async Task<CourseModulesInfoResponse> GetCourseModulesFromCourse(GetCourseModulesFromCourseRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var courseModules = await _courseService.GetCourseModulesFromCourse(request.CourseId.ToGuid());
                 return new()
                 {
                     CourseModules = { courseModules.ToProtoCourseModuleInfoList() }

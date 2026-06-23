@@ -96,7 +96,16 @@ namespace ByteCodePlatform.Infrastructure.Repositories
 
             return orderedThemes.GetCourseThemeDtos();
         }
-        
+
+        //TODO:пофиксить и сделать проброс исключения в случае отсутствия свойств
+        public async Task<CourseThemeDto> GetCourseTheme(Guid courseId)
+        {
+            var theme = await _dbContext.CourseTheme.FirstOrDefaultAsync(x => x.Id == courseId) ??
+                        throw new ArgumentNullException(nameof(courseId), "Course theme not found");
+
+            return theme.GetCourseThemeDto();
+        }
+
         public async Task<CourseThemeDto> UpdateCourseTheme(UpdateCourseThemeRequest request)
         {
             var theme = await _dbContext.CourseTheme.FirstOrDefaultAsync(x => x.Id == request.Id) ??
@@ -146,6 +155,23 @@ namespace ByteCodePlatform.Infrastructure.Repositories
         public async Task<List<CourseModuleDto>> GetCourseModules()
         {
             var modules = await _dbContext.CourseModule.ToListAsync();
+            if (modules.Any(module => !module.ModuleFieldProperties.CheckProperties()))
+            {
+                throw new("Course module properties are not allowed");
+            }
+
+            var orderedModules = modules.Where(x =>
+                    string.Equals(x.ModuleFieldProperties
+                        .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
+                .OrderBy(x => x.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value)
+                .ThenBy(x => x.CreatedAt).ToList();
+
+            return orderedModules.GetCourseModuleDtos();
+        }
+
+        public async Task<List<CourseModuleDto>> GetCourseModulesFromCourse(Guid courseId)
+        {
+            var modules = await _dbContext.CourseModule.Where(x => x.CourseThemeId == courseId).ToListAsync();
             if (modules.Any(module => !module.ModuleFieldProperties.CheckProperties()))
             {
                 throw new("Course module properties are not allowed");

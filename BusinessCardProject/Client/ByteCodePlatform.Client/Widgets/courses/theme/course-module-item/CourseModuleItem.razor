@@ -1,0 +1,13 @@
+﻿<MudTreeViewItem Text="@Module.Name" TextTypo="Typo.h4" Class="mb-1">
+    @if (Module.VideoCourses.Any())
+    {
+        @foreach (var (videoCourse, index) in Module.VideoCourses.Select((v, i) => (v, i)))
+        {
+            <CourseVideoItem VideoCourse="videoCourse" Index="index" />
+        }
+    }
+    else
+    {
+        <MudTreeViewItem Text="В разработке!" Disabled="true"/>
+    }
+</MudTreeViewItem>

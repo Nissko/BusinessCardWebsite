@@ -7,8 +7,11 @@ namespace BusinessCardProject.Client.Widgets.header
     public partial class Header : ComponentBase, IDisposable
     {
         [Inject] private UserSettingService UserSettingService { get; set; } = null!;
+        [Inject] private IBrowserViewportService BrowserViewportService { get; set; } = null!;
 
         private Color HeaderColor => UserSettingService.Settings.IsDark ? Color.Info : Color.Dark;
+        private Guid _viewportSubscriptionId;
+        private bool _showHeaderButtons;
 
         protected override async Task OnInitializedAsync()
         {
@@ -19,10 +22,32 @@ namespace BusinessCardProject.Client.Widgets.header
                 UserSettingService.Settings.UpdateTime = DateTime.Now;
                 await UserSettingService.SaveAsync();
             }
+            
+            _viewportSubscriptionId = Guid.NewGuid();
+            await BrowserViewportService.SubscribeAsync(
+                _viewportSubscriptionId,
+                OnViewportChanged,
+                fireImmediately: true);
 
             StateHasChanged();
         }
 
+        private async Task OnViewportChanged(BrowserViewportEventArgs args)
+        {
+            _showHeaderButtons = CheckBreakPoint(args.Breakpoint);
+            await InvokeAsync(StateHasChanged);
+        }
+        
+        private static bool CheckBreakPoint(Breakpoint breakpoint)
+        {
+            return breakpoint switch
+            {
+                Breakpoint.Xxl => true,
+                Breakpoint.Xl or Breakpoint.Lg or Breakpoint.Md => true,
+                _ => false
+            };
+        }
+        
         private void ToggleDrawer()
         {
             UserSettingService.Settings.IsDrawerOpen = !UserSettingService.Settings.IsDrawerOpen;

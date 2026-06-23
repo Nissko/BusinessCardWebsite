@@ -16,8 +16,13 @@ namespace BusinessCardProject.Client.Widgets.setting.video_platform_selector
 
         protected override async Task OnInitializedAsync()
         {
-            await LoadSettingsAsync();
             await base.OnInitializedAsync();
+            await LoadSettingsAsync();
+
+            if (!_isYouTubeSelected && !_isRuTubeSelected && !_isVkVideoSelected)
+            {
+                await LoadSettingsAsync();
+            }
         }
 
         private async Task LoadSettingsAsync()

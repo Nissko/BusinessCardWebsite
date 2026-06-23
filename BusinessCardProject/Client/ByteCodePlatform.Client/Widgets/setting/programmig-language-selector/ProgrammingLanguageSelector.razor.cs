@@ -16,8 +16,13 @@ namespace BusinessCardProject.Client.Widgets.setting.programmig_language_selecto
 
         protected override async Task OnInitializedAsync()
         {
-            await LoadSettingsAsync();
             await base.OnInitializedAsync();
+            await LoadSettingsAsync();
+            
+            if (!_isCSharpSelected && !_isPhpSelected && !_isLaravelSelected)
+            {
+                await LoadSettingsAsync();
+            }
         }
 
         private async Task LoadSettingsAsync()

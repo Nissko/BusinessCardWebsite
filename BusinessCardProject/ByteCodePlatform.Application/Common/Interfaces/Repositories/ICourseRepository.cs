@@ -39,6 +39,11 @@ namespace ByteCodePlatform.Application.Common.Interfaces.Repositories
         Task<List<CourseThemeDto>> GetCourseThemes();
 
         /// <summary>
+        /// Вывод темы по Id
+        /// </summary>
+        Task<CourseThemeDto> GetCourseTheme(Guid courseId);
+
+        /// <summary>
         /// Изменение информации темы
         /// </summary>
         Task<CourseThemeDto> UpdateCourseTheme(UpdateCourseThemeRequest request);
@@ -53,9 +58,14 @@ namespace ByteCodePlatform.Application.Common.Interfaces.Repositories
         Task<CourseModuleDto> AddCourseModule(CreateCourseModuleRequest request);
 
         /// <summary>
-        /// Вывод модулей курса
+        /// Вывод всех модулей курсов
         /// </summary>
         Task<List<CourseModuleDto>> GetCourseModules();
+        
+        /// <summary>
+        /// Вывод всех модулей курса
+        /// </summary>
+        Task<List<CourseModuleDto>> GetCourseModulesFromCourse(Guid courseId);
 
         /// <summary>
         /// Изменение модуля курса

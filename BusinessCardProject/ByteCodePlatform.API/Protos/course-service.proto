@@ -20,14 +20,20 @@ service CourseService {
   // Вывод тем
   rpc GetCourseThemes(GetCourseThemesRequest)
       returns(CourseThemesInfoResponse);
+  // Вывод темы
+  rpc GetCourseTheme(GetCourseThemeRequest)
+      returns(CourseThemeInfoResponse);
   // Изменение информации темы
   rpc UpdateCourseTheme(UpdateCourseThemeRequest)
       returns(CourseThemeInfoResponse);
   // Добавление модуля курса
   rpc AddCourseModule(AddCourseModuleRequest)
       returns(CourseModuleInfoResponse);
-  // Вывод модулей курса
+  // Вывод всех модулей курсов
   rpc GetCourseModules(GetCourseModulesRequest)
+      returns(CourseModulesInfoResponse);
+  // Вывод всех модулей курса
+  rpc GetCourseModulesFromCourse(GetCourseModulesFromCourseRequest)
       returns(CourseModulesInfoResponse);
   // Изменение модуля курса
   rpc UpdateCourseModule(UpdateCourseModuleRequest)
@@ -56,6 +62,9 @@ message AddCourseThemeRequest{
   optional double OldPrice = 7;
 }
 message GetCourseThemesRequest{}
+message GetCourseThemeRequest{
+  string Id = 1;
+}
 message UpdateCourseThemeRequest{
   string Id = 1;
   optional string ProgrammingLanguageId = 2;
@@ -73,6 +82,9 @@ message AddCourseModuleRequest{
   string Name = 2;
 }
 message GetCourseModulesRequest{}
+message GetCourseModulesFromCourseRequest{
+  string CourseId = 1;
+}
 message UpdateCourseModuleRequest{
   string Id = 1;
   optional string CourseThemeId = 2;

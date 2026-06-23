@@ -1,0 +1,15 @@
+﻿@using BusinessCardProject.Client.Widgets.courses.theme.course_module_item
+
+<MudText Typo="Typo.h4" HtmlTag="p" Color="Color.Primary" Style="font-weight: bold;" Class="mb-2">
+    Содержание курса:
+</MudText>
+
+<MudTreeView T="string" Hover="true" ExpandOnClick="true">
+    @if (CourseModules != null)
+    {
+        foreach (var module in CourseModules.CourseModules)
+        {
+            <CourseModuleItem Module="module" CourseGrpc="CourseGrpc"/>
+        }
+    }
+</MudTreeView>

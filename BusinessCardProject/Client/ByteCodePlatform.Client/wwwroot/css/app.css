@@ -316,6 +316,11 @@ html[data-theme='true'] .btn-dismiss:hover svg {
     color: var(--mud-palette-primary-text) !important;
 }
 
+.mud-button-filled-error:focus:not(:focus-visible) {
+    background-color: var(--mud-palette-error) !important;
+    color: var(--mud-palette-error-text) !important;
+}
+
 .mud-button-root .mud-ripple {
     transition: none !important;
 }

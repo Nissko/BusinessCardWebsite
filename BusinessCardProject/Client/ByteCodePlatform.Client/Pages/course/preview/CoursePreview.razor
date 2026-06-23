@@ -1,0 +1,26 @@
+﻿@page "/course/{id:guid}"
+@using BusinessCardProject.Client.Widgets.courses.theme.course_content
+@using BusinessCardProject.Client.Widgets.courses.theme.course_hero
+@using CourseService.Proto
+@inject CourseService.CourseServiceClient CourseGrpc
+
+<PageTitle>
+    @(CourseThemeInfo != null ? $"Курс - {CourseThemeInfo.Name}" : "Курс")
+</PageTitle>
+
+@if (CourseThemeInfo != null)
+{
+    <MudContainer Class="py-4 py-sm-8 py-md-12 py-lg-16 py-xl-20">
+        <MudGrid>
+            <CourseHero Course="CourseThemeInfo" />
+            <CourseAuthor />
+            <MudItem xs="12" Class="mt-6">
+                <CourseContent Course="CourseThemeInfo" CourseGrpc="CourseGrpc" />
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+}
+
+@code {
+    
+}
