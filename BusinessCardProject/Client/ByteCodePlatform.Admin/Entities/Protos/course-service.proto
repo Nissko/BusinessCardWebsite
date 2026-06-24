@@ -1,0 +1,194 @@
+syntax = "proto3";
+package CourseGrpcService;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "CourseService.Proto";
+
+// Сервис для управления курсами
+//TODO: доделать
+service CourseService {
+  rpc CheckGrpcCourseTiming(CheckGrpcCourseTimingRequest)
+      returns(CheckGrpcCourseTimingResponse);
+  // Вывод ЯП
+  rpc GetProgrammingLanguages(GetProgrammingLanguagesRequest)
+      returns(ProgrammingLanguagesInfoResponse);
+  // Добавление темы курса
+  rpc AddCourseTheme(AddCourseThemeRequest)
+      returns(CourseThemeInfoResponse);
+  // Вывод тем
+  rpc GetCourseThemes(GetCourseThemesRequest)
+      returns(CourseThemesInfoResponse);
+  // Вывод темы
+  rpc GetCourseTheme(GetCourseThemeRequest)
+      returns(CourseThemeInfoResponse);
+  // Изменение информации темы
+  rpc UpdateCourseTheme(UpdateCourseThemeRequest)
+      returns(CourseThemeInfoResponse);
+  // Добавление модуля курса
+  rpc AddCourseModule(AddCourseModuleRequest)
+      returns(CourseModuleInfoResponse);
+  // Вывод всех модулей курсов
+  rpc GetCourseModules(GetCourseModulesRequest)
+      returns(CourseModulesInfoResponse);
+  // Вывод всех модулей курса
+  rpc GetCourseModulesFromCourse(GetCourseModulesFromCourseRequest)
+      returns(CourseModulesInfoResponse);
+  // Изменение модуля курса
+  rpc UpdateCourseModule(UpdateCourseModuleRequest)
+      returns(CourseModuleInfoResponse);
+  // Добавление контента курса
+  rpc AddCourseContent(AddCourseContentRequest)
+      returns(CourseContentInfoResponse);
+  // Вывод контента курсов
+  rpc GetCourseContents(GetCourseContentsRequest)
+      returns(CourseContentsInfoResponse);
+  // Вывод контента курсов модуля
+  rpc GetCourseContentsFromModuleId(GetCourseContentsFromModuleIdRequest)
+      returns(CourseContentsInfoResponse);
+  // Изменение контента курса
+  rpc UpdateCourseContent(UpdateCourseContentRequest)
+      returns(CourseContentInfoResponse);
+}
+
+//request
+message CheckGrpcCourseTimingRequest{}
+message GetProgrammingLanguagesRequest{}
+message AddCourseThemeRequest{
+  string ProgrammingLanguageId = 1;
+  string AuthorId = 2;
+  string Name = 3;
+  string Description = 4;
+  string AvatarUrl = 5;
+  double Price = 6;
+  optional double OldPrice = 7;
+}
+message GetCourseThemesRequest{}
+message GetCourseThemeRequest{
+  string Id = 1;
+}
+message UpdateCourseThemeRequest{
+  string Id = 1;
+  optional string ProgrammingLanguageId = 2;
+  optional string Name = 3;
+  optional string Description = 4;
+  optional string AvatarUrl = 5;
+  optional double Price = 6;
+  optional double OldPrice = 7;
+  optional bool IsShow = 8;
+  optional int32 DisplayOrder = 9;
+  optional bool IsFree = 10;
+}
+message AddCourseModuleRequest{
+  string CourseThemeId = 1;
+  string Name = 2;
+}
+message GetCourseModulesRequest{}
+message GetCourseModulesFromCourseRequest{
+  string CourseId = 1;
+}
+message UpdateCourseModuleRequest{
+  string Id = 1;
+  optional string CourseThemeId = 2;
+  optional string Name = 3;
+  optional bool IsShow = 4;
+  optional int32 DisplayOrder = 5;
+}
+message AddCourseContentRequest{
+  string CourseModuleId = 1;
+  string Name = 2;
+  string LinkOnRutube = 3;
+  string LinkOnVk = 4;
+  string LinkOnYoutube = 5;
+  string ImgUrl = 6;
+}
+message GetCourseContentsRequest{}
+message GetCourseContentsFromModuleIdRequest{
+  string ModuleId = 1;
+}
+message UpdateCourseContentRequest{
+  string Id = 1;
+  optional string CourseModuleId = 2;
+  optional string Name = 3;
+  optional string LinkOnRutube = 4;
+  optional string LinkOnVk = 5;
+  optional string LinkOnYoutube = 6;
+  optional string ImgUrl = 7;
+  optional bool IsShow = 8;
+  optional int32 DisplayOrder = 9;
+}
+
+//response
+message CheckGrpcCourseTimingResponse {
+  google.protobuf.Timestamp DateTime = 1;
+  bool Health = 2;
+  string GrpcService = 3;
+}
+message ProgrammingLanguageInfoResponse{
+  string Id = 1;
+  string Name = 2;
+  repeated LightCourseThemeInfo CourseThemes = 3;
+};
+message ProgrammingLanguagesInfoResponse{
+  repeated ProgrammingLanguageInfoResponse ProgrammingLanguages = 1;
+};
+message CourseThemeInfoResponse{
+  string Id = 1;
+  string Name = 2;
+  string Description = 3;
+  string AvatarUrl = 4;
+  double Price = 5;
+  optional double OldPrice = 6;
+  google.protobuf.Timestamp CreatedAt = 7;
+  optional google.protobuf.Timestamp UpdatedAt = 8;
+  UserAuthorInfo Author = 9;
+  LightProgrammingLanguageInfo ProgrammingLanguage = 10;
+  bool IsFree = 11;
+}
+message CourseThemesInfoResponse{
+  repeated CourseThemeInfoResponse CourseThemes = 1;
+}
+message CourseModuleInfoResponse{
+  string Id = 1;
+  string Name = 2;
+  google.protobuf.Timestamp CreatedAt = 3;
+  google.protobuf.Timestamp UpdatedAt = 4;
+  LightCourseThemeInfo Theme = 5;
+}
+message CourseModulesInfoResponse{
+  repeated CourseModuleInfoResponse CourseModules = 1;
+}
+message CourseContentInfoResponse{
+  string Id = 1;
+  string Name = 2;
+  string LinkRutube = 3;
+  string LinkVk = 4;
+  string LinkYoutube = 5;
+  string ImgUrl = 6;
+  google.protobuf.Timestamp CreatedAt = 7;
+  optional google.protobuf.Timestamp UpdatedAt = 8;
+  LightCourseModuleInfo Module = 9;
+}
+message CourseContentsInfoResponse{
+  repeated CourseContentInfoResponse CourseContents = 1;
+}
+
+//messages for DTO
+message LightCourseThemeInfo{
+  string Id = 1;
+  string Name = 2;
+}
+message LightProgrammingLanguageInfo{
+  string Id = 1;
+}
+message LightCourseModuleInfo{
+  string Id = 1;
+}
+message UserAuthorInfo{
+  string AuthorId = 1;
+  string UserId = 2;
+  string Surname = 3;
+  string Name = 4;
+  string NickName = 5;
+}

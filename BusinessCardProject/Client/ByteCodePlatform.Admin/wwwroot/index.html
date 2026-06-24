@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+
+    <!-- SEO -->
+    <title>БайтКод — Админка</title>
+    <meta name="description"
+          content="Учебные материалы по C#, разработке приложений и веб-приложений. Видеоуроки и статьи для начинающих и опытных разработчиков. Начни писать на C# легко и понятно!">
+    <meta name="keywords"
+          content="обучение C#, C# для начинающих, уроки C#, разработка приложений на C#, веб-разработка C#, БайтКод, программирование на C#, .NET, ASP.NET, Blazor">
+    <meta name="author" content="БайтКод">
+    <meta name="robots" content="index, follow">
+
+    <base href="/"/>
+    <link rel="icon" type="image/png" href="favicon.png"/>
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png"/>
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png"/>
+    <link rel="manifest" href="manifest.webmanifest"/>
+
+    <meta name="theme-color" content="#4a86ff">
+    <meta name="msapplication-TileColor" content="#4a86ff">
+
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" as="style">
+    <link rel="preload" href="_content/MudBlazor/MudBlazor.min.css" as="style">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/app.css" type="text/css">
+</head>
+
+<body>
+<div id="app">
+</div>
+
+<div id="blazor-error-ui">
+    <div class="error-container">
+        <div class="error-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+        </div>
+
+        <div class="error-content">
+            <h3>Произошла ошибка</h3>
+            <p>Приложение столкнулось с непредвиденной ошибкой.</p>
+            <p class="countdown-text">
+                Автоматическая перезагрузка через <span id="countdown">15</span> сек...
+            </p>
+        </div>
+
+        <div class="error-actions">
+            <a href="" class="btn-reload reload">
+                Перезагрузить
+            </a>
+            <button class="btn-dismiss dismiss" onclick="cancelAutoReload()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="js/internal-error.js"></script>
+<script src="_framework/blazor.webassembly.js"></script>
+<script>navigator.serviceWorker.register('service-worker.js', {updateViaCache: 'none'});</script>
+<script src="_content/MudBlazor/MudBlazor.min.js"></script>
+</body>
+
+</html>
