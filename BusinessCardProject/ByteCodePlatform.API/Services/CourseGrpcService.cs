@@ -24,6 +24,7 @@ namespace ByteCodePlatform.API.Services
             _courseService = courseService ?? throw new ArgumentNullException(nameof(courseService));
         }
 
+        [AllowAnonymous]
         public override async Task<CheckGrpcCourseTimingResponse> CheckGrpcCourseTiming(
             CheckGrpcCourseTimingRequest request, ServerCallContext context)
         {

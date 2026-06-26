@@ -20,6 +20,10 @@
     
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.0" />
         <PackageReference Include="Google.Api.CommonProtos" Version="2.16.0"/>
         <PackageReference Include="Google.Protobuf" Version="3.30.2"/>

@@ -7,17 +7,16 @@ using ByteCodePlatform.Domain.Entities.Course.Theme;
 using ByteCodePlatform.Infrastructure.Configuration;
 using ByteCodePlatform.Infrastructure.Configuration.FieldProperties;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace ByteCodePlatform.Infrastructure
 {
     public class ByteCodeCoreDbContext : DbContext, IByteCodeCoreDbContext
     {
         private readonly string _defaultSchema = "bytecode_core";
-
+        
         public ByteCodeCoreDbContext(DbContextOptions<ByteCodeCoreDbContext> options)
-            : base(options)
-        {
-        }
+            : base(options) { }
 
         public DbSet<UserEntity> User { get; set; }
         public DbSet<AuthorEntity> Author { get; set; }
@@ -60,24 +59,6 @@ namespace ByteCodePlatform.Infrastructure
             #endregion
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ByteCodeCoreDbContext).Assembly);
-        }
-
-        public ByteCodeCoreDbContext()
-        {
-            Database.EnsureCreated();
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql(
-                "Server=192.168.1.130;User Id=nikita;Password=qwertyaib12345678;Port=5432;Database=bytecodeDb;",
-                npgsqlOptions => { npgsqlOptions.UseNodaTime(); }).UseLazyLoadingProxies();
-        }
-
-        private static DbContextOptions<T> ChangeOptionsType<T>(DbContextOptions options) where T : DbContext
-        {
-            return new DbContextOptionsBuilder<T>()
-                .Options;
         }
     }
 }

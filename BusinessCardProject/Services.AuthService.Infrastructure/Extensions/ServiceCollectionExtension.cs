@@ -19,10 +19,10 @@ namespace Services.AuthService.Infrastructure.Extensions
                 throw new ArgumentNullException(nameof(services));
 
             services.AddDbContext<AuthDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("PostgreSqlDatabase")));
-
-            services.AddScoped<AuthDbContext>(provider => provider.GetService<AuthDbContext>()
-                                                                 ?? throw new InvalidOperationException());
+                options.UseNpgsql(
+                    configuration.GetConnectionString("PostgreSql"),
+                    npgsqlOptions => npgsqlOptions.UseNodaTime()
+                ).UseLazyLoadingProxies());
             
             //Регистрация сервисов
             services.AddScoped<IMediator, Mediator>();

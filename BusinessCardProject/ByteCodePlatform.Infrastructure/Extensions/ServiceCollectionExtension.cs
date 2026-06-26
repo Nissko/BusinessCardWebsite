@@ -18,10 +18,10 @@ namespace ByteCodePlatform.Infrastructure.Extensions
                 throw new ArgumentNullException(nameof(services));
 
             services.AddDbContext<ByteCodeCoreDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("PostgreSqlDatabase")));
-
-            services.AddScoped<ByteCodeCoreDbContext>(provider => provider.GetService<ByteCodeCoreDbContext>()
-                                                                 ?? throw new InvalidOperationException());
+                options.UseNpgsql(
+                    configuration.GetConnectionString("PostgreSql"),
+                    npgsqlOptions => npgsqlOptions.UseNodaTime()
+                ).UseLazyLoadingProxies());
             
             //Регистрация сервисов
             services.AddScoped<IMediator, Mediator>();

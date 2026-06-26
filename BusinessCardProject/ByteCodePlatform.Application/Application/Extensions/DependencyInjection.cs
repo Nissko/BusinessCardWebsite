@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ByteCodePlatform.Application.Application.Extensions
 {
-    public static class DependecyInjection
+    public static class DependencyInjection
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
@@ -13,11 +13,6 @@ namespace ByteCodePlatform.Application.Application.Extensions
             
             // Регистрируем MediatR
             services.AddMediatR(Assembly.GetExecutingAssembly());
-        
-            // Регистрируем AutoMapper
-            //services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            /*// Регистрируем ICustomMapper
-            services.AddScoped<ICustomMapper, CustomMapper>();*/
 
             return services;
         }

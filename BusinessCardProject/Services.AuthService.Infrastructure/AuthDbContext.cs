@@ -36,23 +36,5 @@ namespace Services.AuthService.Infrastructure
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthDbContext).Assembly);
         }
-
-        public AuthDbContext()
-        {
-            Database.EnsureCreated();
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql(
-                "Server=192.168.1.130;User Id=nikita;Password=qwertyaib12345678;Port=5432;Database=bytecodeDb;",
-                npgsqlOptions => { npgsqlOptions.UseNodaTime(); }).UseLazyLoadingProxies();
-        }
-
-        private static DbContextOptions<T> ChangeOptionsType<T>(DbContextOptions options) where T : DbContext
-        {
-            return new DbContextOptionsBuilder<T>()
-                .Options;
-        }
     }
 }
