@@ -16,7 +16,12 @@ service AuthorizationService {
   rpc UpdateUser(UpdateUserRequest) returns (UserBooleanResponse);
   // Получение пользователя
   rpc GetUser(GetUserRequest) returns (UserInfoResponse);
+  // Получение пользователя по Email
   rpc GetUserByEmail(GetUserByEmailRequest) returns (UserInfoResponse);
+  // Добавление роли автора из ядра
+  rpc AddAuthorRole(AddAuthorRoleRequest) returns (AddAuthorRoleResponse);
+  // Получение пользователей для админки
+  rpc GetUsersFromSearch(GetUsersFromSearchRequest) returns (GetUsersFromSearchResponse);
 }
 
 message CreateUserRequest{
@@ -100,4 +105,27 @@ message LogoutRequest {
   string refresh_token = 1;
 }
 
+message AddAuthorRoleRequest{
+  // Идентификатор пользователя
+  string user_id = 1;
+}
+
+message AddAuthorRoleResponse{
+  bool success = 1;
+}
+
 message LogoutResponse {}
+
+//Запрос для поиска пользователей в админке
+message GetUsersFromSearchRequest{
+  int32 page = 1;
+  int32 pageSize = 2;
+  string search = 3;
+  string sortBy = 4;
+  string sortDirection = 5;
+}
+
+message GetUsersFromSearchResponse{
+  repeated UserInfoResponse Items = 1;
+  int32 TotalCount = 2;
+}

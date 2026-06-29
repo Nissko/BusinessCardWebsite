@@ -7,7 +7,6 @@ using ByteCodePlatform.Domain.Entities.Course.Theme;
 using ByteCodePlatform.Infrastructure.Configuration;
 using ByteCodePlatform.Infrastructure.Configuration.FieldProperties;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace ByteCodePlatform.Infrastructure
 {

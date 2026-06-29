@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.0.0" />
     <PackageReference Include="Grpc.Net.Client.Web" Version="2.70.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.30.2" />
+    <PackageReference Include="Google.Protobuf" Version="3.29.3" />
     <PackageReference Include="Grpc.Net.Client" Version="2.70.0" />
     <PackageReference Include="Grpc.Net.ClientFactory" Version="2.70.0" />
     <PackageReference Include="Grpc.Tools" Version="2.71.0">
@@ -28,12 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\" />
-    <Folder Include="Shared\" />
-    <Folder Include="Widgets\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Protobuf Include="Entities\Protos\auth-service.proto">
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
@@ -43,6 +37,15 @@
     <Protobuf Include="Entities\Protos\user-service.proto">
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ContractualDTOs\Dtos\Dtos.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Features\auth\login-form\LoginForm.razor" />
+    <AdditionalFiles Include="Pages\auth\Login.razor" />
   </ItemGroup>
 
 </Project>

@@ -12,7 +12,7 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.0.0" />
     <PackageReference Include="Grpc.Net.Client.Web" Version="2.70.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.30.2" />
+    <PackageReference Include="Google.Protobuf" Version="3.29.3" />
     <PackageReference Include="Grpc.Net.Client" Version="2.70.0" />
     <PackageReference Include="Grpc.Net.ClientFactory" Version="2.70.0" />
     <PackageReference Include="Grpc.Tools" Version="2.71.0">
@@ -53,22 +53,6 @@
     <Protobuf Include="Entities\Protos\user-service.proto">
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\BasePages\CoursesPages\CourseThemesPage\CourseIllustration\CoreIllustrationPage.razor" />
-    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\MainAdmin.razor" />
-    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\AuditComponents.razor" />
-    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\CourseThemesComponent\Components\ComponentItems\CourseModuleTreeItemComponent.razor" />
-    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\CourseThemesComponent\Components\ComponentItems\CourseThemeTreeItemComponent.razor" />
-    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\CourseThemesComponent\Components\ComponentItems\CourseVideoTreeItemComponent.razor" />
-    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\CourseThemesComponent\Components\DynamicDialogs\DialogCustomComponent.razor" />
-    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\CourseThemesComponent\Components\PreviewComponent.razor" />
-    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\CourseThemesComponent\CourseThemesComponents.razor" />
-    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\GraphСomponents.razor" />
-    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\OrderComponents.razor" />
-    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\ServerComponents.razor" />
-    <_ContentIncludedByDefault Remove="Pages\AdminPanelPages\Сomponents\UserComponents.razor" />
   </ItemGroup>
 
 </Project>

@@ -53,7 +53,6 @@ body {
     to { transform: rotate(360deg); }
 }
 
-/* Остальные ваши стили */
 .mud-alert-position {
     align-items: center !important;
 }
@@ -323,4 +322,9 @@ html[data-theme='true'] .btn-dismiss:hover svg {
 
 .mud-button-root .mud-ripple {
     transition: none !important;
+}
+
+.mud-treeview.mud-treeview-selected-primary .mud-treeview-item-content.mud-treeview-item-selected {
+    background-color: transparent !important;
+    color: var(--mud-palette-text-primary) !important;
 }

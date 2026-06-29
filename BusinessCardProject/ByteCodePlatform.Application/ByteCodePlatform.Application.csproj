@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.30.2" />
+        <PackageReference Include="Google.Protobuf" Version="3.29.3" />
         <PackageReference Include="MediatR" Version="11.0.0" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
@@ -19,6 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ByteCodePlatform.ClientProto\ByteCodePlatform.ClientProto.csproj" />
       <ProjectReference Include="..\ByteCodePlatform.Domain\ByteCodePlatform.Domain.csproj" />
       <ProjectReference Include="..\ContractualDTOs\Dtos\Dtos.csproj" />
       <ProjectReference Include="..\ContractualDTOs\Requests\Requests.csproj" />

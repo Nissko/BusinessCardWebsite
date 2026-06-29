@@ -1,0 +1,70 @@
+﻿@*<MudPaper Style="width: 50%" Class="mr-2 px-2 py-2" Elevation="1">
+    <MudItem Class="d-flex justify-space-between align-center">
+        <MudText Typo="Typo.body1">
+            Тема: @SelectedCt
+        </MudText>
+        <MudIconButton Icon="@Icons.Material.Rounded.Add"/>
+    </MudItem>
+    <MudDivider Class="my-2"/>
+    <MudItem xs="12">
+        <MudTreeView T="string"
+                     Hover="true"
+                     ExpandOnClick="true">
+            @if (CourseTheme != null && !string.IsNullOrEmpty(SelectedCt))
+            {
+                var selectedTheme = CourseTheme.FirstOrDefault(ctn => ctn.Name == SelectedCt);
+                if (selectedTheme != null && selectedTheme.CourseModules.Any())
+                {
+                    foreach (var module in selectedTheme.CourseModules.OrderBy(xs => xs.DisplayOrder))
+                    {
+                        <MudTreeViewItem Text="@module.Name"
+                                         TextTypo="Typo.body1"
+                                         Class="mb-1"
+                                         Value="@module.Id.ToString()"
+                                         Expanded="@GetModuleExpandedState(module.Id)"
+                                         ExpandedChanged="@((expanded) => OnModuleExpandedChanged(module.Id, expanded))">
+                            @if (module.VideoCourses.Any())
+                            {
+                                foreach (var (videoCourse, index) in module.VideoCourses.Select((v, i) => (v, i)))
+                                {
+                                    <MudTreeViewItem Text="@($"Урок {index + 1}. {videoCourse.Name}")"
+                                                     TextTypo="Typo.body1" 
+                                                     Class="mt-1 mb-1"
+                                                     Value="@videoCourse.Id.ToString()"
+                                                     Expanded="@GetVideoCourseExpandedState(videoCourse.Id)"
+                                                     ExpandedChanged="@((expanded) => OnVideoCourseExpandedChanged(videoCourse.Id, expanded))">
+                                        <MudGrid Class="pt-4 pb-4 pr-7">
+                                            <MudItem xs="12" md="3">
+                                                <MudImage Src="images/sweden.jpg"
+                                                          Alt="Swedish Farm House"
+                                                          Style="width: 100%"
+                                                          Elevation="25" 
+                                                          Class="rounded-lg"/>
+                                            </MudItem>
+                                            <MudItem xs="12" md="9"
+                                                     Class="d-flex flex-column justify-start">
+                                                <MudText Typo="Typo.body1" Class="pb-2">
+                                                    @videoCourse.Description
+                                                </MudText>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudTreeViewItem>
+                                }
+                            }
+                            else
+                            {
+                                <MudTreeViewItem Text="В разработке!" Disabled="true"/>
+                            }
+                        </MudTreeViewItem>
+                    }
+                }
+                else if (selectedTheme != null)
+                {
+                    <MudAlert Severity="Severity.Info" Variant="Variant.Filled">
+                        Карточка пуста, необходимо ее настроить
+                    </MudAlert>
+                }
+            }
+        </MudTreeView>
+    </MudItem>
+</MudPaper>*@

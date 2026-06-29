@@ -1,9 +1,13 @@
+using ByteCodePlatform.API.ProtoMappers.Course.Users;
 using ByteCodePlatform.Application.Application.Extensions;
 using ByteCodePlatform.Application.Common.Interfaces.Repositories;
 using ByteCodePlatform.Domain.Enums;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
+using Requests.User;
 using UserService.Proto;
+using CreateAuthorRequest = UserService.Proto.CreateAuthorRequest;
+using CreateUserRequest = UserService.Proto.CreateUserRequest;
 
 namespace ByteCodePlatform.API.Services
 {
@@ -49,6 +53,23 @@ namespace ByteCodePlatform.API.Services
                         UserId = createAuthor.UserInfo.Id.ToString()
                     }
                 };
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        [Authorize(Roles = UserRoleStaticEnum.Admin)]
+        public override async Task<GetUsersFromSearchResponse> GetUsersFromSearch(GetUsersFromSearchRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var usersFromSearch = await _userService.GetUsersFromSearch(
+                    new GetUsersSearchRequest(request.Page, request.PageSize, request.Search, request.SortBy,
+                        request.SortDirection));
+
+                return usersFromSearch.Items.ToProtoUsersFromSearchInfoList();
             }
             catch (Exception ex)
             {

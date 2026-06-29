@@ -3,10 +3,14 @@ using Grpc.Core;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using NodaTime;
+using Requests.User;
 using Services.AuthService.Application.Application.Command;
 using Services.AuthService.Application.Application.Extensions;
 using Services.AuthService.Application.Common.Interfaces;
 using Services.AuthService.Domain.Enums;
+using Services.AuthService.Presentation.ProtoMappers.Users;
+using CreateUserRequest = AuthorizationService.Proto.CreateUserRequest;
+using UpdateUserRequest = AuthorizationService.Proto.UpdateUserRequest;
 
 namespace Services.AuthService.Presentation.Services
 {
@@ -180,6 +184,38 @@ namespace Services.AuthService.Presentation.Services
                     UpdatedAt = user.UpdatedAt?.ToTimestamp() ?? null,
                     DeletedAt = user.DeletedAt?.ToTimestamp() ?? null
                 };
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        [AllowAnonymous]
+        public override async Task<AddAuthorRoleResponse> AddAuthorRole(AddAuthorRoleRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var response = await _users.AddAuthorRole(request.UserId.ToGuid());
+                return new()
+                {
+                    Success = response
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        [Authorize(Roles = UserRoleStaticEnum.Admin)]
+        public override async Task<GetUsersFromSearchResponse> GetUsersFromSearch(GetUsersFromSearchRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var response = await _users.GetUsersFromSearch(new GetUsersSearchRequest(request.Page, request.PageSize,
+                    request.Search, request.SortBy, request.SortDirection));
+                return response.Items.ToProtoUsersFromSearchInfoList();
             }
             catch (Exception ex)
             {

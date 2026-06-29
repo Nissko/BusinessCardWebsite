@@ -1,0 +1,11 @@
+@page "/login"
+@using ByteCodePlatform.Admin.Features.auth.login_form
+@layout EmptyAuthLayout
+
+<MudContainer MaxWidth="MaxWidth.Small">
+    <LoginForm OnRegisterClick="@(() => NavManager.NavigateTo("/register"))" />
+</MudContainer>
+
+@code {
+    [Inject] private NavigationManager NavManager { get; set; } = null!;
+}

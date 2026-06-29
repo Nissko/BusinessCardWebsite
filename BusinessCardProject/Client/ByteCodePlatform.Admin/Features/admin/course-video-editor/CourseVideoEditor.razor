@@ -1,0 +1,23 @@
+﻿@if (VideoCourses != null && !string.IsNullOrEmpty(SelectedPreviewCourseModuleId.ToString()))
+{
+    @*var selectedVideo = VideoCourses.FirstOrDefault(vc => vc.Id == SelectedPreviewCourseModuleId);
+    if (selectedVideo != null)
+    {
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText>
+                <b>Название</b>:
+                <ul>@selectedVideo.Name</ul>
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(selectedVideo.Id,
+                                        new DialogParameters<DynamicEditDialog>
+                                        {
+                                            { x => x.LabelTextString, "Название" },
+                                            { x => x.NameOfApiKey, nameof(selectedVideo.Name) },
+                                            { x => x.InputType, DynamicInputType.Text },
+                                            { x => x.InputValueString, selectedVideo.Name }
+                                        },
+                                        _backdropClick))"/>
+        </MudItem>
+    }*@
+}

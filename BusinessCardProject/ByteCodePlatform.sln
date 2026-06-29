@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.7.11911.148 stable
+VisualStudioVersion = 18.7.11911.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{2A5E4899-3EA6-46E6-B79D-ADEDE7EA5348}"
 EndProject
@@ -52,6 +52,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.AuthService.ClientProtos", "Services.AuthService.ClientProtos\Services.AuthService.ClientProtos.csproj", "{0077D294-1ACB-4FD7-9E84-68D4EB674F2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ByteCodePlatform.Admin", "Client\ByteCodePlatform.Admin\ByteCodePlatform.Admin.csproj", "{603F84E8-3AFD-4296-9ECC-252A2B29670C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientProtos", "ClientProtos", "{650CEDB9-F00E-4C64-AD43-F63371F83EDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ByteCodePlatform.ClientProto", "ByteCodePlatform.ClientProto\ByteCodePlatform.ClientProto.csproj", "{7B9655FF-F729-434E-9DA0-07D47E6F6AA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +123,10 @@ Global
 		{603F84E8-3AFD-4296-9ECC-252A2B29670C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{603F84E8-3AFD-4296-9ECC-252A2B29670C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{603F84E8-3AFD-4296-9ECC-252A2B29670C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B9655FF-F729-434E-9DA0-07D47E6F6AA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B9655FF-F729-434E-9DA0-07D47E6F6AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B9655FF-F729-434E-9DA0-07D47E6F6AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B9655FF-F729-434E-9DA0-07D47E6F6AA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -146,6 +154,8 @@ Global
 		{0F912251-3651-45F5-8807-5982EA10038C} = {EC251316-87EA-4AE4-917D-42C5E3D27452}
 		{0077D294-1ACB-4FD7-9E84-68D4EB674F2A} = {EC251316-87EA-4AE4-917D-42C5E3D27452}
 		{603F84E8-3AFD-4296-9ECC-252A2B29670C} = {02217D61-9364-4118-989A-D19AAA270FEF}
+		{650CEDB9-F00E-4C64-AD43-F63371F83EDE} = {F93FFD62-7063-4C90-8011-EC653E24711F}
+		{7B9655FF-F729-434E-9DA0-07D47E6F6AA2} = {650CEDB9-F00E-4C64-AD43-F63371F83EDE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {20B77252-D979-4169-AB40-93EF2533A116}

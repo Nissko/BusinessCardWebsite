@@ -15,6 +15,7 @@ namespace Services.AuthService.Infrastructure
         }
 
         public DbSet<UserEntity> User { get; set; }
+        public DbSet<UserRolesEntity>  UserRole { get; set; }
         public DbSet<RefreshTokenEntity> RefreshToken { get; set; }
 
         public void Migrate()

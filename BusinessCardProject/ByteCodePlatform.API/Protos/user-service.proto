@@ -11,6 +11,7 @@ service UserGrpcService {
   rpc CreateUser(CreateUserRequest) returns (UserBooleanResponse);
   // Выдача авторских прав
   rpc CreateAuthorUser(CreateAuthorRequest) returns (UserAuthorInfoResponse);
+  rpc GetUsersFromSearch(GetUsersFromSearchRequest) returns (GetUsersFromSearchResponse);
 }
 
 message CreateUserRequest{
@@ -47,4 +48,18 @@ message UserBooleanResponse{
 message UserAuthorInfoResponse{
   string author_id = 1;
   UserInfoResponse user = 2;
+}
+
+//Запрос для поиска пользователей в админке
+message GetUsersFromSearchRequest{
+  int32 page = 1;
+  int32 pageSize = 2;
+  string search = 3;
+  string sortBy = 4;
+  string sortDirection = 5;
+}
+
+message GetUsersFromSearchResponse{
+  repeated UserInfoResponse Items = 1;
+  int32 TotalCount = 2;
 }

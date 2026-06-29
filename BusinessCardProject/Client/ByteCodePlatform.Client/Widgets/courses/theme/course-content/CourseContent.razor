@@ -4,7 +4,7 @@
     Содержание курса:
 </MudText>
 
-<MudTreeView T="string" Hover="true" ExpandOnClick="true">
+<MudTreeView Style="user-select: none;" T="string" Hover="true" ExpandOnClick="true">
     @if (CourseModules != null)
     {
         foreach (var module in CourseModules.CourseModules)

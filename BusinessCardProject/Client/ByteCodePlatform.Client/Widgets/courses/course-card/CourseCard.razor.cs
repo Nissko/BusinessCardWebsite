@@ -1,28 +1,29 @@
 ﻿using CourseService.Proto;
 using Microsoft.AspNetCore.Components;
 
-namespace BusinessCardProject.Client.Widgets.courses.course_card;
-
-public partial class CourseCard : ComponentBase
+namespace BusinessCardProject.Client.Widgets.courses.course_card
 {
-    [Parameter, EditorRequired]
-    public CourseThemeInfoResponse Course { get; set; } = null!;
-
-    [Parameter]
-    public EventCallback<Guid> OnCourseSelected { get; set; }
-
-    private async Task OnSelectClick()
+    public partial class CourseCard : ComponentBase
     {
-        if (Guid.TryParse(Course.Id, out var themeId))
+        [Parameter, EditorRequired]
+        public CourseThemeInfoResponse Course { get; set; } = null!;
+
+        [Parameter]
+        public EventCallback<Guid> OnCourseSelected { get; set; }
+
+        private async Task OnSelectClick()
         {
-            await OnCourseSelected.InvokeAsync(themeId);
+            if (Guid.TryParse(Course.Id, out var themeId))
+            {
+                await OnCourseSelected.InvokeAsync(themeId);
+            }
         }
-    }
 
-    private string GetFooterNote()
-    {
-        return Course.IsFree
-            ? "* курс может включать в себя платный доп. контент"
-            : "* доступ предоставляется навсегда";
+        private string GetFooterNote()
+        {
+            return Course.IsFree
+                ? "* курс может включать в себя платный доп. контент"
+                : "* доступ предоставляется навсегда";
+        }
     }
 }

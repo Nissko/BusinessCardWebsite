@@ -27,7 +27,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowBlazorClient", policy =>
     {
         policy
-            .WithOrigins(builder.Configuration["GrpcServices:ClientUrl"] ?? throw new Exception("Grpc services url is missing"))
+            .WithOrigins(
+                builder.Configuration["GrpcServices:ClientUrl"] ?? throw new Exception("Grpc services url is missing"),
+                "https://localhost:7237"
+            )
             .AllowAnyMethod()
             .AllowAnyHeader()
             .WithExposedHeaders(

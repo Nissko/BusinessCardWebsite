@@ -1,3 +1,4 @@
+using Dtos.DTO.Pagination;
 using Dtos.DTO.User;
 using Requests.User;
 
@@ -14,5 +15,10 @@ namespace ByteCodePlatform.Application.Common.Interfaces.Repositories
         /// Выдача авторских прав
         /// </summary>
         Task<UserAuthorDto> CreateAuthorUser(CreateAuthorRequest request);
+        
+        /// <summary>
+        /// Получение всех пользователей для админки
+        /// </summary>
+        Task<PaginationDto<UserDto>> GetUsersFromSearch(GetUsersSearchRequest request);
     }
 }

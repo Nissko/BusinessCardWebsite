@@ -1,0 +1,74 @@
+﻿@if (CourseModules != null && !string.IsNullOrEmpty(SelectedPreviewCourseModuleId.ToString()))
+{
+    @*var selectedModule = CourseModules.FirstOrDefault(cm => cm.Id == SelectedPreviewCourseModuleId);
+    if (selectedModule != null)
+    {
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText>
+                <b>Название</b>:
+                <ul>@selectedModule.Name</ul>
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(selectedModule.Id,
+                                        new DialogParameters<DynamicEditDialog>
+                                        {
+                                            { x => x.LabelTextString, "Название" },
+                                            { x => x.NameOfApiKey, nameof(selectedModule.Name) },
+                                            { x => x.InputType, DynamicInputType.Text },
+                                            { x => x.InputValueString, selectedModule.Name }
+                                        },
+                                        _backdropClick))"/>
+        </MudItem>
+        
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText Class="mb-2"
+                     Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <b>Описание</b>: @selectedModule.Description
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(selectedModule.Id,
+                                        new DialogParameters<DynamicEditDialog>
+                                        {
+                                            { x => x.LabelTextString, "Описание" },
+                                            { x => x.NameOfApiKey, nameof(selectedModule.Description) },
+                                            { x => x.InputType, DynamicInputType.TextArea },
+                                            { x => x.InputValueString, selectedModule.Description }
+                                        },
+                                        _backdropClick))"/>
+        </MudItem>
+        
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText Class="mb-2"
+                     Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <b>Порядок отображения</b>: @selectedModule.DisplayOrder
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(selectedModule.Id,
+                                        new DialogParameters<DynamicEditDialog>
+                                        {
+                                            { x => x.LabelTextString, "Порядок отображения" },
+                                            { x => x.NameOfApiKey, nameof(selectedModule.DisplayOrder) },
+                                            { x => x.InputType, DynamicInputType.Number },
+                                            { x => x.InputValueString, selectedModule.DisplayOrder.ToString() }
+                                        },
+                                        _backdropClick))"/>
+        </MudItem>
+        
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText Class="mb-2"
+                     Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <b>Показывать</b>: @(selectedModule.IsShow ? "Да" : "Нет")
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(selectedModule.Id,
+                                        new DialogParameters<DynamicEditDialog>
+                                        {
+                                            { x => x.LabelTextString, "Показывать" },
+                                            { x => x.NameOfApiKey, nameof(selectedModule.IsShow) },
+                                            { x => x.InputType, DynamicInputType.Boolean },
+                                            { x => x.InputValueString, selectedModule.IsShow.ToString() }
+                                        },
+                                        _backdropClick))"/>
+        </MudItem>
+    }*@
+}

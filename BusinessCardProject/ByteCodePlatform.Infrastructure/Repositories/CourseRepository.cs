@@ -56,11 +56,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
         #endregion
 
         #region CourseTheme
-
-        /// <summary>
-        /// TODO: Добавить св-во, которое отвечает за то что, платный курс или нет
-        /// TODO: Добавить св-ва в DtoResponse
-        /// </summary>
+        
         public async Task<CourseThemeDto> AddCourseTheme(CreateCourseThemeRequest request)
         {
             var programLanguage = await _dbContext.ProgrammingLanguageCategory
@@ -97,13 +93,14 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             return orderedThemes.GetCourseThemeDtos();
         }
 
-        //TODO:пофиксить и сделать проброс исключения в случае отсутствия свойств
         public async Task<CourseThemeDto> GetCourseTheme(Guid courseId)
         {
             var theme = await _dbContext.CourseTheme.FirstOrDefaultAsync(x => x.Id == courseId) ??
                         throw new ArgumentNullException(nameof(courseId), "Course theme not found");
 
-            return theme.GetCourseThemeDto();
+            return theme.ThemeFieldProperties.CheckProperties()
+                ? theme.GetCourseThemeDto()
+                : throw new Exception("Course theme properties are not allowed");
         }
 
         public async Task<CourseThemeDto> UpdateCourseTheme(UpdateCourseThemeRequest request)
@@ -134,9 +131,6 @@ namespace ByteCodePlatform.Infrastructure.Repositories
 
         #region CourseModule
 
-        /// <summary>
-        /// TODO: Добавить св-ва в DtoResponse
-        /// </summary>
         public async Task<CourseModuleDto> AddCourseModule(CreateCourseModuleRequest request)
         {
             var courseTheme = await _dbContext.CourseTheme.FirstOrDefaultAsync(x => x.Id == request.CourseThemeId) ??
@@ -211,9 +205,6 @@ namespace ByteCodePlatform.Infrastructure.Repositories
 
         #region CourseContent
 
-        /// <summary>
-        /// TODO: Добавить св-ва в DtoResponse
-        /// </summary>
         public async Task<CourseContentDto> AddCourseContent(CreateCourseContentRequest request)
         {
             var courseModule = await _dbContext.CourseModule

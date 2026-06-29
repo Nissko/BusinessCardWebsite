@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using ByteCodePlatform.Application.Application.Extensions;
 using ByteCodePlatform.Infrastructure.Extensions;
+using ByteCodePlatform.Infrastructure.Extensions.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +9,10 @@ using CourseGrpcService = ByteCodePlatform.API.Services.CourseGrpcService;
 using UserGrpcService = ByteCodePlatform.API.Services.UserGrpcService;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IAuthTokenAccessor, GrpcAuthTokenAccessor>();
+builder.Services.AddScoped<AuthTokenPropagationHandler>();
      
 var port = int.Parse(builder.Configuration["GrpcServices:ListenPort"] ?? throw new Exception("Port is missing"));
 builder.WebHost.ConfigureKestrel(options =>
@@ -27,7 +32,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowBlazorClient", policy =>
     {
         policy
-            .WithOrigins(builder.Configuration["GrpcServices:ClientUrl"] ?? throw new Exception("Grpc services url is missing"))
+            .WithOrigins(
+                builder.Configuration["GrpcServices:ClientUrl"] ?? throw new Exception("Grpc services url is missing"),
+                "https://localhost:7237"
+            )
             .AllowAnyMethod()
             .AllowAnyHeader()
             .WithExposedHeaders(
@@ -39,6 +47,21 @@ builder.Services.AddCors(options =>
             );
     });
 });
+
+builder.Services.AddGrpcClient<AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient>(options =>
+    {
+        options.Address = new Uri(builder.Configuration["GrpcServices:AuthServiceUrl"]
+                                  ?? throw new Exception("Grpc services url is missing"));
+    })
+    .ConfigurePrimaryHttpMessageHandler(sp =>
+    {
+        var tokenHandler = sp.GetRequiredService<AuthTokenPropagationHandler>();
+        tokenHandler.InnerHandler = new SocketsHttpHandler
+        {
+            EnableMultipleHttp2Connections = true
+        };
+        return tokenHandler;
+    });
 
 builder.Services.AddGrpc();
 builder.Services.AddCollectionInfrastructure(builder.Configuration)
@@ -87,7 +110,3 @@ app.MapGrpcService<UserGrpcService>().EnableGrpcWeb();
 app.MapGrpcService<CourseGrpcService>().EnableGrpcWeb();
 
 app.Run();
-
-/*
- * TODO: сделать чтобы при добавлении автора ставился признак пользователю
- */

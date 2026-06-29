@@ -1,0 +1,27 @@
+﻿@page "/"
+@using ByteCodePlatform.Admin.Shared.config.admin
+@using ByteCodePlatform.Admin.Widgets.admin_panel.admin_content
+@using ByteCodePlatform.Admin.Widgets.admin_panel.admin_sidebar
+
+<PageTitle>Панель администратора</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="pt-2">
+    <MudGrid Class="mt-2">
+        <MudItem xs="12" md="3" Class="py-1">
+            <AdminSidebar OnSelect="OnSectionSelected" />
+        </MudItem>
+
+        <MudItem xs="12" md="9" Class="py-1 pl-1">
+            <AdminContent Section="_currentSection" />
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private AdminFiltersBtns _currentSection = AdminFiltersBtns.Graphs;
+
+    private void OnSectionSelected(AdminFiltersBtns section)
+    {
+        _currentSection = section;
+    }
+}

@@ -1,0 +1,102 @@
+﻿@using UserService.Proto
+<MudPaper>
+    <MudTable ServerData="ServerReload" 
+              Dense="true" 
+              Hover="true" 
+              Loading="@_isLoading" 
+              @ref="_table">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Список пользователей</MudText>
+            <MudSpacer/>
+            <MudTextField T="string" 
+                          ValueChanged="@(OnSearch)"
+                          Placeholder="Поиск"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Rounded.Search"
+                          IconSize="Size.Small"
+                          Class="mt-0"/>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>
+                <MudTableSortLabel SortLabel="surname" 
+                                   InitialDirection="SortDirection.Ascending" 
+                                   T="UserInfoResponse">
+                    ФИО
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="nickname" T="UserInfoResponse">Ник</MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="email" T="UserInfoResponse">Почта</MudTableSortLabel>
+            </MudTh>
+            <MudTh>Автор</MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="createdat" T="UserInfoResponse">
+                    Дата регистрации
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel T="UserInfoResponse">
+                    Активен
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel T="UserInfoResponse">
+                    Блок
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="ФИО">
+                <MudText Typo="Typo.body2">
+                    @context.Surname @context.Name
+                </MudText>
+            </MudTd>
+            <MudTd DataLabel="Ник">
+                <MudText Typo="Typo.body2">
+                    @context.Nickname
+                </MudText>
+            </MudTd>
+            <MudTd DataLabel="Почта">
+                <MudText Typo="Typo.body2">
+                    @context.Email
+                </MudText>
+            </MudTd>
+            <MudTd DataLabel="Автор">
+                <MudText Typo="Typo.body2">
+                    @(context.IsAuthor ? "Да" : "Нет")
+                </MudText>
+            </MudTd>
+            <MudTd DataLabel="Дата регистрации">
+                <MudText Typo="Typo.body2">
+                    @context.CreatedAt.ToDateTime().ToLocalTime().ToString("yy-MM-dd HH:mm")
+                </MudText>
+            </MudTd>
+            <MudTd DataLabel="Активен">
+                <MudText Align="Align.Center" Typo="Typo.body2">
+                    @(context.DeletedAt == null ? "Да" : "Нет")
+                </MudText>
+            </MudTd>
+            <MudTd>
+                <MudButton Style="width: 100%; margin-bottom: 5px;" 
+                           Size="Size.Small" 
+                           Color="Color.Primary"
+                           Variant="Variant.Filled">
+                    Изменить
+                </MudButton>
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>Пользователи не найдены</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Загрузка...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="[5, 10, 25, 50]"
+                           RowsPerPageString="Записей на странице:"/>
+        </PagerContent>
+    </MudTable>
+</MudPaper>

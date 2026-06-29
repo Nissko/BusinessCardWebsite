@@ -29,8 +29,6 @@ namespace Services.AuthService.Domain.Enums
             if (request != null) return request;
             {
                 var typeOfCourseIsExists = string.Join(",", List().Select(s => s.Name));
-
-                /*TODO: Кастомное исключение*/
                 throw new ArgumentNullException(typeOfCourseIsExists);
             }
         }

@@ -1,0 +1,108 @@
+﻿@*@if (CourseTheme != null)
+{
+    var selectedTheme = CourseTheme.FirstOrDefault(ctn => ctn.Name == SelectedCt);
+    if (selectedTheme != null)
+    {
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText>
+                <b>Название</b>:
+                <ul>@selectedTheme.Name</ul>
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(selectedTheme.Id,
+                                        new DialogParameters<DynamicEditDialog>
+                                        {
+                                            { x => x.LabelTextString, "Название" },
+                                            { x => x.NameOfApiKey, nameof(selectedTheme.Name) },
+                                            { x => x.InputType, DynamicInputType.Text },
+                                            { x => x.InputValueString, selectedTheme.Name }
+                                        },
+                                        _backdropClick))"/>
+        </MudItem>
+        
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText Class="mb-2"
+                     Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <b>Описание</b>: @selectedTheme.Description
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(selectedTheme.Id,
+                                        new DialogParameters<DynamicEditDialog>
+                                        {
+                                            { x => x.LabelTextString, "Описание" },
+                                            { x => x.NameOfApiKey, nameof(selectedTheme.Description) },
+                                            { x => x.InputType, DynamicInputType.TextArea },
+                                            { x => x.InputValueString, selectedTheme.Description }
+                                        },
+                                        _backdropClick))"/>
+        </MudItem>
+        
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText>
+                <b>Порядок отображения</b>:
+                <ul>@selectedTheme.DisplayOrder</ul>
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(selectedTheme.Id,
+                                        new DialogParameters<DynamicEditDialog>
+                                        {
+                                            { x => x.LabelTextString, "Порядок отображения" },
+                                            { x => x.NameOfApiKey, nameof(selectedTheme.DisplayOrder) },
+                                            { x => x.InputType, DynamicInputType.Number },
+                                            { x => x.InputValueString, selectedTheme.DisplayOrder.ToString() }
+                                        },
+                                        _backdropClick))"/>
+        </MudItem>
+        
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText>
+                <b>Показывать</b>:
+                <ul>@(selectedTheme.IsActive ? "Да" : "Нет")</ul>
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(selectedTheme.Id,
+                                        new DialogParameters<DynamicEditDialog>
+                                        {
+                                            { x => x.LabelTextString, "Показывать" },
+                                            { x => x.NameOfApiKey, nameof(selectedTheme.IsActive) },
+                                            { x => x.InputType, DynamicInputType.Boolean },
+                                            { x => x.InputValueString, selectedTheme.IsActive.ToString() }
+                                        },
+                                        _backdropClick))"/>
+        </MudItem>
+        
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText>
+                <b>Бесплатный</b>:
+                <ul>@(selectedTheme.IsFree ? "Да" : "Нет")</ul>
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(selectedTheme.Id,
+                                        new DialogParameters<DynamicEditDialog>
+                                        {
+                                            { x => x.LabelTextString, "Бесплатный" },
+                                            { x => x.NameOfApiKey, nameof(selectedTheme.IsFree) },
+                                            { x => x.InputType, DynamicInputType.Boolean },
+                                            { x => x.InputValueString, selectedTheme.IsFree.ToString() }
+                                        },
+                                        _backdropClick))"/>
+        </MudItem>
+        
+        <MudItem Class="d-flex justify-space-between align-center">
+            <MudText>
+                <b>Рекомендации</b>:
+                <ul>@string.Join(',', selectedTheme.CourseThemeRecommendation.Select(ctr => ctr.Name))</ul>
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(selectedTheme.Id,
+                                        new DialogParameters<DynamicEditDialog>
+                                        {
+                                            { x => x.LabelTextString, "Рекомендации" },
+                                            { x => x.NameOfApiKey, nameof(selectedTheme.CourseThemeRecommendation) },
+                                            { x => x.InputType, DynamicInputType.Text },
+                                            { x => x.InputValueString, string.Join(',', selectedTheme.CourseThemeRecommendation.Select(ctr => ctr.Name)) }
+                                        },
+                                        _backdropClick))"/>
+        </MudItem>
+    }
+}*@

@@ -1,5 +1,7 @@
 using ByteCodePlatform.Application.Application.Extensions;
+using ByteCodePlatform.Application.Application.GrpcClients;
 using ByteCodePlatform.Application.Common.Interfaces;
+using ByteCodePlatform.Application.Common.Interfaces.GrpcClients;
 using ByteCodePlatform.Application.Common.Interfaces.Repositories;
 using ByteCodePlatform.Infrastructure.Repositories;
 using MediatR;
@@ -31,8 +33,8 @@ namespace ByteCodePlatform.Infrastructure.Extensions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
             
-            //Регистрация gRPC
-            //services.AddScoped<IChatGrpcClient, ChatGrpcClientService>();
+            //Клиенты
+            services.AddScoped<IAuthGrpcService, AuthGrpcClientService>();
 
             services.AddApplication();
 

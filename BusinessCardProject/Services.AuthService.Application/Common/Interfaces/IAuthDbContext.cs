@@ -9,6 +9,7 @@ namespace Services.AuthService.Application.Common.Interfaces
         DatabaseFacade Database { get; }
 
         public DbSet<UserEntity> User { get; set; }
+        public DbSet<UserRolesEntity> UserRole { get; set; }
         public DbSet<RefreshTokenEntity> RefreshToken { get; set; }
 
         void Migrate();

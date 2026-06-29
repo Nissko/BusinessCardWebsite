@@ -1,3 +1,4 @@
+using Dtos.DTO.Pagination;
 using Dtos.DTO.User;
 using Requests.User;
 
@@ -27,6 +28,19 @@ namespace Services.AuthService.Application.Common.Interfaces
         
         Task<bool> VerifyPassword(Guid userId, string plainPassword);
 
+        /// <summary>
+        /// Список ролей пользователя
+        /// </summary>
         Task<List<string>> GetRoles(Guid userId);
+        
+        /// <summary>
+        /// Добавление роли автора из ядра
+        /// </summary>
+        Task<bool> AddAuthorRole(Guid userId);
+        
+        /// <summary>
+        /// Получение всех пользователей для админки
+        /// </summary>
+        Task<PaginationDto<UserDto>> GetUsersFromSearch(GetUsersSearchRequest request);
     }
 }
