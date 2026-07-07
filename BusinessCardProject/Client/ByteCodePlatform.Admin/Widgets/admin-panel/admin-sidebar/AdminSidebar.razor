@@ -1,0 +1,48 @@
+﻿@using ByteCodePlatform.Admin.Shared.config.admin
+
+<MudItem Class="d-flex align-center px-3 py-2 h-100">
+    <MudList T="string" Class="mud-width-full">
+        <MudText Typo="Typo.subtitle1" Class="px-4">Администрирование</MudText>
+        <MudDivider Class="my-1"/>
+        
+        <MudListItem Text="Графики"
+                     Icon="@Icons.Material.Rounded.Analytics"
+                     IconColor="Color.Info"
+                     OnClick="@(() => OnSelect.InvokeAsync(AdminFiltersBtns.Graphs))"/>
+        
+        <MudListItem Text="Сервер"
+                     Icon="@Icons.Material.Rounded.Storage"
+                     IconColor="Color.Info"
+                     OnClick="@(() => OnSelect.InvokeAsync(AdminFiltersBtns.Servers))"/>
+        
+        <MudListItem Text="Заказы"
+                     Icon="@Icons.Material.Rounded.Receipt"
+                     IconColor="Color.Info"
+                     OnClick="@(() => OnSelect.InvokeAsync(AdminFiltersBtns.Orders))"/>
+        
+        <MudListItem Text="Настройки"
+                     Icon="@Icons.Material.Rounded.Settings"
+                     IconColor="Color.Info">
+            <NestedList>
+                <MudListItem Text="Пользователи"
+                             Icon="@Icons.Material.Rounded.People"
+                             IconColor="Color.Success"
+                             OnClick="@(() => OnSelect.InvokeAsync(AdminFiltersBtns.Users))"/>
+                
+                <MudListItem Text="Темы курсов"
+                             Icon="@Icons.Material.Rounded.ViewModule"
+                             IconColor="Color.Success"
+                             OnClick="@(() => OnSelect.InvokeAsync(AdminFiltersBtns.CourseThemes))"/>
+                
+                <MudListItem Text="Аудит"
+                             Icon="@Icons.Material.Rounded.Security"
+                             IconColor="Color.Warning"
+                             OnClick="@(() => OnSelect.InvokeAsync(AdminFiltersBtns.Audits))"/>
+            </NestedList>
+        </MudListItem>
+    </MudList>
+</MudItem>
+
+@code {
+    [Parameter] public EventCallback<AdminFiltersBtns> OnSelect { get; set; }
+}

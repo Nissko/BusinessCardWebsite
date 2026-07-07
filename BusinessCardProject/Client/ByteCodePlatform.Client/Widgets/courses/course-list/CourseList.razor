@@ -1,0 +1,23 @@
+﻿@using BusinessCardProject.Client.Widgets.courses.course_card_skeleton
+@using BusinessCardProject.Client.Widgets.courses.course_card
+
+<MudGrid Class="mt-8">
+    @if (_courses != null)
+    {
+        @foreach (var course in _courses)
+        {
+            <MudItem xs="12" sm="6" md="4">
+                <CourseCard Course="course" OnCourseSelected="@OnCourseSelected" />
+            </MudItem>
+        }
+    }
+    else
+    {
+        @for (var i = 0; i < _skeletonCount; i++)
+        {
+            <MudItem xs="12" sm="6" md="4">
+                <CourseCardSkeleton />
+            </MudItem>
+        }
+    }
+</MudGrid>

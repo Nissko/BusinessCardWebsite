@@ -1,0 +1,29 @@
+﻿@using BusinessCardProject.Client.Entities.Services.ProjectInfo.Entity
+@using BusinessCardProject.Client.Features.auth_menu
+@using BusinessCardProject.Client.Features.toggle_theme
+
+<MudAppBar Elevation="0">
+    <MudIconButton Icon="@Icons.Material.Rounded.Menu" 
+                   Color="Color.Inherit" 
+                   Edge="Edge.Start"
+                   OnClick="@ToggleDrawer"/>
+                   
+    <MudLink Href="" Underline="Underline.None">
+        <MudText Typo="Typo.h4" Class="mr-3" Style="font-weight: bold" Color="@HeaderColor">
+            @ProjectInfoGlobalEntity.ProjectName.ToUpperInvariant()
+        </MudText>
+    </MudLink>
+    
+    @*TODO: Доработать верхнее меню + сделать боковое*@
+    @if (_showHeaderButtons)
+    {
+        <MudButton Color="Color.Error" Variant="Variant.Filled" >
+            Тестовая кнопка
+        </MudButton>
+    }
+    
+    <MudSpacer/>
+    
+    <ThemeToggle />
+    <UserMenu />
+</MudAppBar>

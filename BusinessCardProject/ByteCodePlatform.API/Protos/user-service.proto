@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "UserService.Proto";
+
+// Сервис для управления пользователями
+service UserGrpcService {
+  // Добавление пользователя
+  rpc CreateUser(CreateUserRequest) returns (UserBooleanResponse);
+  // Выдача авторских прав
+  rpc CreateAuthorUser(CreateAuthorRequest) returns (UserAuthorInfoResponse);
+  rpc GetUsersFromSearch(GetUsersFromSearchRequest) returns (GetUsersFromSearchResponse);
+}
+
+message CreateUserRequest{
+  // Идентификатор из AuthService
+  string user_id = 1;
+}
+
+message CreateAuthorRequest{
+  // Идентификатор пользователя
+  string user_id = 1;
+}
+
+message GetUserRequest{
+  // Идентификатор пользователя
+  string user_id = 1;
+}
+
+message UserInfoResponse{
+  string user_id = 1;
+  string surname = 2;
+  string name = 3;
+  string nickname = 4;
+  string email = 5;
+  bool isAuthor = 6;
+  google.protobuf.Timestamp createdAt = 7;
+  optional google.protobuf.Timestamp updatedAt = 8;
+  optional google.protobuf.Timestamp deletedAt = 9;
+}
+
+message UserBooleanResponse{
+  bool success = 1;
+}
+
+message UserAuthorInfoResponse{
+  string author_id = 1;
+  UserInfoResponse user = 2;
+}
+
+//Запрос для поиска пользователей в админке
+message GetUsersFromSearchRequest{
+  int32 page = 1;
+  int32 pageSize = 2;
+  string search = 3;
+  string sortBy = 4;
+  string sortDirection = 5;
+}
+
+message GetUsersFromSearchResponse{
+  repeated UserInfoResponse Items = 1;
+  int32 TotalCount = 2;
+}

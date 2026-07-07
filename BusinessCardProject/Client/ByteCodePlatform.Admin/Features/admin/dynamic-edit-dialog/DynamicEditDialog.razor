@@ -1,0 +1,70 @@
+﻿<MudDialog>
+    <DialogContent>
+        @switch (InputType)
+        {
+            case DynamicInputType.Text:
+                <MudTextField T="string"
+                              InputType="MudBlazor.InputType.Text"
+                              Variant="Variant.Outlined"
+                              Label="@LabelTextString"
+                              Required="true"
+                              MaxLength="200"
+                              @bind-Value="InputValueString"
+                              RequiredError="Значение не должно быть пустым"/>
+                break;
+
+            case DynamicInputType.TextArea:
+                <MudTextField T="string"
+                              Label="@LabelTextString"
+                              Variant="Variant.Outlined"
+                              Lines="3"
+                              MaxLines="10"
+                              MaxLength="1000"
+                              @bind-Value="InputValueString"/>
+                break;
+
+            case DynamicInputType.Number:
+                <MudNumericField T="int?"
+                                 Label="@LabelTextString"
+                                 @bind-Value="_currentNumberValue"
+                                 Min="0"
+                                 Immediate="true"/>
+                break;
+
+            case DynamicInputType.Boolean:
+                var newListString = new List<string> { "true", "false" };
+
+                <MudSelect T="string"
+                           @bind-Value="_currentBoolValue"
+                           Label="@LabelTextString">
+                    @foreach (var value in newListString)
+                    {
+                        <MudSelectItem Value="@value"
+                                       Disabled="@(bool.Parse(InputValueString) == bool.Parse(value))">
+                            @(bool.Parse(value) ? "Да" : "Нет")
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+                break;
+
+            case DynamicInputType.Select:
+                <MudText>@nameof(DynamicInputType.Select) - в разработке</MudText>
+                break;
+
+            case DynamicInputType.MultiSelect:
+                <MudText>@nameof(DynamicInputType.MultiSelect) - в разработке</MudText>
+                break;
+
+            default:
+                <MudText Color="Color.Error">Неподдерживаемый тип ввода: @InputType</MudText>
+                break;
+        }
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Cancel">Отмена</MudButton>
+        <MudButton Color="Color.Primary" OnClick="UpdateData" Disabled="_isLoading">
+            @(_isLoading ? "Загрузка..." : ButtonTextString)
+        </MudButton>
+    </DialogActions>
+</MudDialog>

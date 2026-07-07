@@ -1,0 +1,239 @@
+syntax = "proto3";
+package CourseGrpcService;
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "CourseService.Proto";
+
+service CourseService {
+  rpc CheckGrpcCourseTiming (CheckGrpcCourseTimingRequest) returns (CheckGrpcCourseTimingResponse);
+
+  // Языки программирования
+  rpc GetProgrammingLanguages (GetProgrammingLanguagesRequest) returns (ProgrammingLanguagesInfoResponse);
+
+  // Темы курсов
+  rpc AddCourseTheme (AddCourseThemeRequest) returns (CourseThemeInfoResponse);
+  rpc GetCourseThemes (GetCourseThemesRequest) returns (CourseThemesInfoResponse);
+  rpc GetCourseThemeById (GetCourseThemeByIdRequest) returns (CourseThemeInfoResponse);
+  rpc UpdateCourseTheme (UpdateCourseThemeRequest) returns (CourseThemeInfoResponse);
+  rpc GetCourseThemeProperties (GetCourseThemePropertiesRequest) returns (CourseThemePropertiesResponse);
+
+  // Модули курсов
+  rpc AddCourseModule (AddCourseModuleRequest) returns (CourseModuleInfoResponse);
+  rpc GetCourseModules (GetCourseModulesRequest) returns (CourseModulesInfoResponse);
+  rpc GetCourseModulesByCourseId (GetCourseModulesByCourseIdRequest) returns (CourseModulesInfoResponse);
+  rpc UpdateCourseModule (UpdateCourseModuleRequest) returns (CourseModuleInfoResponse);
+  rpc GetCourseModuleProperties (GetCourseModulePropertiesRequest) returns (CourseModulePropertiesResponse);
+
+  // Контент курсов
+  rpc AddCourseContent (AddCourseContentRequest) returns (CourseContentInfoResponse);
+  rpc GetCourseContents (GetCourseContentsRequest) returns (CourseContentsInfoResponse);
+  rpc GetCourseContentsByModuleId (GetCourseContentsByModuleIdRequest) returns (CourseContentsInfoResponse);
+  rpc UpdateCourseContent (UpdateCourseContentRequest) returns (CourseContentInfoResponse);
+  rpc GetCourseContentProperties (GetCourseContentPropertiesRequest) returns (CourseContentPropertiesResponse);
+}
+
+message CheckGrpcCourseTimingRequest {}
+message GetProgrammingLanguagesRequest {}
+
+// Темы курсов
+message AddCourseThemeRequest {
+  string programming_language_id = 1;
+  string author_id = 2;
+  string name = 3;
+  string description = 4;
+  string avatar_url = 5;
+  double price = 6;
+  optional double old_price = 7;
+}
+
+message GetCourseThemesRequest {
+  optional bool ignore_filters = 1;
+}
+
+message GetCourseThemeByIdRequest {
+  string id = 1;
+}
+
+message UpdateCourseThemeRequest {
+  string id = 1;
+  optional string programming_language_id = 2;
+  optional string name = 3;
+  optional string description = 4;
+  optional string avatar_url = 5;
+  optional double price = 6;
+  optional double old_price = 7;
+  optional bool is_show = 8;
+  optional int32 display_order = 9;
+  optional bool is_free = 10;
+}
+
+message GetCourseThemePropertiesRequest {
+  string course_theme_id = 1;
+}
+
+// Модули курсов
+message AddCourseModuleRequest {
+  string course_theme_id = 1;
+  string name = 2;
+}
+
+message GetCourseModulesRequest {}
+
+message GetCourseModulesByCourseIdRequest {
+  string course_id = 1;
+  optional bool ignore_filters = 2;
+}
+
+message UpdateCourseModuleRequest {
+  string id = 1;
+  optional string course_theme_id = 2;
+  optional string name = 3;
+  optional bool is_show = 4;
+  optional int32 display_order = 5;
+}
+
+message GetCourseModulePropertiesRequest {
+  string course_module_id = 1;
+}
+
+// Контент курсов
+message AddCourseContentRequest {
+  string course_module_id = 1;
+  string name = 2;
+  string link_on_rutube = 3;
+  string link_on_vk = 4;
+  string link_on_youtube = 5;
+  string img_url = 6;
+}
+
+message GetCourseContentsRequest {}
+
+message GetCourseContentsByModuleIdRequest {
+  string module_id = 1;
+}
+
+message UpdateCourseContentRequest {
+  string id = 1;
+  optional string course_module_id = 2;
+  optional string name = 3;
+  optional string link_on_rutube = 4;
+  optional string link_on_vk = 5;
+  optional string link_on_youtube = 6;
+  optional string img_url = 7;
+  optional bool is_show = 8;
+  optional int32 display_order = 9;
+}
+
+message GetCourseContentPropertiesRequest {
+  string course_content_id = 1;
+}
+
+message CheckGrpcCourseTimingResponse {
+  google.protobuf.Timestamp date_time = 1;
+  bool health = 2;
+  string grpc_service = 3;
+}
+
+// Языки программирования
+message ProgrammingLanguageInfoResponse {
+  string id = 1;
+  string name = 2;
+  repeated LightCourseThemeInfo course_themes = 3;
+}
+
+message ProgrammingLanguagesInfoResponse {
+  repeated ProgrammingLanguageInfoResponse programming_languages = 1;
+}
+
+// Темы курсов
+message CourseThemeInfoResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string avatar_url = 4;
+  double price = 5;
+  optional double old_price = 6;
+  google.protobuf.Timestamp created_at = 7;
+  optional google.protobuf.Timestamp updated_at = 8;
+  UserAuthorInfo author = 9;
+  LightProgrammingLanguageInfo programming_language = 10;
+  bool is_free = 11;
+  optional bool success = 12;
+}
+
+message CourseThemesInfoResponse {
+  repeated CourseThemeInfoResponse course_themes = 1;
+}
+
+message CourseThemePropertiesResponse {
+  string course_theme_id = 1;
+  int32 display_order = 2;
+  bool is_show = 3;
+  bool is_free = 4;
+}
+
+// Модули курсов
+message CourseModuleInfoResponse {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp updated_at = 4;
+  LightCourseThemeInfo theme = 5;
+  optional bool success = 6;
+}
+
+message CourseModulesInfoResponse {
+  repeated CourseModuleInfoResponse course_modules = 1;
+}
+
+message CourseModulePropertiesResponse {
+  string course_module_id = 1;
+  int32 display_order = 2;
+  bool is_show = 3;
+}
+
+// Контент курсов
+message CourseContentInfoResponse {
+  string id = 1;
+  string name = 2;
+  string link_rutube = 3;
+  string link_vk = 4;
+  string link_youtube = 5;
+  string img_url = 6;
+  google.protobuf.Timestamp created_at = 7;
+  optional google.protobuf.Timestamp updated_at = 8;
+  LightCourseModuleInfo module = 9;
+  optional bool success = 10;
+}
+
+message CourseContentsInfoResponse {
+  repeated CourseContentInfoResponse course_contents = 1;
+}
+
+message CourseContentPropertiesResponse {
+  string course_content_id = 1;
+  int32 display_order = 2;
+  bool is_show = 3;
+}
+
+message LightCourseThemeInfo {
+  string id = 1;
+  string name = 2;
+}
+
+message LightProgrammingLanguageInfo {
+  string id = 1;
+}
+
+message LightCourseModuleInfo {
+  string id = 1;
+}
+
+message UserAuthorInfo {
+  string author_id = 1;
+  string user_id = 2;
+  string surname = 3;
+  string name = 4;
+  string nick_name = 5;
+}

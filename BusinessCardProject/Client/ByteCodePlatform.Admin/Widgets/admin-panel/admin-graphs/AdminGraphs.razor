@@ -1,0 +1,32 @@
+﻿<MudGrid Class="justify-space-between mt-1" Spacing="2">
+    <MudItem xs="12" sm="6" lg="6">
+        <MudPaper Elevation="1" Class="pa-2 mud-width-full">
+            <MudText Typo="Typo.subtitle2">
+                Посещения за эту неделю:
+            </MudText>
+            <MudChart ChartType="ChartType.Line"
+                      ChartSeries="@_series"
+                      @bind-SelectedIndex="_index"
+                      XAxisLabels="@_xAxisLabels"
+                      ChartOptions="@_options"
+                      Width="440"
+                      AxisChartOptions="_axisChartOptions"
+                      Class="mud-width-full"/>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" lg="6">
+        <MudPaper Elevation="1" Class="pa-2 mud-width-full">
+            <MudText Typo="Typo.subtitle2">
+                Популярный ЯП:
+            </MudText>
+            <MudChart ChartType="ChartType.Line"
+                      ChartSeries="@_series"
+                      @bind-SelectedIndex="_index"
+                      XAxisLabels="@_xAxisLabels"
+                      ChartOptions="@_options"
+                      Width="440"
+                      AxisChartOptions="_axisChartOptions"
+                      Class="mud-width-full"/>
+        </MudPaper>
+    </MudItem>
+</MudGrid>

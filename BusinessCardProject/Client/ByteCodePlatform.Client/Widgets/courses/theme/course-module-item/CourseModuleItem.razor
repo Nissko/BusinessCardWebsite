@@ -1,0 +1,14 @@
+﻿@using BusinessCardProject.Client.Widgets.courses.theme.course_video_item
+<MudTreeViewItem Style="user-select: none;" T="string" Text="@Module.Name" TextTypo="Typo.h4" Class="mb-1">
+    @if (VideoCourses != null && VideoCourses.CourseContents.Any())
+    {
+        @foreach (var (videoCourse, index) in VideoCourses.CourseContents.Select((v, i) => (v, i)))
+        {
+            <CourseVideoItem VideoCourse="videoCourse" Index="index" />
+        }
+    }
+    else
+    {
+        <MudTreeViewItem T="string" Text="В разработке!" Disabled="true"/>
+    }
+</MudTreeViewItem>

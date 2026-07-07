@@ -1,0 +1,110 @@
+﻿@using ByteCodePlatform.Admin.Features.admin.course_module_editor
+@using ByteCodePlatform.Admin.Features.admin.course_theme_editor
+@using ByteCodePlatform.Admin.Features.admin.course_tree_preview
+@using ByteCodePlatform.Admin.Features.admin.course_video_editor
+
+<MudContainer>
+    <MudGrid>
+        <MudItem Style="padding-left: 6px !important;" xs="12" md="12" Class="d-flex">
+            <MudAutocomplete T="string"
+                             Label="Язык программирования"
+                             @bind-Value="_selectedPlText"
+                             @bind-Value:after="OnPlChanged"
+                             SearchFunc="SearchFromPl"
+                             ResetValueOnEmptyText="true"
+                             MinCharacters="2"
+                             DebounceInterval="200"
+                             AdornmentIcon="@Icons.Material.Rounded.Search"
+                             AdornmentColor="Color.Primary"
+                             Class="px-1"/>
+
+            <MudAutocomplete T="string"
+                             Label="Тема"
+                             @bind-Value="_selectedCtText"
+                             @bind-Value:after="UpdateSelectedCtId"
+                             SearchFunc="SearchFromCt"
+                             ResetValueOnEmptyText="true"
+                             MinCharacters="2"
+                             DebounceInterval="200"
+                             AdornmentIcon="@Icons.Material.Rounded.Search"
+                             AdornmentColor="Color.Primary"
+                             Class="px-1"/>
+        </MudItem>
+
+        <MudItem Style="padding-left: 6px !important;" xs="12" md="12" Class="d-flex">
+            <CourseTreePreview CourseTheme="@_selectedCourseTheme"
+                               CourseModules="@_courseModules"
+                               SelectedPlId="@_selectedPlId"
+                               SelectedCtId="@_selectedCtId"
+                               OnCourseModuleSelected="@HandleModuleItemSelected"
+                               OnVideoCourseSelected="@HandleVideoCourseItemSelected"
+                               OnCourseThemeCreated="@HandleCourseThemeCreated"/>
+
+            <MudTabs Outlined="true"
+                     Position="Position.Top"
+                     Rounded="true"
+                     Border="true"
+                     ApplyEffectsToContainer="true"
+                     PanelClass="pa-6"
+                     @bind-ActivePanelIndex="_activeIndex"
+                     Style="width: 50%"
+                     Class="px-2 py-2"
+                     Elevation="1">
+
+                <MudTabPanel Text="Тема">
+                    <CourseThemeEditor CourseTheme="@_courseThemes"
+                                       SelectedCtId="@_selectedCtId"
+                                       SelectedCtProperties="@_courseThemeProperties"
+                                       OnDataChanged="RefreshDataAsync"/>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Модуль">
+                    @if (_selectedModulePreviewId == Guid.Empty && !string.IsNullOrEmpty(_selectedCtText))
+                    {
+                        <MudFab StartIcon="@Icons.Material.Rounded.Add"
+                                Label="Добавить"
+                                DropShadow="false"
+                                OnClick="AddNewModule"/>
+                    }
+                    else if (_selectedCtId == Guid.Empty && string.IsNullOrEmpty(_selectedCtText))
+                    {
+                        <MudAlert Variant="Variant.Filled"
+                                  Icon="@Icons.Material.Rounded.Error"
+                                  Severity="Severity.Info">
+                            Выберите тему сверху для добавления и/или редактирования модулей курса!
+                        </MudAlert>
+                    }
+
+                    <CourseModuleEditor CourseModules="@_courseModules"
+                                        CourseModuleProperties="_courseModuleProperties"
+                                        SelectedPreviewCourseModuleId="_selectedModulePreviewId"
+                                        OnDataChanged="RefreshDataAsync"/>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Видео">
+                    @if (_selectedModulePreviewId != Guid.Empty &&
+                         _selectedVideoCoursePreviewId == Guid.Empty &&
+                         !string.IsNullOrEmpty(_selectedCtText))
+                    {
+                        <MudFab StartIcon="@Icons.Material.Rounded.Add"
+                                Label="Добавить"
+                                DropShadow="false"/>
+                    }
+                    else if (_selectedModulePreviewId == Guid.Empty && !string.IsNullOrEmpty(_selectedCtText))
+                    {
+                        <MudAlert Variant="Variant.Filled"
+                                  Icon="@Icons.Material.Rounded.Error"
+                                  Severity="Severity.Info">
+                            Выберите модуль в левой панели для добавления и/или редактирования контента (видео)!
+                        </MudAlert>
+                    }
+
+                    <CourseVideoEditor VideoCourses="_courseContents"
+                                       CourseContentProperties="_courseContentProperties"
+                                       SelectedPreviewCourseContentId="_selectedVideoCoursePreviewId"
+                                       OnDataChanged="RefreshDataAsync"/>
+                </MudTabPanel>
+            </MudTabs>
+        </MudItem>
+    </MudGrid>
+</MudContainer>

@@ -1,0 +1,35 @@
+﻿@using ByteCodePlatform.Admin.Shared.config.admin
+@using ByteCodePlatform.Admin.Widgets.admin_panel.admin_audit
+@using ByteCodePlatform.Admin.Widgets.admin_panel.admin_course_themes
+@using ByteCodePlatform.Admin.Widgets.admin_panel.admin_graphs
+@using ByteCodePlatform.Admin.Widgets.admin_panel.admin_orders
+@using ByteCodePlatform.Admin.Widgets.admin_panel.admin_servers
+@using ByteCodePlatform.Admin.Widgets.admin_panel.admin_users
+@switch (Section)
+{
+    case AdminFiltersBtns.Graphs:
+        <AdminGraphs />
+        break;
+    case AdminFiltersBtns.Servers:
+        <AdminServers />
+        break;
+    case AdminFiltersBtns.Orders:
+        <AdminOrders />
+        break;
+    case AdminFiltersBtns.Users:
+        <AdminUsers />
+        break;
+    case AdminFiltersBtns.CourseThemes:
+        <AdminCourseThemes />
+        break;
+    case AdminFiltersBtns.Audits:
+        <AdminAudit />
+        break;
+    default:
+        <MudPaper>
+            <MudText Typo="Typo.h6" Class="mt-2 px-2 py-2" Color="Color.Info">
+                Выберите пункт администрирования!
+            </MudText>
+        </MudPaper>
+        break;
+}

@@ -1,0 +1,11 @@
+﻿@using BusinessCardProject.Client.Entities.Services.ProjectInfo
+
+@inject UserSettingService userSettingService
+
+<MudDrawer id="nav-drawer" 
+           @bind-Open="userSettingService.Settings.IsDrawerOpen" 
+           Breakpoint="Breakpoint.None"
+           ClipMode="DrawerClipMode.Always"
+           Elevation="4">
+    <NavMenu/>
+</MudDrawer>

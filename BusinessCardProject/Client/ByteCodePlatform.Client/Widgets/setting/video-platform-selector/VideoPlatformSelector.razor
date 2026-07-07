@@ -1,0 +1,32 @@
+﻿<MudItem Class="d-flex justify-space-between align-center px-2 py-2 h-100"
+         Style="min-height: 74px;">
+    <MudSwitch T="bool"
+               Style="user-select: none;"
+               Value="@_isYouTubeSelected"
+               ValueChanged="@(v => OnPlatformChanged(0, v))"
+               LabelPlacement="@Placement"
+               Color="Color.Success"
+               UncheckedColor="Color.Error">
+        <MudText Typo="Typo.caption">YouTube</MudText>
+    </MudSwitch>
+
+    <MudSwitch T="bool"
+               Style="user-select: none;"
+               Value="@_isRuTubeSelected"
+               ValueChanged="@(v => OnPlatformChanged(1, v))"
+               LabelPlacement="@Placement"
+               Color="Color.Success"
+               UncheckedColor="Color.Error">
+        <MudText Typo="Typo.caption">RuTube</MudText>
+    </MudSwitch>
+
+    <MudSwitch T="bool"
+               Style="user-select: none;"
+               Value="@_isVkVideoSelected"
+               ValueChanged="@(v => OnPlatformChanged(2, v))"
+               LabelPlacement="@Placement"
+               Color="Color.Success"
+               UncheckedColor="Color.Error">
+        <MudText Typo="Typo.caption">VK Видео</MudText>
+    </MudSwitch>
+</MudItem>

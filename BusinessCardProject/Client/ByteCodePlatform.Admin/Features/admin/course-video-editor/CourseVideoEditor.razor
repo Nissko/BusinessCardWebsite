@@ -1,0 +1,125 @@
+﻿@using ByteCodePlatform.Admin.Features.admin.dynamic_edit_dialog
+
+@if (_videoCourse != null)
+{
+    <MudItem Class="mb-2 d-flex justify-space-between align-center">
+        <MudText>
+            <b>Название</b>:
+            <ul>@_videoCourse.Name</ul>
+        </MudText>
+        <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                       OnClick="@(() => OpenDialogAsync(
+                                    Guid.Parse(_videoCourse.Id),
+                                    TypeOfEntityType.VideoCourse,
+                                    "Name",
+                                    DynamicInputType.Text,
+                                    _videoCourse.Name,
+                                    "Название"))"/>
+    </MudItem>
+
+    <MudItem Class="mb-2 d-flex justify-space-between align-center">
+        <MudText Class="mb-2"
+                 Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <b>Обложка</b>:
+            <ul>@_videoCourse.ImgUrl</ul>
+        </MudText>
+        <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                       OnClick="@(() => OpenDialogAsync(
+                                    Guid.Parse(_videoCourse.Id),
+                                    TypeOfEntityType.VideoCourse,
+                                    "ImgUrl",
+                                    DynamicInputType.Text,
+                                    _videoCourse.ImgUrl,
+                                    "Обложка"))"/>
+    </MudItem>
+    
+    <MudItem Class="mb-2 d-flex justify-space-between align-center">
+        <MudText Class="mb-2"
+                 Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <b>Rutube</b>:
+            <ul>@_videoCourse.LinkRutube</ul>
+        </MudText>
+        <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                       OnClick="@(() => OpenDialogAsync(
+                                    Guid.Parse(_videoCourse.Id),
+                                    TypeOfEntityType.VideoCourse,
+                                    "LinkRutube",
+                                    DynamicInputType.Text,
+                                    _videoCourse.LinkRutube,
+                                    "Rutube"))"/>
+    </MudItem>
+
+    <MudItem Class="mb-2 d-flex justify-space-between align-center">
+        <MudText Class="mb-2"
+                 Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <b>VK Видео</b>:
+            <ul>@_videoCourse.LinkVk</ul>
+        </MudText>
+        <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                       OnClick="@(() => OpenDialogAsync(
+                                    Guid.Parse(_videoCourse.Id),
+                                    TypeOfEntityType.VideoCourse,
+                                    "LinkVk",
+                                    DynamicInputType.Text,
+                                    _videoCourse.LinkVk,
+                                    "VK Видео"))"/>
+    </MudItem>
+
+    <MudItem Class="mb-2 d-flex justify-space-between align-center">
+        <MudText Class="mb-2"
+                 Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <b>YouTube</b>:
+            <ul>@_videoCourse.LinkYoutube</ul>
+        </MudText>
+        <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                       OnClick="@(() => OpenDialogAsync(
+                                    Guid.Parse(_videoCourse.Id),
+                                    TypeOfEntityType.VideoCourse,
+                                    "LinkYoutube",
+                                    DynamicInputType.Text,
+                                    _videoCourse.LinkYoutube,
+                                    "YouTube"))"/>
+    </MudItem>
+
+    <MudItem Class="d-flex justify-space-between align-center">
+        <MudText Class="mb-2"
+                 Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <b>Свойства:</b>
+        </MudText>
+    </MudItem>
+
+    @if (CourseContentProperties != null)
+    {
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText Class="mb-2"
+                     Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <b>Порядок отображения</b>:
+                <ul>@CourseContentProperties.DisplayOrder</ul>
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(
+                                        Guid.Parse(_videoCourse.Id),
+                                        TypeOfEntityType.VideoCourse,
+                                        "DisplayOrder",
+                                        DynamicInputType.Number,
+                                        CourseContentProperties.DisplayOrder.ToString(),
+                                        "Порядок отображения"))"/>
+        </MudItem>
+
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText Class="mb-2"
+                     Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <b>Показывать</b>:
+                <ul>@(CourseContentProperties.IsShow ? "Да" : "Нет")</ul>
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(
+                                        Guid.Parse(_videoCourse.Id),
+                                        TypeOfEntityType.VideoCourse,
+                                        "IsShow",
+                                        DynamicInputType.Boolean,
+                                        CourseContentProperties.IsShow.ToString(),
+                                        "Показывать"))"/>
+        </MudItem>
+    }
+}

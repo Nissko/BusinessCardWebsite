@@ -1,0 +1,35 @@
+﻿<MudCard Elevation="25" Class="rounded-lg pb-4">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: bold;">
+                @Course.Name
+            </MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+
+    <MudCardContent>
+        <div class="d-flex justify-center pb-3">
+            <MudText Typo="Typo.h3">
+                @(Course.IsFree ? "Бесплатно" : Course.Price)
+            </MudText>
+        </div>
+    </MudCardContent>
+
+    <MudCardActions Class="d-flex justify-center">
+        <MudButton OnClick="@OnSelectClick"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Large"
+                   Style="width:50%;">
+            @(Course.IsFree ? "Изучить" : "Купить")
+        </MudButton>
+    </MudCardActions>
+
+    <MudCardContent Style="padding-bottom: 0;">
+        <div class="d-flex justify-center">
+            <MudText Typo="Typo.caption" Align="Align.Justify">
+                @GetFooterNote()
+            </MudText>
+        </div>
+    </MudCardContent>
+</MudCard>

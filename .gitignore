@@ -384,3 +384,5 @@ packages/
 /.idea/
 /BusinessCardProject/.vs/
 /BusinessCardProject/.idea/
+/BusinessCardProject/.ai
+/BusinessCardProject/.ai/.vulnerable_packages.txt
