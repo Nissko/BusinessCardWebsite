@@ -28,7 +28,8 @@ namespace ByteCodePlatform.API.ProtoMappers.Course.Themes
                 ProgrammingLanguage = new()
                 {
                     Id = dto.ProgrammingLanguage.Id.ToString()
-                }
+                },
+                Success = true
             };
         }
 
@@ -51,6 +52,23 @@ namespace ByteCodePlatform.API.ProtoMappers.Course.Themes
             this List<LightCourseThemeDto> dtos)
         {
             return dtos.Select(ToProtoLightCourseThemeInfo).ToList();
+        }
+
+        public static CourseThemePropertiesResponse ToProtoGetFieldPropertiesCourseThemeId(this CourseThemePropertiesDto dto)
+        {
+            return new CourseThemePropertiesResponse
+            {
+                CourseThemeId = dto.CourseThemeId.ToString(),
+                DisplayOrder = dto.DisplayOrder,
+                IsShow = dto.IsShow,
+                IsFree = dto.IsFree
+            };
+        }
+        
+        public static List<CourseThemePropertiesResponse> ToProtoGetFieldPropertiesCourseThemeIdList(
+            this List<CourseThemePropertiesDto> dtos)
+        {
+            return dtos.Select(ToProtoGetFieldPropertiesCourseThemeId).ToList();
         }
     }
 }

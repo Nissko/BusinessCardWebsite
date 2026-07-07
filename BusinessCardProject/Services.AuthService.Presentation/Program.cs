@@ -29,7 +29,7 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins(
                 builder.Configuration["GrpcServices:ClientUrl"] ?? throw new Exception("Grpc services url is missing"),
-                "https://localhost:7237"
+                builder.Configuration["GrpcAdminService:UrlToAdminPanel"] ?? throw new Exception("Grpc admin service url is missing")
             )
             .AllowAnyMethod()
             .AllowAnyHeader()

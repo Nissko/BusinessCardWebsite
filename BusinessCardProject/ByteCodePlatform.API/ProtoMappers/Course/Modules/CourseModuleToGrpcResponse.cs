@@ -16,7 +16,8 @@ namespace ByteCodePlatform.API.ProtoMappers.Course.Modules
                 Name = dto.Name,
                 CreatedAt = dto.CreatedAt.ToTimestamp(),
                 UpdatedAt = dto.UpdatedAt?.ToTimestamp() ?? null,
-                Theme = dto.Theme.ToProtoLightCourseThemeInfo()
+                Theme = dto.Theme.ToProtoLightCourseThemeInfo(),
+                Success = true
             };
         }
 
@@ -38,6 +39,22 @@ namespace ByteCodePlatform.API.ProtoMappers.Course.Modules
             this List<LightCourseModuleDto> dtos)
         {
             return dtos.Select(ToProtoLightCourseModuleInfo).ToList();
+        }
+        
+        public static CourseModulePropertiesResponse ToProtoGetFieldPropertiesCourseModuleId(this CourseModulePropertiesDto dto)
+        {
+            return new CourseModulePropertiesResponse
+            {
+                CourseModuleId = dto.CourseModuleId.ToString(),
+                DisplayOrder = dto.DisplayOrder,
+                IsShow = dto.IsShow
+            };
+        }
+        
+        public static List<CourseModulePropertiesResponse> ToProtoGetFieldPropertiesCourseModuleIdList(
+            this List<CourseModulePropertiesDto> dtos)
+        {
+            return dtos.Select(ToProtoGetFieldPropertiesCourseModuleId).ToList();
         }
     }
 }

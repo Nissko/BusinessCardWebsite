@@ -36,7 +36,7 @@ namespace ByteCodePlatform.Application.Common.Interfaces.Repositories
         /// <summary>
         /// Вывод тем
         /// </summary>
-        Task<List<CourseThemeDto>> GetCourseThemes();
+        Task<List<CourseThemeDto>> GetCourseThemes(bool ignoreFilters = false);
 
         /// <summary>
         /// Вывод темы по Id
@@ -47,6 +47,11 @@ namespace ByteCodePlatform.Application.Common.Interfaces.Repositories
         /// Изменение информации темы
         /// </summary>
         Task<CourseThemeDto> UpdateCourseTheme(UpdateCourseThemeRequest request);
+
+        /// <summary>
+        /// Получение свойст на темы курса
+        /// </summary>
+        Task<CourseThemePropertiesDto> GetCourseThemeProperties(Guid courseThemeId);
 
         #endregion
 
@@ -65,12 +70,17 @@ namespace ByteCodePlatform.Application.Common.Interfaces.Repositories
         /// <summary>
         /// Вывод всех модулей курса
         /// </summary>
-        Task<List<CourseModuleDto>> GetCourseModulesFromCourse(Guid courseId);
+        Task<List<CourseModuleDto>> GetCourseModulesFromCourse(Guid courseId, bool ignoreFilters = false);
 
         /// <summary>
         /// Изменение модуля курса
         /// </summary>
         Task<CourseModuleDto> UpdateCourseModule(UpdateCourseModuleRequest request);
+        
+        /// <summary>
+        /// Получение свойств модуля
+        /// </summary>
+        Task<CourseModulePropertiesDto> GetCourseModuleProperties(Guid courseModuleId);
 
         #endregion
 
@@ -95,6 +105,11 @@ namespace ByteCodePlatform.Application.Common.Interfaces.Repositories
         /// Изменение контента курса
         /// </summary>
         Task<CourseContentDto> UpdateCourseContent(UpdateCourseContentRequest request);
+        
+        /// <summary>
+        /// Получение свойств с контента курса
+        /// </summary>
+        Task<CourseContentPropertiesDto> GetCourseContentProperties(Guid courseContentId);
 
         #endregion
     }

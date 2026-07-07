@@ -15,8 +15,8 @@ namespace BusinessCardProject.Client.Widgets.courses.theme.course_content
         {
             await base.OnInitializedAsync();
 
-            var request = new GetCourseModulesFromCourseRequest { CourseId = Course.Id };
-            CourseModules = await CourseGrpc.GetCourseModulesFromCourseAsync(request);
+            var request = new GetCourseModulesByCourseIdRequest { CourseId = Course.Id };
+            CourseModules = await CourseGrpc.GetCourseModulesByCourseIdAsync(request);
         }
     }
 }

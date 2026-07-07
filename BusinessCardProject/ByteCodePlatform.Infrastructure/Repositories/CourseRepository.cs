@@ -32,16 +32,16 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
         
-        public Task<CheckGrpcCourseTimingDto> CheckGrpcCourseTiming()
+        public async Task<CheckGrpcCourseTimingDto> CheckGrpcCourseTiming()
         {
             try
             {
                 var dateTimeNow = SystemClock.Instance.GetCurrentInstant();
-                return Task.FromResult(new CheckGrpcCourseTimingDto(dateTimeNow, true, Servicename));
+                return await Task.FromResult(new CheckGrpcCourseTimingDto(dateTimeNow, true, Servicename));
             }
             catch (Exception exception)
             {
-                return Task.FromException<CheckGrpcCourseTimingDto>(exception);
+                return await Task.FromException<CheckGrpcCourseTimingDto>(exception);
             }
         }
 
@@ -76,7 +76,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             return newTheme.GetCourseThemeDto();
         }
 
-        public async Task<List<CourseThemeDto>> GetCourseThemes()
+        public async Task<List<CourseThemeDto>> GetCourseThemes(bool ignoreFilters)
         {
             var themes = await _dbContext.CourseTheme.ToListAsync();
             if (themes.Any(theme => !theme.ThemeFieldProperties.CheckProperties()))
@@ -84,11 +84,21 @@ namespace ByteCodePlatform.Infrastructure.Repositories
                 throw new("Course theme properties are not allowed");
             }
 
-            var orderedThemes = themes.Where(x =>
-                    string.Equals(x.ThemeFieldProperties
-                        .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
-                .OrderBy(x => x.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value)
-                .ThenBy(x => x.CreatedAt).ToList();
+            List<CourseThemeEntity> orderedThemes;
+            if (!ignoreFilters)
+            {
+                orderedThemes = themes.Where(x =>
+                        string.Equals(x.ThemeFieldProperties
+                            .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
+                    .OrderBy(x => int.Parse(x.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
+                    .ThenBy(x => x.CreatedAt).ToList();
+            }
+            else
+            {
+                orderedThemes = themes
+                    .OrderBy(x => int.Parse(x.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
+                    .ThenBy(x => x.CreatedAt).ToList();
+            }
 
             return orderedThemes.GetCourseThemeDtos();
         }
@@ -117,14 +127,35 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             var displayOrder = theme.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder);
             var isFree = theme.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.IsFree);
 
-            isShow?.UpdateValue(request.IsShow?.ToString());
-            displayOrder?.UpdateValue(request.DisplayOrder?.ToString());
-            isFree?.UpdateValue(request.IsFree?.ToString());
+            if (request.IsShow != null)
+            { 
+                isShow?.UpdateValue(request.IsShow?.ToString());
+            }
+
+            if (request.IsFree != null)
+            { 
+                isFree?.UpdateValue(request.IsFree?.ToString());
+            }
+
+            if (request.DisplayOrder != null)
+            { 
+                displayOrder?.UpdateValue(request.DisplayOrder?.ToString());
+            }
 
             _dbContext.CourseTheme.Update(theme);
             await _dbContext.SaveChangesAsync(CancellationToken.None);
 
             return theme.GetCourseThemeDto();
+        }
+
+        public async Task<CourseThemePropertiesDto> GetCourseThemeProperties(Guid courseThemeId)
+        {
+            var courseThemeProperties = await _dbContext.CourseThemeFieldProperty
+                                            .AsNoTracking()
+                                            .Where(x => x.CourseThemeId == courseThemeId)
+                                            .ToListAsync() ??
+                                        throw new Exception("Course theme properties not found");
+            return courseThemeProperties.GetCourseThemePropertiesDto();
         }
 
         #endregion
@@ -157,26 +188,36 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             var orderedModules = modules.Where(x =>
                     string.Equals(x.ModuleFieldProperties
                         .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
-                .OrderBy(x => x.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value)
+                .OrderBy(x => int.Parse(x.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
                 .ThenBy(x => x.CreatedAt).ToList();
 
             return orderedModules.GetCourseModuleDtos();
         }
 
-        public async Task<List<CourseModuleDto>> GetCourseModulesFromCourse(Guid courseId)
+        public async Task<List<CourseModuleDto>> GetCourseModulesFromCourse(Guid courseId, bool ignoreFilters)
         {
             var modules = await _dbContext.CourseModule.Where(x => x.CourseThemeId == courseId).ToListAsync();
             if (modules.Any(module => !module.ModuleFieldProperties.CheckProperties()))
             {
                 throw new("Course module properties are not allowed");
             }
-
-            var orderedModules = modules.Where(x =>
-                    string.Equals(x.ModuleFieldProperties
-                        .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
-                .OrderBy(x => x.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value)
-                .ThenBy(x => x.CreatedAt).ToList();
-
+            
+            List<CourseModuleEntity> orderedModules;
+            if (!ignoreFilters)
+            {
+                orderedModules = modules.Where(x =>
+                        string.Equals(x.ModuleFieldProperties
+                            .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
+                    .OrderBy(x => int.Parse(x.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
+                    .ThenBy(x => x.CreatedAt).ToList();
+            }
+            else
+            {
+                orderedModules = modules
+                    .OrderBy(x => int.Parse(x.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
+                    .ThenBy(x => x.CreatedAt).ToList();
+            }
+            
             return orderedModules.GetCourseModuleDtos();
         }
 
@@ -199,6 +240,16 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
 
             return module.GetCourseModuleDto();
+        }
+
+        public async Task<CourseModulePropertiesDto> GetCourseModuleProperties(Guid courseModuleId)
+        {
+            var courseModuleProperties = await _dbContext.CourseModuleFieldProperty
+                                             .AsNoTracking()
+                                             .Where(x => x.CourseModuleId == courseModuleId)
+                                             .ToListAsync() ??
+                                         throw new Exception("Course module properties not found");
+            return courseModuleProperties.GetCourseModulePropertiesDto();
         }
 
         #endregion
@@ -233,7 +284,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             var orderedContents = contents.Where(x =>
                     string.Equals(x.ContentFieldProperties
                         .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
-                .OrderBy(x => x.ContentFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value)
+                .OrderBy(x => int.Parse(x.ContentFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
                 .ThenBy(x => x.CreatedAt).ToList();
 
             return orderedContents.GetCourseContentDtos();
@@ -250,7 +301,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             var orderedContents = contents.Where(x =>
                     string.Equals(x.ContentFieldProperties
                         .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
-                .OrderBy(x => x.ContentFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value)
+                .OrderBy(x => int.Parse(x.ContentFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
                 .ThenBy(x => x.CreatedAt).ToList();
 
             return orderedContents.GetCourseContentDtos();
@@ -278,6 +329,16 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
 
             return content.GetCourseContentDto();
+        }
+
+        public async Task<CourseContentPropertiesDto> GetCourseContentProperties(Guid courseContentId)
+        {
+            var courseContentProperties = await _dbContext.CourseContentFieldProperty
+                                              .AsNoTracking()
+                                              .Where(x => x.CourseContentId == courseContentId)
+                                              .ToListAsync() ??
+                                          throw new Exception("Course content properties not found");
+            return courseContentProperties.GetCourseContentPropertiesDto();
         }
 
         #endregion

@@ -12,8 +12,8 @@ namespace BusinessCardProject.Client.Pages.course.preview
         {
             await base.OnInitializedAsync();
 
-            var request = new GetCourseThemeRequest { Id = Id.ToString() };
-            CourseThemeInfo = await CourseGrpc.GetCourseThemeAsync(request);
+            var request = new GetCourseThemeByIdRequest { Id = Id.ToString() };
+            CourseThemeInfo = await CourseGrpc.GetCourseThemeByIdAsync(request);
         }
     }
 }

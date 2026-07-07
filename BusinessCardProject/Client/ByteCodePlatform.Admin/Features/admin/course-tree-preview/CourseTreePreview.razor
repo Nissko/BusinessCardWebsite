@@ -1,64 +1,66 @@
-﻿@*<MudPaper Style="width: 50%" Class="mr-2 px-2 py-2" Elevation="1">
-    <MudItem Class="d-flex justify-space-between align-center">
+﻿<MudPaper Style="width: 50%" Class="mr-2 px-2 py-2 mtp-mx-vh-custom" Elevation="1">
+    <div Class="d-flex justify-space-between align-center px-2">
         <MudText Typo="Typo.body1">
-            Тема: @SelectedCt
+            Тема: @CourseTheme?.Name
         </MudText>
-        <MudIconButton Icon="@Icons.Material.Rounded.Add"/>
-    </MudItem>
+
+        @if (string.IsNullOrEmpty(CourseTheme?.Id) && !string.IsNullOrEmpty(SelectedPlId))
+        {
+            <MudIconButton Icon="@Icons.Material.Rounded.Add"
+                           Size="Size.Small"
+                           OnClick="AddNewCourseTheme"/>
+        }
+    </div>
     <MudDivider Class="my-2"/>
-    <MudItem xs="12">
+
+    <div class="px-2">
         <MudTreeView T="string"
                      Hover="true"
                      ExpandOnClick="true">
-            @if (CourseTheme != null && !string.IsNullOrEmpty(SelectedCt))
+            @if (CourseTheme != null && !string.IsNullOrEmpty(CourseTheme?.Name))
             {
-                var selectedTheme = CourseTheme.FirstOrDefault(ctn => ctn.Name == SelectedCt);
-                if (selectedTheme != null && selectedTheme.CourseModules.Any())
+                if (CourseTheme != null && CourseModules != null)
                 {
-                    foreach (var module in selectedTheme.CourseModules.OrderBy(xs => xs.DisplayOrder))
+                    foreach (var module in CourseModules)
                     {
+                        if (!Guid.TryParse(module.Id, out var moduleId)) continue;
+
                         <MudTreeViewItem Text="@module.Name"
                                          TextTypo="Typo.body1"
                                          Class="mb-1"
-                                         Value="@module.Id.ToString()"
-                                         Expanded="@GetModuleExpandedState(module.Id)"
-                                         ExpandedChanged="@((expanded) => OnModuleExpandedChanged(module.Id, expanded))">
-                            @if (module.VideoCourses.Any())
+                                         Value="@module.Id"
+                                         Expanded="@GetModuleExpandedState(moduleId)"
+                                         ExpandedChanged="@((expanded) => OnModuleExpandedChanged(moduleId, expanded))">
+                            @if (_moduleContentsCache.TryGetValue(moduleId, out var moduleVideos))
                             {
-                                foreach (var (videoCourse, index) in module.VideoCourses.Select((v, i) => (v, i)))
+                                var index = 0;
+                                foreach (var videoCourse in moduleVideos)
                                 {
-                                    <MudTreeViewItem Text="@($"Урок {index + 1}. {videoCourse.Name}")"
-                                                     TextTypo="Typo.body1" 
+                                    if (!Guid.TryParse(videoCourse.Id, out var videoId)) continue;
+                                    index++;
+
+                                    <MudTreeViewItem Text="@($"Урок {index}. {videoCourse.Name}")"
+                                                     TextTypo="Typo.body1"
                                                      Class="mt-1 mb-1"
-                                                     Value="@videoCourse.Id.ToString()"
-                                                     Expanded="@GetVideoCourseExpandedState(videoCourse.Id)"
-                                                     ExpandedChanged="@((expanded) => OnVideoCourseExpandedChanged(videoCourse.Id, expanded))">
+                                                     Value="@videoCourse.Id"
+                                                     Expanded="@GetVideoCourseExpandedState(videoId)"
+                                                     ExpandedChanged="@((expanded) => OnVideoCourseExpandedChanged(videoId, expanded))">
                                         <MudGrid Class="pt-4 pb-4 pr-7">
-                                            <MudItem xs="12" md="3">
+                                            <MudItem xs="12" md="12">
                                                 <MudImage Src="images/sweden.jpg"
                                                           Alt="Swedish Farm House"
                                                           Style="width: 100%"
-                                                          Elevation="25" 
+                                                          Elevation="25"
                                                           Class="rounded-lg"/>
-                                            </MudItem>
-                                            <MudItem xs="12" md="9"
-                                                     Class="d-flex flex-column justify-start">
-                                                <MudText Typo="Typo.body1" Class="pb-2">
-                                                    @videoCourse.Description
-                                                </MudText>
                                             </MudItem>
                                         </MudGrid>
                                     </MudTreeViewItem>
                                 }
                             }
-                            else
-                            {
-                                <MudTreeViewItem Text="В разработке!" Disabled="true"/>
-                            }
                         </MudTreeViewItem>
                     }
                 }
-                else if (selectedTheme != null)
+                else if (CourseTheme != null)
                 {
                     <MudAlert Severity="Severity.Info" Variant="Variant.Filled">
                         Карточка пуста, необходимо ее настроить
@@ -66,5 +68,5 @@
                 }
             }
         </MudTreeView>
-    </MudItem>
-</MudPaper>*@
+    </div>
+</MudPaper>

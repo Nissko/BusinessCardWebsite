@@ -5,24 +5,54 @@ html, body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Светлая тема */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #424242;
+    --spinner-color: #4a86ff;
+}
+
+/* Темная тема */
+html[data-theme='true'] {
+    --bg-color: #1a1a27;
+    --text-color: #b2b0bf;
+    --spinner-color: #4a86ff;
+}
+
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
 }
 
-.page{
-    width: 100% !important;
-}
-
 #app {
     display: flex;
     justify-content: center;
-    height: 100vh;
+    align-items: flex-start;
+    min-height: 100vh;
     width: 100%;
     background-color: var(--bg-color);
 }
 
-/* Остальные ваши стили */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 8px solid var(--spinner-color);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s ease-in-out infinite;
+}
+
+/* Текст загрузки */
+.loading-progress-text {
+    margin-left: 16px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 .mud-alert-position {
     align-items: center !important;
 }
@@ -292,4 +322,18 @@ html[data-theme='true'] .btn-dismiss:hover svg {
 
 .mud-button-root .mud-ripple {
     transition: none !important;
+}
+
+.mud-treeview.mud-treeview-selected-primary .mud-treeview-item-content.mud-treeview-item-selected {
+    background-color: transparent !important;
+    color: var(--mud-palette-text-primary) !important;
+}
+.mud-fab-extended.mud-fab-size-large:focus:not(:focus-visible) {
+    background-color: var(--mud-palette-action-default-hover) !important;
+    color: var(--mud-palette-text-primary) !important;
+}
+.mtp-mx-vh-custom{
+    max-height: 80vh;
+    overflow: auto;
+    padding-bottom: 1.5rem;
 }

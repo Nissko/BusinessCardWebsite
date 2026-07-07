@@ -86,7 +86,7 @@ namespace ByteCodePlatform.API.Services
         {
             try
             {
-                var courseThemes = await _courseService.GetCourseThemes();
+                var courseThemes = await _courseService.GetCourseThemes(request.IgnoreFilters);
                 return new()
                 {
                     CourseThemes = { courseThemes.ToProtoCourseThemeInfoList() }
@@ -97,9 +97,9 @@ namespace ByteCodePlatform.API.Services
                 throw new RpcException(new(StatusCode.Aborted, ex.Message));
             }
         }
-
+        
         [AllowAnonymous]
-        public override async Task<CourseThemeInfoResponse> GetCourseTheme(GetCourseThemeRequest request, ServerCallContext context)
+        public override async Task<CourseThemeInfoResponse> GetCourseThemeById(GetCourseThemeByIdRequest request, ServerCallContext context)
         {
             try
             {
@@ -120,11 +120,29 @@ namespace ByteCodePlatform.API.Services
             {
                 double? price = request.HasPrice ? request.Price : null;
                 double? oldPrice = request.HasOldPrice ? request.OldPrice : null;
+                bool? isShow = request.HasIsShow ? request.IsShow : null;
+                bool? isFree = request.HasIsFree ? request.IsFree : null;
+                int? displayOrder = request.HasDisplayOrder ? request.DisplayOrder : null;
 
                 var updateCourseTheme = await _courseService.UpdateCourseTheme(new(request.Id.ToGuid(),
                     request.ProgrammingLanguageId.ToGuidOrNull(), request.Name, request.Description, request.AvatarUrl,
-                    price, oldPrice, request.IsShow, request.DisplayOrder, request.IsFree));
+                    price, oldPrice, isShow, displayOrder, isFree));
                 return updateCourseTheme.ToProtoCourseThemeInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        [Authorize(Roles = UserRoleStaticEnum.Admin)]
+        public override async Task<CourseThemePropertiesResponse> GetCourseThemeProperties(GetCourseThemePropertiesRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var courseThemeProperties = await _courseService
+                    .GetCourseThemeProperties(request.CourseThemeId.ToGuid());
+                return courseThemeProperties.ToProtoGetFieldPropertiesCourseThemeId();
             }
             catch (Exception ex)
             {
@@ -172,11 +190,12 @@ namespace ByteCodePlatform.API.Services
         }
 
         [AllowAnonymous]
-        public override async Task<CourseModulesInfoResponse> GetCourseModulesFromCourse(GetCourseModulesFromCourseRequest request, ServerCallContext context)
+        public override async Task<CourseModulesInfoResponse> GetCourseModulesByCourseId(GetCourseModulesByCourseIdRequest request, ServerCallContext context)
         {
             try
             {
-                var courseModules = await _courseService.GetCourseModulesFromCourse(request.CourseId.ToGuid());
+                var courseModules = await _courseService.GetCourseModulesFromCourse(request.CourseId.ToGuid(),
+                    request.IgnoreFilters);
                 return new()
                 {
                     CourseModules = { courseModules.ToProtoCourseModuleInfoList() }
@@ -194,9 +213,27 @@ namespace ByteCodePlatform.API.Services
         {
             try
             {
+                bool? isShow = request.HasIsShow ? request.IsShow : null;
+                int? displayOrder = request.HasDisplayOrder ? request.DisplayOrder : null;
+                
                 var updateCourseModule = await _courseService.UpdateCourseModule(new(request.Id.ToGuid(),
-                    request.CourseThemeId.ToGuidOrNull(), request.Name, request.IsShow, request.DisplayOrder));
+                    request.CourseThemeId.ToGuidOrNull(), request.Name, isShow, displayOrder));
                 return updateCourseModule.ToProtoCourseModuleInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        [Authorize(Roles = UserRoleStaticEnum.Admin)]
+        public override async Task<CourseModulePropertiesResponse> GetCourseModuleProperties(GetCourseModulePropertiesRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var courseModuleProperties = await _courseService
+                    .GetCourseModuleProperties(request.CourseModuleId.ToGuid());
+                return courseModuleProperties.ToProtoGetFieldPropertiesCourseModuleId();
             }
             catch (Exception ex)
             {
@@ -244,7 +281,7 @@ namespace ByteCodePlatform.API.Services
         }
 
         [AllowAnonymous]
-        public override async Task<CourseContentsInfoResponse> GetCourseContentsFromModuleId(GetCourseContentsFromModuleIdRequest request, ServerCallContext context)
+        public override async Task<CourseContentsInfoResponse> GetCourseContentsByModuleId(GetCourseContentsByModuleIdRequest request, ServerCallContext context)
         {
             try
             {
@@ -266,10 +303,28 @@ namespace ByteCodePlatform.API.Services
         {
             try
             {
+                bool? isShow = request.HasIsShow ? request.IsShow : null;
+                int? displayOrder = request.HasDisplayOrder ? request.DisplayOrder : null;
+                
                 var updateCourseContent = await _courseService.UpdateCourseContent(new(request.Id.ToGuid(),
                     request.CourseModuleId.ToGuidOrNull(), request.Name, request.LinkOnRutube, request.LinkOnVk,
-                    request.LinkOnYoutube, request.ImgUrl, request.IsShow, request.DisplayOrder));
+                    request.LinkOnYoutube, request.ImgUrl, isShow, displayOrder));
                 return updateCourseContent.ToProtoCourseContentInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        [Authorize(Roles = UserRoleStaticEnum.Admin)]
+        public override async Task<CourseContentPropertiesResponse> GetCourseContentProperties(GetCourseContentPropertiesRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var courseContentProperties = await _courseService
+                    .GetCourseContentProperties(request.CourseContentId.ToGuid());
+                return courseContentProperties.ToProtoGetFieldPropertiesCourseContentId();
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
 ﻿using ByteCodePlatform.Admin.Features.admin.dynamic_edit_dialog;
+using CourseService.Proto;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -8,20 +9,32 @@ namespace ByteCodePlatform.Admin.Features.admin.course_module_editor
     {
         [Inject] private IDialogService Dialog { get; set; } = null!;
 
+        [Parameter] public List<CourseModuleInfoResponse>? CourseModules { get; set; }
+        [Parameter] public CourseModulePropertiesResponse? CourseModuleProperties { get; set; }
         [Parameter] public EventCallback OnDataChanged { get; set; }
-        [Parameter] public List<string>? CourseModules { get; set; }
         [Parameter] public Guid? SelectedPreviewCourseModuleId { get; set; }
 
-        private readonly DialogOptions _backdropClick = new() { BackdropClick = false, FullWidth = true };
-
-        private async Task OpenDialogAsync(Guid id, DialogParameters<DynamicEditDialog> parameters, DialogOptions options)
+        private async Task OpenDialogAsync(
+            Guid id,
+            TypeOfEntityType entityType,
+            string fieldName,
+            DynamicInputType inputType,
+            string currentValue,
+            string label)
         {
-            const string typeName = "Редактирование";
-            parameters.Add(x => x.ButtonTextString, "Изменить");
-            parameters.Add(x => x.RecordId, id);
-            parameters.Add(x => x.NameOfApi, TypeOfEntityType.CourseModule);
+            var parameters = new DialogParameters<DynamicEditDialog>
+            {
+                { x => x.RecordId, id },
+                { x => x.EntityType, entityType },
+                { x => x.FieldName, fieldName },
+                { x => x.InputType, inputType },
+                { x => x.InputValueString, currentValue },
+                { x => x.LabelTextString, label },
+                { x => x.ButtonTextString, "Изменить" }
+            };
 
-            var dialogReference = await Dialog.ShowAsync<DynamicEditDialog>(typeName, parameters, options);
+            var options = new DialogOptions { BackdropClick = false, FullWidth = true };
+            var dialogReference = await Dialog.ShowAsync<DynamicEditDialog>("Редактирование", parameters, options);
             var dialogResult = await dialogReference.Result;
 
             if (!dialogResult!.Canceled && OnDataChanged.HasDelegate)

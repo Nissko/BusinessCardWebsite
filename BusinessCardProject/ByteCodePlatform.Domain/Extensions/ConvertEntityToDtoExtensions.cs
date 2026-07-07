@@ -3,6 +3,7 @@ using ByteCodePlatform.Domain.Entities.Course;
 using ByteCodePlatform.Domain.Entities.Course.Content;
 using ByteCodePlatform.Domain.Entities.Course.Module;
 using ByteCodePlatform.Domain.Entities.Course.Theme;
+using ByteCodePlatform.Domain.Enums;
 using Dtos.DTO.Course.Content;
 using Dtos.DTO.Course.Module;
 using Dtos.DTO.Course.ProgramLanguage;
@@ -122,6 +123,20 @@ namespace ByteCodePlatform.Domain.Extensions
         {
             return en.Select(e => new LightCourseThemeDto(e.Id, e.Name)).ToList();
         }
+        
+        public static CourseThemePropertiesDto GetCourseThemePropertiesDto(this List<CourseThemeFieldPropertyEntity> e)
+        {
+            return new CourseThemePropertiesDto(
+                e.Select(x => x.CourseThemeId).FirstOrDefault(),
+                int.TryParse(e.FirstOrDefault(x => x.FieldPropertyTypeId == FieldPropertyTypesEnum.DisplayOrder)?.Value,
+                    out var displayOrder)
+                    ? displayOrder
+                    : 1,
+                bool.TryParse(e.FirstOrDefault(x => x.FieldPropertyTypeId == FieldPropertyTypesEnum.IsShow)?.Value,
+                    out var isShow) && isShow,
+                !bool.TryParse(e.FirstOrDefault(x => x.FieldPropertyTypeId == FieldPropertyTypesEnum.IsFree)?.Value,
+                    out var isFree) || isFree);
+        }
 
         #endregion
 
@@ -160,6 +175,18 @@ namespace ByteCodePlatform.Domain.Extensions
         {
             return en.Select(e => new LightCourseModuleDto(e.Id)).ToList();
         }
+        
+        public static CourseModulePropertiesDto GetCourseModulePropertiesDto(this List<CourseModuleFieldPropertyEntity> e)
+        {
+            return new CourseModulePropertiesDto(
+                e.Select(x => x.CourseModuleId).FirstOrDefault(),
+                int.TryParse(e.FirstOrDefault(x => x.FieldPropertyTypeId == FieldPropertyTypesEnum.DisplayOrder)?.Value,
+                    out var displayOrder)
+                    ? displayOrder
+                    : 1,
+                bool.TryParse(e.FirstOrDefault(x => x.FieldPropertyTypeId == FieldPropertyTypesEnum.IsShow)?.Value,
+                    out var isShow) && isShow);
+        }
 
         #endregion
 
@@ -194,6 +221,18 @@ namespace ByteCodePlatform.Domain.Extensions
                 e.UpdatedAt ?? null,
                 e.CourseModule.GetLightCourseModuleDto()
             )).ToList();
+        }
+        
+        public static CourseContentPropertiesDto GetCourseContentPropertiesDto(this List<CourseContentFieldPropertyEntity> e)
+        {
+            return new CourseContentPropertiesDto(
+                e.Select(x => x.CourseContentId).FirstOrDefault(),
+                int.TryParse(e.FirstOrDefault(x => x.FieldPropertyTypeId == FieldPropertyTypesEnum.DisplayOrder)?.Value,
+                    out var displayOrder)
+                    ? displayOrder
+                    : 1,
+                bool.TryParse(e.FirstOrDefault(x => x.FieldPropertyTypeId == FieldPropertyTypesEnum.IsShow)?.Value,
+                    out var isShow) && isShow);
         }
 
         #endregion

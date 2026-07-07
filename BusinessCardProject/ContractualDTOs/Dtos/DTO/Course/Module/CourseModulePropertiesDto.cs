@@ -1,0 +1,7 @@
+﻿namespace Dtos.DTO.Course.Module
+{
+    public record CourseModulePropertiesDto(
+        Guid CourseModuleId,
+        int DisplayOrder,
+        bool IsShow);
+}

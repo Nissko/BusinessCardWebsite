@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ByteCodePlatform.Admin.Entities.Services.ProjectInfo.Interfaces;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace ByteCodePlatform.Admin.Features.admin.dynamic_edit_dialog
@@ -6,12 +7,13 @@ namespace ByteCodePlatform.Admin.Features.admin.dynamic_edit_dialog
     public partial class DynamicEditDialog : ComponentBase
     {
         [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
-        //[Inject] private ICoreBaseService CoreBaseService { get; set; } = null!;
+        [Inject] private IEntityUpdateService UpdateService { get; set; } = null!;
+        [Inject] private ISnackbar Snackbar { get; set; } = null!;
 
         [Parameter, EditorRequired] public string LabelTextString { get; set; } = string.Empty;
         [Parameter, EditorRequired] public Guid RecordId { get; set; }
-        [Parameter, EditorRequired] public TypeOfEntityType NameOfApi { get; set; }
-        [Parameter, EditorRequired] public string NameOfApiKey { get; set; } = string.Empty;
+        [Parameter, EditorRequired] public TypeOfEntityType EntityType { get; set; }
+        [Parameter, EditorRequired] public string FieldName { get; set; } = string.Empty;
         [Parameter, EditorRequired] public string ButtonTextString { get; set; } = string.Empty;
         [Parameter, EditorRequired] public DynamicInputType InputType { get; set; }
         [Parameter, EditorRequired] public string InputValueString { get; set; } = string.Empty;
@@ -39,27 +41,44 @@ namespace ByteCodePlatform.Admin.Features.admin.dynamic_edit_dialog
         {
             if (_isLoading) return;
 
-            var valueToSend = InputType switch
+            // Определяем значение для отправки
+            object? valueToSend = InputType switch
             {
-                DynamicInputType.Number => _currentNumberValue?.ToString(),
-                DynamicInputType.Boolean => _currentBoolValue,
+                DynamicInputType.Number => _currentNumberValue,
+                DynamicInputType.Boolean => bool.TryParse(_currentBoolValue, out var b) ? b : null,
                 _ => InputValueString
             };
 
-            if (string.IsNullOrEmpty(valueToSend) && InputType != DynamicInputType.Boolean)
-                return;
+            // Валидация
+            if (valueToSend == null || (valueToSend is string s && string.IsNullOrEmpty(s)))
+            {
+                if (InputType != DynamicInputType.Boolean)
+                {
+                    Snackbar.Add("Значение не должно быть пустым", Severity.Warning);
+                    return;
+                }
+            }
 
             _isLoading = true;
             StateHasChanged();
 
             try
             {
-                /*TODO: Переделать*/
-                /*var payload = new DynamicClassDto(RecordId, NameOfApi.ToString(), NameOfApiKey, valueToSend!);
-                var success = await CoreBaseService.DynamicUpdateAsync(payload);*/
+                var success = await UpdateService.UpdateFieldAsync(EntityType, RecordId, FieldName, valueToSend);
 
-                /*if (success)
-                    MudDialog.Close(DialogResult.Ok(true));*/
+                if (success)
+                {
+                    Snackbar.Add("Изменения сохранены", Severity.Success);
+                    MudDialog.Close(DialogResult.Ok(true));
+                }
+                else
+                {
+                    Snackbar.Add("Ошибка при сохранении", Severity.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Ошибка: {ex.Message}", Severity.Error);
             }
             finally
             {
