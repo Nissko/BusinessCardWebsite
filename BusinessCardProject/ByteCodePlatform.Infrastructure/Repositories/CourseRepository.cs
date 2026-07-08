@@ -31,7 +31,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
-        
+
         public async Task<CheckGrpcCourseTimingDto> CheckGrpcCourseTiming()
         {
             try
@@ -46,7 +46,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
         }
 
         #region ProgrammingLanguage
-        
+
         public async Task<List<ProgrammingLanguageDto>> GetProgrammingLanguages()
         {
             var programmingLanguages = await _dbContext.ProgrammingLanguageCategory.ToListAsync();
@@ -56,7 +56,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
         #endregion
 
         #region CourseTheme
-        
+
         public async Task<CourseThemeDto> AddCourseTheme(CreateCourseThemeRequest request)
         {
             var programLanguage = await _dbContext.ProgrammingLanguageCategory
@@ -89,14 +89,17 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             {
                 orderedThemes = themes.Where(x =>
                         string.Equals(x.ThemeFieldProperties
-                            .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
-                    .OrderBy(x => int.Parse(x.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
+                                .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true",
+                            StringComparison.InvariantCultureIgnoreCase))
+                    .OrderBy(x =>
+                        int.Parse(x.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
                     .ThenBy(x => x.CreatedAt).ToList();
             }
             else
             {
                 orderedThemes = themes
-                    .OrderBy(x => int.Parse(x.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
+                    .OrderBy(x =>
+                        int.Parse(x.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
                     .ThenBy(x => x.CreatedAt).ToList();
             }
 
@@ -128,17 +131,17 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             var isFree = theme.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.IsFree);
 
             if (request.IsShow != null)
-            { 
+            {
                 isShow?.UpdateValue(request.IsShow?.ToString());
             }
 
             if (request.IsFree != null)
-            { 
+            {
                 isFree?.UpdateValue(request.IsFree?.ToString());
             }
 
             if (request.DisplayOrder != null)
-            { 
+            {
                 displayOrder?.UpdateValue(request.DisplayOrder?.ToString());
             }
 
@@ -187,8 +190,10 @@ namespace ByteCodePlatform.Infrastructure.Repositories
 
             var orderedModules = modules.Where(x =>
                     string.Equals(x.ModuleFieldProperties
-                        .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
-                .OrderBy(x => int.Parse(x.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
+                            .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true",
+                        StringComparison.InvariantCultureIgnoreCase))
+                .OrderBy(x =>
+                    int.Parse(x.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
                 .ThenBy(x => x.CreatedAt).ToList();
 
             return orderedModules.GetCourseModuleDtos();
@@ -201,23 +206,28 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             {
                 throw new("Course module properties are not allowed");
             }
-            
+
             List<CourseModuleEntity> orderedModules;
             if (!ignoreFilters)
             {
                 orderedModules = modules.Where(x =>
                         string.Equals(x.ModuleFieldProperties
-                            .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
-                    .OrderBy(x => int.Parse(x.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
+                                .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true",
+                            StringComparison.InvariantCultureIgnoreCase))
+                    .OrderBy(x =>
+                        int.Parse(x.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ??
+                                  ""))
                     .ThenBy(x => x.CreatedAt).ToList();
             }
             else
             {
                 orderedModules = modules
-                    .OrderBy(x => int.Parse(x.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
+                    .OrderBy(x =>
+                        int.Parse(x.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ??
+                                  ""))
                     .ThenBy(x => x.CreatedAt).ToList();
             }
-            
+
             return orderedModules.GetCourseModuleDtos();
         }
 
@@ -283,26 +293,45 @@ namespace ByteCodePlatform.Infrastructure.Repositories
 
             var orderedContents = contents.Where(x =>
                     string.Equals(x.ContentFieldProperties
-                        .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
-                .OrderBy(x => int.Parse(x.ContentFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
+                            .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true",
+                        StringComparison.InvariantCultureIgnoreCase))
+                .OrderBy(x =>
+                    int.Parse(x.ContentFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
                 .ThenBy(x => x.CreatedAt).ToList();
 
             return orderedContents.GetCourseContentDtos();
         }
 
-        public async Task<List<CourseContentDto>> GetCourseContentsFromModuleId(Guid moduleId)
+        public async Task<List<CourseContentDto>> GetCourseContentsFromModuleId(Guid moduleId, bool ignoreFilters)
         {
-            var contents = await _dbContext.CourseContent.Where(x=>x.CourseModuleId == moduleId).ToListAsync();
+            var contents = await _dbContext.CourseContent
+                .Where(x => x.CourseModuleId == moduleId)
+                .ToListAsync();
             if (contents.Any(theme => !theme.ContentFieldProperties.CheckProperties()))
             {
                 throw new("Course content properties are not allowed");
             }
 
-            var orderedContents = contents.Where(x =>
-                    string.Equals(x.ContentFieldProperties
-                        .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true", StringComparison.InvariantCultureIgnoreCase))
-                .OrderBy(x => int.Parse(x.ContentFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
-                .ThenBy(x => x.CreatedAt).ToList();
+            List<CourseContentEntity> orderedContents;
+            if (!ignoreFilters)
+            {
+                orderedContents = contents.Where(x =>
+                        string.Equals(x.ContentFieldProperties
+                                .GetProperty(FieldPropertyTypesEnum.IsShow)?.Value, "true",
+                            StringComparison.InvariantCultureIgnoreCase))
+                    .OrderBy(x =>
+                        int.Parse(
+                            x.ContentFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
+                    .ThenBy(x => x.CreatedAt).ToList();
+            }
+            else
+            {
+                orderedContents = contents
+                    .OrderBy(x =>
+                        int.Parse(
+                            x.ContentFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder)?.Value ?? ""))
+                    .ThenBy(x => x.CreatedAt).ToList();
+            }
 
             return orderedContents.GetCourseContentDtos();
         }

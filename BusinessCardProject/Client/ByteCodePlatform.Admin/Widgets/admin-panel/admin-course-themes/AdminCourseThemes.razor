@@ -32,7 +32,8 @@
         </MudItem>
 
         <MudItem Style="padding-left: 6px !important;" xs="12" md="12" Class="d-flex">
-            <CourseTreePreview CourseTheme="@_selectedCourseTheme"
+            <CourseTreePreview @ref="_courseTreePreviewRef"
+                               CourseTheme="@_selectedCourseTheme"
                                CourseModules="@_courseModules"
                                SelectedPlId="@_selectedPlId"
                                SelectedCtId="@_selectedCtId"
@@ -64,7 +65,7 @@
                         <MudFab StartIcon="@Icons.Material.Rounded.Add"
                                 Label="Добавить"
                                 DropShadow="false"
-                                OnClick="AddNewModule"/>
+                                OnClick="AddNewCourseModule"/>
                     }
                     else if (_selectedCtId == Guid.Empty && string.IsNullOrEmpty(_selectedCtText))
                     {
@@ -88,7 +89,8 @@
                     {
                         <MudFab StartIcon="@Icons.Material.Rounded.Add"
                                 Label="Добавить"
-                                DropShadow="false"/>
+                                DropShadow="false"
+                                OnClick="AddNewCourseContent"/>
                     }
                     else if (_selectedModulePreviewId == Guid.Empty && !string.IsNullOrEmpty(_selectedCtText))
                     {

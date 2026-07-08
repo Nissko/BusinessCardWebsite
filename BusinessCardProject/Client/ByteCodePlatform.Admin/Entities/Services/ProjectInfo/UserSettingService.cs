@@ -37,8 +37,6 @@ namespace ByteCodePlatform.Admin.Entities.Services.ProjectInfo
             }
             catch (Exception ex)
             {
-                // Логирование ошибки (если есть логгер)
-                Console.WriteLine($"Failed to load preferences: {ex.Message}");
                 Settings = new();
             }
         }

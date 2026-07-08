@@ -99,7 +99,7 @@ namespace ByteCodePlatform.Application.Common.Interfaces.Repositories
         /// <summary>
         /// Вывод контента модуля
         /// </summary>
-        Task<List<CourseContentDto>> GetCourseContentsFromModuleId(Guid moduleId);
+        Task<List<CourseContentDto>> GetCourseContentsFromModuleId(Guid moduleId, bool ignoreFilters = false);
 
         /// <summary>
         /// Изменение контента курса

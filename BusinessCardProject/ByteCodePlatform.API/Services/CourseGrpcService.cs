@@ -285,7 +285,8 @@ namespace ByteCodePlatform.API.Services
         {
             try
             {
-                var courseContents = await _courseService.GetCourseContentsFromModuleId(request.ModuleId.ToGuid());
+                var courseContents = await _courseService
+                    .GetCourseContentsFromModuleId(request.ModuleId.ToGuid(), request.IgnoreFilters);
                 return new()
                 {
                     CourseContents = { courseContents.ToProtoCourseContentInfoList() }
