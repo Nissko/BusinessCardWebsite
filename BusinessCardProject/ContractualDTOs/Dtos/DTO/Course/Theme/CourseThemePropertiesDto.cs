@@ -4,5 +4,6 @@
         Guid CourseThemeId, 
         int DisplayOrder,
         bool IsShow,
-        bool IsFree);
+        bool IsFree,
+        bool IsDiscount);
 }

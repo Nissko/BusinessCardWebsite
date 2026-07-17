@@ -1,29 +1,48 @@
-﻿@using BusinessCardProject.Client.Entities.Services.ProjectInfo.Entity
-@using BusinessCardProject.Client.Features.auth_menu
+﻿@using BusinessCardProject.Client.Features.auth_menu
 @using BusinessCardProject.Client.Features.toggle_theme
+@using BusinessCardProject.Client.Widgets.header.logos
 
 <MudAppBar Elevation="0">
-    <MudIconButton Icon="@Icons.Material.Rounded.Menu" 
-                   Color="Color.Inherit" 
-                   Edge="Edge.Start"
-                   OnClick="@ToggleDrawer"/>
-                   
-    <MudLink Href="" Underline="Underline.None">
-        <MudText Typo="Typo.h4" Class="mr-3" Style="font-weight: bold" Color="@HeaderColor">
-            @ProjectInfoGlobalEntity.ProjectName.ToUpperInvariant()
-        </MudText>
+    @if (!_showHeaderButtons)
+    {
+        <MudIconButton Icon="@Icons.Material.Rounded.Menu"
+                       Color="Color.Inherit"
+                       Edge="Edge.Start"
+                       OnClick="@ToggleDrawer"/>
+    }
+
+    <MudLink Href="" Underline="Underline.None"
+             Class="d-flex align-content-center justify-content-center">
+        <MainLogo IsDark="UserSettingService.Settings.IsDark"/>
     </MudLink>
-    
-    @*TODO: Доработать верхнее меню + сделать боковое*@
+
     @if (_showHeaderButtons)
     {
-        <MudButton Color="Color.Error" Variant="Variant.Filled" >
-            Тестовая кнопка
+        /* Кнопки в верхнем меню, при широком экране */
+        <MudButton Color="Color.Info" Href="/courses">
+            Курсы
+        </MudButton>
+
+        /*TODO: Включить после доработки*/
+        <MudTooltip Text="В разработке"
+                    Placement="Placement.Bottom">
+            <MudButton Disabled="true" Color="Color.Info" Href="/project-news">
+                Новости
+            </MudButton>
+        </MudTooltip>
+
+        <MudButton Color="Color.Info" Href="/donation-project">
+            Поддержка
         </MudButton>
     }
-    
+
     <MudSpacer/>
+
+    @*TODO: добавить ThemeToggle в настройки*@
+    @if (_showHeaderButtons)
+    {
+        <ThemeToggle/>
+    }
     
-    <ThemeToggle />
-    <UserMenu />
+    <UserMenu/>
 </MudAppBar>

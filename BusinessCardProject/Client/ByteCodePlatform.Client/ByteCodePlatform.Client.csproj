@@ -54,5 +54,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
   </ItemGroup>
+  
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\BasePages\DonationPage\Donation2.razor" />
+  </ItemGroup>
 
 </Project>

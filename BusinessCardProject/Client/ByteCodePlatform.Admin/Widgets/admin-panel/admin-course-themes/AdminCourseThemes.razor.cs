@@ -1,4 +1,6 @@
 ﻿using ByteCodePlatform.Admin.Entities.Services.ProjectInfo.Enums;
+using ByteCodePlatform.Admin.Entities.Services.ProjectInfo.EventArgs;
+using ByteCodePlatform.Admin.Features.admin.course_tree_preview;
 using CourseService.Proto;
 using Microsoft.AspNetCore.Components;
 
@@ -39,6 +41,7 @@ namespace ByteCodePlatform.Admin.Widgets.admin_panel.admin_course_themes
 
         // Для кэша дубликатов имён тем
         private HashSet<string> _duplicateCourseThemeNamesCache = new();
+        private CourseTreePreview? _courseTreePreviewRef;
 
         protected override async Task OnInitializedAsync()
         {
@@ -206,6 +209,11 @@ namespace ByteCodePlatform.Admin.Widgets.admin_panel.admin_course_themes
             }
 
             await UpdateProperties();
+            /*Для очистки кэша видео контента*/
+            if (_courseTreePreviewRef != null)
+            {
+                _courseContents = await _courseTreePreviewRef.RefreshExpandedModuleAsync();
+            }
         }
 
         /// <summary>
@@ -213,7 +221,10 @@ namespace ByteCodePlatform.Admin.Widgets.admin_panel.admin_course_themes
         /// </summary>
         private async Task HandleCourseThemeCreated(Guid newCourseThemeId)
         {
+            _selectedModulePreviewId = Guid.Empty;
+            _selectedVideoCoursePreviewId = Guid.Empty;
             _selectedCtId = newCourseThemeId;
+            
             await RefreshDataAsync();
         }
 
@@ -234,14 +245,14 @@ namespace ByteCodePlatform.Admin.Widgets.admin_panel.admin_course_themes
         /// <summary>
         /// Логика выбора контента (видео)
         /// </summary>
-        private async Task HandleVideoCourseItemSelected(Guid selectedId)
+        private async Task HandleVideoCourseItemSelected(VideoCourseSelectedEventArgs contentSelected)
         {
-            _selectedVideoCoursePreviewId = selectedId;
-
+            _selectedVideoCoursePreviewId = contentSelected.CourseId;
+            _courseContents = contentSelected.CourseContents;
             _courseContentProperties = await CourseService.GetCourseContentPropertiesAsync(
                 new GetCourseContentPropertiesRequest
                 {
-                    CourseContentId = selectedId.ToString()
+                    CourseContentId = _selectedVideoCoursePreviewId.ToString()
                 });
         }
 
@@ -252,20 +263,25 @@ namespace ByteCodePlatform.Admin.Widgets.admin_panel.admin_course_themes
         {
             if (_selectedCtId == Guid.Empty) return;
 
-            var themeRequest = CourseService.GetCourseThemePropertiesAsync(
-                new GetCourseThemePropertiesRequest { CourseThemeId = _selectedCtId.ToString() }).ResponseAsync;
+            var courseThemeRequest = CourseService.GetCourseThemePropertiesAsync(
+                new GetCourseThemePropertiesRequest
+                {
+                    CourseThemeId = _selectedCtId.ToString()
+                }
+            ).ResponseAsync;
 
-            var modulesRequest = CourseService.GetCourseModulesByCourseIdAsync(
+            var courseModulesRequest = CourseService.GetCourseModulesByCourseIdAsync(
                 new GetCourseModulesByCourseIdRequest
                 {
                     CourseId = _selectedCtId.ToString(),
                     IgnoreFilters = true
-                }).ResponseAsync;
+                }
+            ).ResponseAsync;
 
-            await Task.WhenAll(themeRequest, modulesRequest);
+            await Task.WhenAll(courseThemeRequest, courseModulesRequest);
 
-            _courseThemeProperties = themeRequest.Result;
-            _courseModules = modulesRequest.Result.CourseModules.ToList();
+            _courseThemeProperties = courseThemeRequest.Result;
+            _courseModules = courseModulesRequest.Result.CourseModules.ToList();
 
             if (_selectedModulePreviewId != Guid.Empty)
             {
@@ -275,12 +291,21 @@ namespace ByteCodePlatform.Admin.Widgets.admin_panel.admin_course_themes
                         CourseModuleId = _selectedModulePreviewId.ToString()
                     });
             }
+
+            if (_selectedVideoCoursePreviewId != Guid.Empty)
+            {
+                _courseContentProperties = await CourseService.GetCourseContentPropertiesAsync(
+                    new GetCourseContentPropertiesRequest
+                    {
+                        CourseContentId = _selectedVideoCoursePreviewId.ToString()
+                    });
+            }
         }
 
         /// <summary>
         /// Логика добавления нового модуля
         /// </summary>
-        private async Task AddNewModule()
+        private async Task AddNewCourseModule()
         {
             var newCourseModuleResponse = await CourseService.AddCourseModuleAsync(new AddCourseModuleRequest
             {
@@ -289,6 +314,27 @@ namespace ByteCodePlatform.Admin.Widgets.admin_panel.admin_course_themes
             });
 
             if (newCourseModuleResponse.Success) await UpdateProperties();
+        }
+
+        private async Task AddNewCourseContent()
+        {
+            var newCourseContentResponse = await CourseService.AddCourseContentAsync(new AddCourseContentRequest
+            {
+                Name = $"Новый видеокурс {_courseContents?.Count + 1}",
+                CourseModuleId =  _selectedModulePreviewId.ToString(),
+                ImgUrl = "Укажите ссылку на изображение",
+                LinkOnRutube = "Укажите ссылку на RuTube",
+                LinkOnVk = "Укажите ссылку на Vk Видео",
+                LinkOnYoutube = "Укажите ссылку на YouTube"
+            });
+
+            if (newCourseContentResponse.Success) await UpdateProperties();
+
+            /*Для очистки кэша видео контента*/
+            if (_courseTreePreviewRef != null)
+            {
+                _courseContents = await _courseTreePreviewRef.RefreshExpandedModuleAsync();
+            }
         }
     }
 }

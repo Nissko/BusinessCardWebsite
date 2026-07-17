@@ -104,7 +104,8 @@
                                         _backdropClick))"/>
         </MudItem>*@
 
-        /*TODO: Продумать и доработать по ЯП*/
+        /*TODO: Продумать и доработать по ЯП (Возможно админ будет видеть все,
+         а вот авторам будет даваться доступ на определенные темы)*/
         @*<MudItem Class="mb-2 d-flex justify-space-between align-center">
             <MudText Class="mb-2"
                      Style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
@@ -176,6 +177,21 @@
                                         DynamicInputType.Boolean,
                                         SelectedCtProperties.IsFree.ToString(),
                                         "Бесплатный"))"/>
+        </MudItem>
+        
+        <MudItem Class="mb-2 d-flex justify-space-between align-center">
+            <MudText>
+                <b>Скидка</b>:
+                <ul>@(SelectedCtProperties.IsDiscount ? "Да" : "Нет")</ul>
+            </MudText>
+            <MudIconButton Icon="@Icons.Material.Rounded.Edit"
+                           OnClick="@(() => OpenDialogAsync(
+                                        Guid.Parse(selectedTheme.Id),
+                                        TypeOfEntityType.CourseThemes,
+                                        "IsDiscount",
+                                        DynamicInputType.Boolean,
+                                        SelectedCtProperties.IsDiscount.ToString(),
+                                        "Скидка"))"/>
         </MudItem>
     }
 }

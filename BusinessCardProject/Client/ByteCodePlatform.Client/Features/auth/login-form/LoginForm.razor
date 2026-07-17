@@ -15,7 +15,7 @@
                           Label="Email"
                           Variant="Variant.Outlined"
                           Margin="Margin.Dense"
-                          Icon="@Icons.Material.Filled.Email"
+                          Icon="@Icons.Material.Rounded.Email"
                           @onkeydown="HandleEnter"/>
 
             <MudTextField @bind-Value="_model.Password"
@@ -24,10 +24,10 @@
                           Label="Пароль"
                           Variant="Variant.Outlined"
                           Margin="Margin.Dense"
-                          Icon="@Icons.Material.Filled.Lock"
+                          Icon="@Icons.Material.Rounded.Lock"
                           InputType="InputType.Password"
-                          PasswordRevealIcon="Icons.Material.Filled.Visibility"
-                          PasswordRevealIconActive="Icons.Material.Filled.VisibilityOff"
+                          PasswordRevealIcon="Icons.Material.Rounded.Visibility"
+                          PasswordRevealIconActive="Icons.Material.Rounded.VisibilityOff"
                           @onkeydown="HandleEnter"/>
 
             @if (!string.IsNullOrEmpty(_errorMessage))

@@ -1,13 +1,13 @@
 ﻿@using BusinessCardProject.Client.Widgets.courses.course_card_skeleton
 @using BusinessCardProject.Client.Widgets.courses.course_card
 
-<MudGrid Class="mt-8">
+<MudGrid>
     @if (_courses != null)
     {
         @foreach (var course in _courses)
         {
             <MudItem xs="12" sm="6" md="4">
-                <CourseCard Course="course" OnCourseSelected="@OnCourseSelected" />
+                <CourseCard Course="course" CourseThemeProperties="_courseThemeProperties" OnCourseSelected="@OnCourseSelected" />
             </MudItem>
         }
     }

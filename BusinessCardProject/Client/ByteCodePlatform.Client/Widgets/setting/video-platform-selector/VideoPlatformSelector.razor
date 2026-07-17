@@ -1,32 +1,41 @@
-﻿<MudItem Class="d-flex justify-space-between align-center px-2 py-2 h-100"
-         Style="min-height: 74px;">
-    <MudSwitch T="bool"
-               Style="user-select: none;"
-               Value="@_isYouTubeSelected"
-               ValueChanged="@(v => OnPlatformChanged(0, v))"
-               LabelPlacement="@Placement"
-               Color="Color.Success"
-               UncheckedColor="Color.Error">
-        <MudText Typo="Typo.caption">YouTube</MudText>
-    </MudSwitch>
+﻿<MudStack Spacing="3">
+    <MudPaper Elevation="0" Class="rounded-lg pa-3 d-flex align-center justify-space-between" 
+              Style="background-color: var(--mud-palette-surface); border: 1px solid var(--mud-palette-divider);">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <MudIcon Icon="@Icons.Custom.Brands.YouTube" Color="Color.Error" Size="Size.Medium" />
+            <MudText Typo="Typo.body1" Class="font-weight-medium">YouTube</MudText>
+        </MudStack>
+        <MudSwitch T="bool"
+                   Value="@_isYouTubeSelected"
+                   ValueChanged="@(v => OnPlatformChanged(0, v))"
+                   Color="Color.Success"
+                   UncheckedColor="Color.Default" />
+    </MudPaper>
 
-    <MudSwitch T="bool"
-               Style="user-select: none;"
-               Value="@_isRuTubeSelected"
-               ValueChanged="@(v => OnPlatformChanged(1, v))"
-               LabelPlacement="@Placement"
-               Color="Color.Success"
-               UncheckedColor="Color.Error">
-        <MudText Typo="Typo.caption">RuTube</MudText>
-    </MudSwitch>
+    <MudPaper Elevation="0" Class="rounded-lg pa-3 d-flex align-center justify-space-between" 
+              Style="background-color: var(--mud-palette-surface); border: 1px solid var(--mud-palette-divider);">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            @* <MudIcon Icon="@Icons.Material.Rounded.PlayArrow" Color="Color.Primary" Size="Size.Medium" /> *@
+            <MudImage Src="images/custom-icons/rutube_128x128.svg" Alt="Rutube Icon" Height="24" Width="24" />
+            <MudText Typo="Typo.body1" Class="font-weight-medium">RuTube</MudText>
+        </MudStack>
+        <MudSwitch T="bool"
+                   Value="@_isRuTubeSelected"
+                   ValueChanged="@(v => OnPlatformChanged(1, v))"
+                   Color="Color.Success"
+                   UncheckedColor="Color.Default" />
+    </MudPaper>
 
-    <MudSwitch T="bool"
-               Style="user-select: none;"
-               Value="@_isVkVideoSelected"
-               ValueChanged="@(v => OnPlatformChanged(2, v))"
-               LabelPlacement="@Placement"
-               Color="Color.Success"
-               UncheckedColor="Color.Error">
-        <MudText Typo="Typo.caption">VK Видео</MudText>
-    </MudSwitch>
-</MudItem>
+    <MudPaper Elevation="0" Class="rounded-lg pa-3 d-flex align-center justify-space-between" 
+              Style="background-color: var(--mud-palette-surface); border: 1px solid var(--mud-palette-divider);">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <MudImage Src="images/custom-icons/vk-video.svg" Alt="VkVideo Icon" Height="24" Width="24" />
+            <MudText Typo="Typo.body1" Class="font-weight-medium">VK Видео</MudText>
+        </MudStack>
+        <MudSwitch T="bool"
+                   Value="@_isVkVideoSelected"
+                   ValueChanged="@(v => OnPlatformChanged(2, v))"
+                   Color="Color.Success"
+                   UncheckedColor="Color.Default" />
+    </MudPaper>
+</MudStack>

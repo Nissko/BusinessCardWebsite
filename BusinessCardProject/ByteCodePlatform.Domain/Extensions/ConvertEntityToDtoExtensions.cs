@@ -135,7 +135,9 @@ namespace ByteCodePlatform.Domain.Extensions
                 bool.TryParse(e.FirstOrDefault(x => x.FieldPropertyTypeId == FieldPropertyTypesEnum.IsShow)?.Value,
                     out var isShow) && isShow,
                 !bool.TryParse(e.FirstOrDefault(x => x.FieldPropertyTypeId == FieldPropertyTypesEnum.IsFree)?.Value,
-                    out var isFree) || isFree);
+                    out var isFree) || isFree,
+                bool.TryParse(e.FirstOrDefault(x => x.FieldPropertyTypeId == FieldPropertyTypesEnum.IsDiscount)?.Value,
+                    out var isDiscount) && isDiscount);
         }
 
         #endregion

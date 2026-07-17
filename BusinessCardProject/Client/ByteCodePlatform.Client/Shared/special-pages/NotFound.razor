@@ -1,0 +1,32 @@
+﻿@inject NavigationManager NavigationManager
+
+<MudContainer Class="d-flex flex-column align-center justify-center text-center not-found-container"
+              Style="min-height: 80vh;">
+    
+    <MudText Typo="Typo.h1" Class="mt-4"
+             Style="font-weight: 800; font-size: 8rem; line-height: 1; color: var(--mud-palette-primary);">
+        404
+    </MudText>
+
+    <MudText Typo="Typo.h5" Align="Align.Center" Class="mt-2" Color="Color.Secondary">
+        К сожалению, на этой странице ничего нет &#9785;
+    </MudText>
+
+    <MudText Typo="Typo.body1" Align="Align.Center" Class="mt-2" Style="max-width: 400px; opacity: 0.8;">
+        Возможно, она была удалена, перемещена или в адресе закралась опечатка.
+    </MudText>
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Class="mt-6" OnClick="GoHome">
+        <MudIcon Icon="@Icons.Material.Rounded.Home" Class="mr-2"/>
+        На главную
+    </MudButton>
+</MudContainer>
+
+@code {
+
+    private void GoHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+}

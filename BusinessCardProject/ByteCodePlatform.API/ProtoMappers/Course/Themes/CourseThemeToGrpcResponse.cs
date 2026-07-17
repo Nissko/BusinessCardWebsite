@@ -61,7 +61,8 @@ namespace ByteCodePlatform.API.ProtoMappers.Course.Themes
                 CourseThemeId = dto.CourseThemeId.ToString(),
                 DisplayOrder = dto.DisplayOrder,
                 IsShow = dto.IsShow,
-                IsFree = dto.IsFree
+                IsFree = dto.IsFree,
+                IsDiscount = dto.IsDiscount
             };
         }
         

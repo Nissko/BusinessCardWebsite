@@ -122,11 +122,12 @@ namespace ByteCodePlatform.API.Services
                 double? oldPrice = request.HasOldPrice ? request.OldPrice : null;
                 bool? isShow = request.HasIsShow ? request.IsShow : null;
                 bool? isFree = request.HasIsFree ? request.IsFree : null;
+                bool? isDiscount = request.HasIsDiscount ? request.IsDiscount : null;
                 int? displayOrder = request.HasDisplayOrder ? request.DisplayOrder : null;
 
                 var updateCourseTheme = await _courseService.UpdateCourseTheme(new(request.Id.ToGuid(),
                     request.ProgrammingLanguageId.ToGuidOrNull(), request.Name, request.Description, request.AvatarUrl,
-                    price, oldPrice, isShow, displayOrder, isFree));
+                    price, oldPrice, isShow, displayOrder, isFree, isDiscount));
                 return updateCourseTheme.ToProtoCourseThemeInfo();
             }
             catch (Exception ex)
@@ -135,7 +136,7 @@ namespace ByteCodePlatform.API.Services
             }
         }
 
-        [Authorize(Roles = UserRoleStaticEnum.Admin)]
+        [AllowAnonymous]
         public override async Task<CourseThemePropertiesResponse> GetCourseThemeProperties(GetCourseThemePropertiesRequest request, ServerCallContext context)
         {
             try
@@ -285,7 +286,8 @@ namespace ByteCodePlatform.API.Services
         {
             try
             {
-                var courseContents = await _courseService.GetCourseContentsFromModuleId(request.ModuleId.ToGuid());
+                var courseContents = await _courseService
+                    .GetCourseContentsFromModuleId(request.ModuleId.ToGuid(), request.IgnoreFilters);
                 return new()
                 {
                     CourseContents = { courseContents.ToProtoCourseContentInfoList() }

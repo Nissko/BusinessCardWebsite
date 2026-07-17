@@ -1,4 +1,5 @@
-﻿using CourseService.Proto;
+﻿using ByteCodePlatform.Admin.Entities.Services.ProjectInfo.EventArgs;
+using CourseService.Proto;
 using Microsoft.AspNetCore.Components;
 
 namespace ByteCodePlatform.Admin.Features.admin.course_tree_preview
@@ -47,7 +48,7 @@ namespace ByteCodePlatform.Admin.Features.admin.course_tree_preview
         /// Событие при выборе контента курса
         /// </summary>
         [Parameter]
-        public EventCallback<Guid> OnVideoCourseSelected { get; set; }
+        public EventCallback<VideoCourseSelectedEventArgs> OnVideoCourseSelected { get; set; }
 
         /// <summary>
         /// Событие при создании темы курса
@@ -70,11 +71,29 @@ namespace ByteCodePlatform.Admin.Features.admin.course_tree_preview
             }
         }
 
-        private void ClearCache()
+        public void ClearCache()
         {
             _moduleContentsCache.Clear();
             _expandedModuleId = Guid.Empty;
             _expandedVideoCourseId = Guid.Empty;
+        }
+        
+        public async Task<List<CourseContentInfoResponse>> RefreshExpandedModuleAsync()
+        {
+            if (_expandedModuleId != Guid.Empty && CourseModules?.Any(m => m.Id == _expandedModuleId.ToString()) == true)
+            {
+                var response = await CourseService.GetCourseContentsByModuleIdAsync(
+                    new GetCourseContentsByModuleIdRequest
+                    {
+                        ModuleId = _expandedModuleId.ToString(),
+                        IgnoreFilters = true
+                    });
+                _moduleContentsCache[_expandedModuleId] = response.CourseContents.ToList();
+                
+                return response.CourseContents.ToList();
+            }
+
+            return new List<CourseContentInfoResponse>();
         }
 
         private bool GetModuleExpandedState(Guid moduleId) => _expandedModuleId == moduleId;
@@ -93,7 +112,8 @@ namespace ByteCodePlatform.Admin.Features.admin.course_tree_preview
                     var response = await CourseService.GetCourseContentsByModuleIdAsync(
                         new GetCourseContentsByModuleIdRequest
                         {
-                            ModuleId = moduleId.ToString()
+                            ModuleId = moduleId.ToString(),
+                            IgnoreFilters = true
                         });
                     courseContents = response.CourseContents.ToList();
                     _moduleContentsCache[moduleId] = courseContents;
@@ -123,7 +143,13 @@ namespace ByteCodePlatform.Admin.Features.admin.course_tree_preview
             }
 
             if (OnVideoCourseSelected.HasDelegate)
-                await OnVideoCourseSelected.InvokeAsync(_selectedVcPreviewId);
+            {
+                await OnVideoCourseSelected.InvokeAsync(new VideoCourseSelectedEventArgs
+                {
+                    CourseId = _selectedVcPreviewId, 
+                    CourseContents = _moduleContentsCache[_expandedModuleId]
+                });
+            }
         }
 
         private async Task AddNewCourseTheme()

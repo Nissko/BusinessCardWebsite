@@ -8,6 +8,7 @@ namespace ByteCodePlatform.Domain.Extensions.Course
         private const string DefaultIsShow = "false";
         private const string DefaultDisplayOrder = "10";
         private const string DefaultIsFree = "false";
+        private const string DefaultIsDiscount = "false";
         
         /// <summary>
         /// Получение свойства по типу
@@ -25,6 +26,7 @@ namespace ByteCodePlatform.Domain.Extensions.Course
             properties.Add(new(DefaultIsShow, FieldPropertyTypesEnum.IsShow, themeId));
             properties.Add(new(DefaultDisplayOrder, FieldPropertyTypesEnum.DisplayOrder, themeId));
             properties.Add(new(DefaultIsFree, FieldPropertyTypesEnum.IsFree, themeId));
+            properties.Add(new(DefaultIsDiscount, FieldPropertyTypesEnum.IsDiscount, themeId));
         }
     
         /// <summary>
