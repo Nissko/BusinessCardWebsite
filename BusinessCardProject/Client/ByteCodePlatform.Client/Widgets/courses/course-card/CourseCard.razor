@@ -1,35 +1,53 @@
-﻿<MudCard Elevation="25" Class="rounded-lg pb-4">
-    <MudCardHeader>
-        <CardHeaderContent>
-            <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: bold;">
+﻿<MudCard Elevation="1" Class="modern-card rounded-xl overflow-hidden"
+         Style="max-width: 380px; margin: auto; border-top: 4px solid var(--mud-palette-primary);">
+    
+    <MudCardContent Class="pb-2">
+        <div class="d-flex justify-space-between align-start mb-3">
+            <MudText Typo="Typo.h5" Style="font-weight: 700; letter-spacing: -0.5px; line-height: 1.3;">
                 @Course.Name
             </MudText>
-        </CardHeaderContent>
-    </MudCardHeader>
 
-    <MudCardContent>
-        <div class="d-flex justify-center pb-3">
-            <MudText Typo="Typo.h3">
-                @(Course.IsFree ? "Бесплатно" : Course.Price)
-            </MudText>
+            @if (Course.IsFree)
+            {
+                <MudChip T="string"
+                         Color="Color.Success"
+                         Variant="Variant.Filled"
+                         Size="Size.Small"
+                         Style="font-weight: 700; height: 28px; margin-top: 2px;">
+                    Бесплатно
+                </MudChip>
+            }
         </div>
-    </MudCardContent>
 
-    <MudCardActions Class="d-flex justify-center">
-        <MudButton OnClick="@OnSelectClick"
-                   Variant="Variant.Filled"
-                   Color="Color.Primary"
-                   Size="Size.Large"
-                   Style="width:50%;">
-            @(Course.IsFree ? "Изучить" : "Купить")
-        </MudButton>
-    </MudCardActions>
+        @*Удалить этот блок*@
+        <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-6" Style="line-height: 1.6;">
+            @GetFooterNote()
+        </MudText>
 
-    <MudCardContent Style="padding-bottom: 0;">
-        <div class="d-flex justify-center">
-            <MudText Typo="Typo.caption" Align="Align.Justify">
-                @GetFooterNote()
-            </MudText>
+        <div class="d-flex flex-column gap-3">
+            @if (!Course.IsFree)
+            {
+                <div class="d-flex align-center gap-2">
+                    <MudIcon Icon="@Icons.Material.Rounded.LocalOffer" Size="Size.Small" Color="Color.Primary"/>
+                    <MudText Typo="Typo.h6" Style="font-weight: 700;">@Course.Price</MudText>
+                    
+                    @if (CourseThemeProperties.FirstOrDefault(x=>x.CourseThemeId == Course.Id)?.IsDiscount == true)
+                    {
+                        <MudText Typo="Typo.caption" Color="Color.Secondary" Style="text-decoration: line-through;">
+                            @(Course.HasOldPrice ? Course.OldPrice : 0)
+                        </MudText>
+                    }
+                </div>
+            }
+
+            <MudButton OnClick="@OnSelectClick"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       Class="mt-2 mb-1"
+                       Style="border-radius: 12px; text-transform: none; font-weight: 600; box-shadow: 0 4px 12px rgba(var(--mud-palette-primary-rgb), 0.3);">
+                @(Course.IsFree ? "Изучить бесплатно" : "Получить доступ")
+            </MudButton>
         </div>
     </MudCardContent>
 </MudCard>

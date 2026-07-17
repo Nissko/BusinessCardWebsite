@@ -1,49 +1,47 @@
-﻿<MudNavMenu>
-    <MudNavMenu Class="mud-width-full mud-navmenu mud-navmenu-margin-none">
-        <MudNavLink Href="/home" 
-                    Class="mud-nav-item mt-1" 
-                    Icon="@Icons.Material.Rounded.Home">
-            Главная
+﻿@using BusinessCardProject.Client.Features.toggle_theme
+
+<MudNavMenu Class="mt-2">
+    <MudNavLink Href="/home" 
+                Match="NavLinkMatch.All"
+                Icon="@Icons.Material.Rounded.Home">
+        Главная
+    </MudNavLink>
+    
+    <MudDivider Class="my-3" />
+    
+    <MudNavLink Href="/courses"
+                Match="NavLinkMatch.Prefix"
+                Icon="@Icons.Material.Rounded.MenuBook">
+        Курсы
+    </MudNavLink>
+    
+    @*TODO: Включить после доработки*@
+    <MudTooltip Text="В разработке"
+                Placement="Placement.Top">
+        <MudNavLink Href="/project-news"
+                    Disabled="true"
+                    Match="NavLinkMatch.Prefix"
+                    Icon="@Icons.Material.Rounded.Newspaper">
+            Новости
         </MudNavLink>
-        <MudDivider Class="my-1"/>
-        @*TODO: раскомментировать по мере разработки*@
-        @*<MudNavLink Href="/my-courses" 
-                    Class="mud-nav-item mt-1" 
-                    Icon="@Icons.Material.Rounded.ShowChart">
-            Мои курсы
-        </MudNavLink>*@
-        @*<MudNavGroup Title="Мои кур" Icon="@Icons.Material.Rounded.ShowChart" Expanded="false">
-            <MudNavLink Href="/video-courses" 
-                        Class="mud-nav-item" 
-                        Icon="@Icons.Material.Rounded.Article">
-                Лекции
-            </MudNavLink>
-            <MudNavLink Href="/video-courses" 
-                        Class="mud-nav-item" 
-                        Icon="@Icons.Material.Rounded.PersonalVideo">
-                Видео
-            </MudNavLink>
-        </MudNavGroup>*@
-        @*TODO: сделать чтобы появлялось при определенной ширине экрана!*@
-        <MudNavLink Href="/courses"
-                    Class="mud-nav-item" 
-                    Icon="@Icons.Material.Rounded.LibraryBooks">
-            Курсы
-        </MudNavLink>
-        @*<MudNavLink Href="/rate" 
-                    Class="mud-nav-item" 
-                    Icon="@Icons.Material.Rounded.StarRate">
-            Отзывы
-        </MudNavLink>
-        <MudNavLink Href="/donation-project" 
-                    Class="mud-nav-item" 
-                    Icon="@Icons.Material.Rounded.AttachMoney">
-            Поддержать проект
-        </MudNavLink>*@
-    </MudNavMenu>
+    </MudTooltip>
+    
+    <MudNavLink Href="/donation-project"
+                Match="NavLinkMatch.All"
+                Icon="@Icons.Material.Rounded.VolunteerActivism">
+        Поддержка проекта
+    </MudNavLink>
+    
+    <MudDivider Class="my-4" />
+    
+    <div class="d-flex align-center justify-space-between px-4 mud-nav-item">
+        <MudText Typo="Typo.body2" Class="d-flex align-center gap-2">
+            Тема оформления
+        </MudText>
+        <ThemeToggle />
+    </div>
 </MudNavMenu>
 
-@code
-{
-
+@code {
+    // Дополнительная логика при необходимости
 }

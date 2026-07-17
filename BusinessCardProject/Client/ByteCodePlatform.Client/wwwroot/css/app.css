@@ -1,3 +1,12 @@
+/* Шрифт для логотипа в шапке */
+@font-face {
+    font-family: 'Educational Gothic';
+    src: url('/fonts/EDUCATIONALGOTHIC-REGULAR.OTF') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     margin: 0;
@@ -327,4 +336,8 @@ html[data-theme='true'] .btn-dismiss:hover svg {
 .mud-treeview.mud-treeview-selected-primary .mud-treeview-item-content.mud-treeview-item-selected {
     background-color: transparent !important;
     color: var(--mud-palette-text-primary) !important;
+}
+
+.mud-toolbar-gutters{
+    height: 64px !important;
 }

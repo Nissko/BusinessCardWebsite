@@ -1,32 +1,40 @@
-﻿<MudItem Class="d-flex justify-space-between align-center px-2 py-2 h-100"
-         Style="min-height: 74px;">
-    <MudSwitch T="bool"
-               Style="user-select: none;"
-               Value="@_isCSharpSelected"
-               ValueChanged="@(v => OnLanguageChanged(0, v))"
-               LabelPlacement="@Placement"
-               Color="Color.Success"
-               UncheckedColor="Color.Error">
-        <MudText Typo="Typo.caption">C#</MudText>
-    </MudSwitch>
+﻿<MudStack Spacing="3">
+    <MudPaper Elevation="0" Class="rounded-lg pa-3 d-flex align-center justify-space-between" 
+              Style="background-color: var(--mud-palette-surface); border: 1px solid var(--mud-palette-divider);">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <MudImage Src="images/custom-icons/csharp.svg" Alt="Csharp Icon" Height="24" Width="24" />
+            <MudText Typo="Typo.body1" Class="font-weight-medium">C#</MudText>
+        </MudStack>
+        <MudSwitch T="bool"
+                   Value="@_isCSharpSelected"
+                   ValueChanged="@(v => OnLanguageChanged(0, v))"
+                   Color="Color.Success"
+                   UncheckedColor="Color.Default" />
+    </MudPaper>
 
-    <MudSwitch T="bool"
-               Style="user-select: none;"
-               Value="@_isPhpSelected"
-               ValueChanged="@(v => OnLanguageChanged(1, v))"
-               LabelPlacement="@Placement"
-               Color="Color.Success"
-               UncheckedColor="Color.Error">
-        <MudText Typo="Typo.caption">PHP</MudText>
-    </MudSwitch>
+    <MudPaper Elevation="0" Class="rounded-lg pa-3 d-flex align-center justify-space-between" 
+              Style="background-color: var(--mud-palette-surface); border: 1px solid var(--mud-palette-divider);">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <MudImage Src="images/custom-icons/php.svg" Alt="Php Icon" Height="24" Width="24" />
+            <MudText Typo="Typo.body1" Class="font-weight-medium">PHP</MudText>
+        </MudStack>
+        <MudSwitch T="bool"
+                   Value="@_isPhpSelected"
+                   ValueChanged="@(v => OnLanguageChanged(1, v))"
+                   Color="Color.Success"
+                   UncheckedColor="Color.Default" />
+    </MudPaper>
 
-    <MudSwitch T="bool"
-               Style="user-select: none;"
-               Value="@_isLaravelSelected"
-               ValueChanged="@(v => OnLanguageChanged(2, v))"
-               LabelPlacement="@Placement"
-               Color="Color.Success"
-               UncheckedColor="Color.Error">
-        <MudText Typo="Typo.caption">Laravel</MudText>
-    </MudSwitch>
-</MudItem>
+    <MudPaper Elevation="0" Class="rounded-lg pa-3 d-flex align-center justify-space-between" 
+              Style="background-color: var(--mud-palette-surface); border: 1px solid var(--mud-palette-divider);">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <MudIcon Icon="@Icons.Material.Rounded.Web" Color="Color.Warning" Size="Size.Medium" />
+            <MudText Typo="Typo.body1" Class="font-weight-medium">Laravel</MudText>
+        </MudStack>
+        <MudSwitch T="bool"
+                   Value="@_isLaravelSelected"
+                   ValueChanged="@(v => OnLanguageChanged(2, v))"
+                   Color="Color.Success"
+                   UncheckedColor="Color.Default" />
+    </MudPaper>
+</MudStack>

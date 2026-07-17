@@ -13,6 +13,7 @@ namespace BusinessCardProject.Client.Widgets.courses.course_list
         [Parameter] public EventCallback<Guid> OnCourseSelectedEvent { get; set; }
 
         private List<CourseThemeInfoResponse>? _courses;
+        private readonly List<CourseThemePropertiesResponse>? _courseThemeProperties = new();
         private int _skeletonCount = 6;
         private Guid _viewportSubscriptionId;
 
@@ -29,7 +30,8 @@ namespace BusinessCardProject.Client.Widgets.courses.course_list
             _courses = await LoadCoursesAsync();
 
             if (_courses.Any())
-            {
+            { 
+                await LoadCourseThemesAsync();
                 await BrowserViewportService.UnsubscribeAsync(_viewportSubscriptionId);
             }
         }
@@ -39,6 +41,21 @@ namespace BusinessCardProject.Client.Widgets.courses.course_list
             var request = new GetCourseThemesRequest();
             var result = await CourseGrpc.GetCourseThemesAsync(request);
             return result.CourseThemes.ToList();
+        }
+
+        private async Task LoadCourseThemesAsync()
+        {
+            if (_courses != null)
+            {
+                foreach (var request in _courses.Select(course => new GetCourseThemePropertiesRequest
+                         {
+                             CourseThemeId = course.Id
+                         }))
+                {
+                    var response = await CourseGrpc.GetCourseThemePropertiesAsync(request);
+                    _courseThemeProperties?.Add(response);
+                }
+            }
         }
 
         private async Task OnViewportChanged(BrowserViewportEventArgs args)

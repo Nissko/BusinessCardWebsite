@@ -66,6 +66,7 @@ message UpdateCourseThemeRequest {
   optional bool is_show = 8;
   optional int32 display_order = 9;
   optional bool is_free = 10;
+  optional bool is_discount = 11;
 }
 
 message GetCourseThemePropertiesRequest {
@@ -172,6 +173,7 @@ message CourseThemePropertiesResponse {
   int32 display_order = 2;
   bool is_show = 3;
   bool is_free = 4;
+  bool is_discount = 5;
 }
 
 // Модули курсов

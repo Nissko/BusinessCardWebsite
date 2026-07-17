@@ -16,5 +16,10 @@ namespace ByteCodePlatform.Domain.Enums
         /// Признак, что тема бесплатная
         /// </summary>
         public static Guid IsFree = Guid.Parse("d31d0ccd-6ee3-4a54-9f2a-b7f3d67a9704");
+        
+        /// <summary>
+        /// Признак, что на тему курса действует скидка
+        /// </summary>
+        public static Guid IsDiscount = Guid.Parse("2b4d6ed3-7f1d-40d7-a6bd-3c945ee63113");
     }
 }

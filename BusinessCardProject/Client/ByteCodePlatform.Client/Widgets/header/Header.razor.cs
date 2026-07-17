@@ -9,7 +9,6 @@ namespace BusinessCardProject.Client.Widgets.header
         [Inject] private UserSettingService UserSettingService { get; set; } = null!;
         [Inject] private IBrowserViewportService BrowserViewportService { get; set; } = null!;
 
-        private Color HeaderColor => UserSettingService.Settings.IsDark ? Color.Info : Color.Dark;
         private Guid _viewportSubscriptionId;
         private bool _showHeaderButtons;
 

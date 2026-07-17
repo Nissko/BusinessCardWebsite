@@ -4,30 +4,44 @@
 
 <PageTitle>Настройки</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Medium">
-    <MudText Typo="Typo.h5" Align="Align.Justify" GutterBottom="true" Class="mt-4 px-3">
-        <b>Настройки:</b>
-    </MudText>
+<MudContainer MaxWidth="MaxWidth.Medium" Class="my-6">
 
-    <MudGrid Class="mt-2">
-        <MudItem xs="12" sm="5" md="4" Class="py-1">
-            <MudItem Class="d-flex align-center px-3 py-2 h-100" Style="min-height: 74px;">
-                <MudText>Платформа для просмотра:</MudText>
+    <MudPaper Elevation="2" Class="rounded-xl pa-5 mb-6">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-4">
+            <MudIcon Icon="@Icons.Material.Rounded.PlayCircle" Color="Color.Primary" />
+            <MudText Typo="Typo.h6" Class="font-weight-bold">
+                Платформа для просмотра
+            </MudText>
+        </MudStack>
+        
+        <MudText Typo="Typo.body2" Class="mb-4">
+            Выберите предпочтительную видео-платформу для просмотра
+        </MudText>
+
+        <MudGrid Spacing="3">
+            <MudItem xs="12" sm="4">
+                <VideoPlatformSelector />
             </MudItem>
-        </MudItem>
+        </MudGrid>
+    </MudPaper>
 
-        <MudItem xs="12" sm="7" md="5" Class="py-1">
-            <VideoPlatformSelector />
-        </MudItem>
+    <MudPaper Elevation="2" Class="rounded-xl pa-5 mb-6">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-4">
+            <MudIcon Icon="@Icons.Material.Rounded.Code" Color="Color.Secondary" />
+            <MudText Typo="Typo.h6" Class="font-weight-bold">
+                Язык изучения
+            </MudText>
+        </MudStack>
+        
+        <MudText Typo="Typo.body2" Class="mb-4">
+            Выберите язык программирования или предмет, который вы хотите изучать
+        </MudText>
 
-        <MudItem xs="12" sm="5" md="4" Class="py-1">
-            <MudItem Class="d-flex align-center px-3 py-2 h-100" Style="min-height: 74px;">
-                <MudText>Язык изучения:</MudText>
+        <MudGrid Spacing="3">
+            <MudItem xs="12" sm="4">
+                <ProgrammingLanguageSelector />
             </MudItem>
-        </MudItem>
+        </MudGrid>
+    </MudPaper>
 
-        <MudItem xs="12" sm="7" md="5" Class="py-1">
-            <ProgrammingLanguageSelector />
-        </MudItem>
-    </MudGrid>
 </MudContainer>

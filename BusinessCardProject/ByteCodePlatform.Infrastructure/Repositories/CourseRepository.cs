@@ -129,6 +129,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             var isShow = theme.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.IsShow);
             var displayOrder = theme.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder);
             var isFree = theme.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.IsFree);
+            var isDiscount = theme.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.IsDiscount);
 
             if (request.IsShow != null)
             {
@@ -143,6 +144,11 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             if (request.DisplayOrder != null)
             {
                 displayOrder?.UpdateValue(request.DisplayOrder?.ToString());
+            }
+
+            if (request.IsDiscount != null)
+            {
+                isDiscount?.UpdateValue(request.IsDiscount?.ToString());
             }
 
             _dbContext.CourseTheme.Update(theme);

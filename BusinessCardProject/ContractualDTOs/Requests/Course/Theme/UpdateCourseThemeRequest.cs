@@ -10,5 +10,6 @@ namespace Requests.Course.Theme
         double? OldPrice,
         bool? IsShow,
         int? DisplayOrder,
-        bool? IsFree);
+        bool? IsFree,
+        bool? IsDiscount);
 }
