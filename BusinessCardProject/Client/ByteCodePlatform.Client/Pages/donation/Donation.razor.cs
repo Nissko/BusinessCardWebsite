@@ -1,25 +1,26 @@
 ﻿using BusinessCardProject.Client.Entities.Services.ProjectInfo;
 using Microsoft.AspNetCore.Components;
 
-namespace BusinessCardProject.Client.Pages.donation;
-
-public partial class Donation : ComponentBase, IDisposable
+namespace BusinessCardProject.Client.Pages.donation
 {
-    [Inject] private UserSettingService UserSettingService { get; set; } = null!;
-    
-    protected override async Task OnInitializedAsync()
+    public partial class Donation : ComponentBase, IDisposable
     {
-        UserSettingService.OnChange += StateHasChanged;
-        if (UserSettingService.Settings.UpdateTime == null)
+        [Inject] private UserSettingService UserSettingService { get; set; } = null!;
+    
+        protected override async Task OnInitializedAsync()
         {
-            await UserSettingService.LoadAsync();
-            UserSettingService.Settings.UpdateTime = DateTime.Now;
-            await UserSettingService.SaveAsync();
+            UserSettingService.OnChange += StateHasChanged;
+            if (UserSettingService.Settings.UpdateTime == null)
+            {
+                await UserSettingService.LoadAsync();
+                UserSettingService.Settings.UpdateTime = DateTime.Now;
+                await UserSettingService.SaveAsync();
+            }
         }
-    }
     
-    public void Dispose()
-    {
-        UserSettingService.OnChange -= StateHasChanged;
+        public void Dispose()
+        {
+            UserSettingService.OnChange -= StateHasChanged;
+        }
     }
 }

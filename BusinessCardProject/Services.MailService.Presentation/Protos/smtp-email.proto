@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option csharp_namespace = "SmtpMailService.Proto";
+
+package email;
+
+service SmtpMailGrpcService {
+  rpc SendEmail (SendEmailRequest) returns (SendEmailResponse);
+}
+
+message SendEmailRequest {
+  repeated string to = 1;
+  repeated string cc = 2;
+  repeated string bcc = 3;
+  string from = 4;
+  string display_name = 5;
+  string reply_to = 6;
+  string reply_to_name = 7;
+  string subject = 8;
+  string body = 9;
+  bool is_html = 10;
+}
+
+message SendEmailResponse {
+  bool is_success = 1;
+}
