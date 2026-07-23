@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Protobuf Include="Clients\smtp-email.proto" GrpcServices="Both" />
       <Protobuf Include="Clients\user-service.proto" GrpcServices="Both" />
     </ItemGroup>
 

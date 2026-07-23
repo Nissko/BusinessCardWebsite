@@ -8,7 +8,7 @@ using Requests.User;
 
 namespace ByteCodePlatform.Application.Application.GrpcClients
 {
-    public class AuthGrpcClientService(
+    public class AuthServiceGrpcServiceClient(
         AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient authorizationService)
         : IAuthGrpcService
     {

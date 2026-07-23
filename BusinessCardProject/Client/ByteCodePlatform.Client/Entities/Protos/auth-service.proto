@@ -10,6 +10,7 @@ service AuthorizationService {
   rpc Login (LoginRequest) returns (LoginResponse);
   rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
   rpc Logout (LogoutRequest) returns (LogoutResponse);
+  rpc VerificationAccount(VerificationAccountRequest) returns (VerificationAccountResponse);
   // Создание пользователя
   rpc CreateUser(CreateUserRequest) returns (UserBooleanResponse);
   // Изменение пользовательских данных
@@ -105,6 +106,11 @@ message LogoutRequest {
   string refresh_token = 1;
 }
 
+message VerificationAccountRequest{
+  string user_id = 1;
+  string verification_code = 2;
+}
+
 message AddAuthorRoleRequest{
   // Идентификатор пользователя
   string user_id = 1;
@@ -115,6 +121,10 @@ message AddAuthorRoleResponse{
 }
 
 message LogoutResponse {}
+
+message VerificationAccountResponse{
+  bool success = 1;
+}
 
 //Запрос для поиска пользователей в админке
 message GetUsersFromSearchRequest{

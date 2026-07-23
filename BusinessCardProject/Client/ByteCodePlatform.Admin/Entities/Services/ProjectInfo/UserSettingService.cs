@@ -52,9 +52,9 @@ namespace ByteCodePlatform.Admin.Entities.Services.ProjectInfo
                 await _jsRuntime.InvokeVoidAsync("localStorage.setItem", StorageKey, json);
                 OnChange?.Invoke();
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Failed to save preferences: {ex.Message}");
+                Console.WriteLine("Failed to save preferences");
             }
         }
     }

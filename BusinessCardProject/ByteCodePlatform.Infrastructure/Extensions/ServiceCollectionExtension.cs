@@ -34,7 +34,7 @@ namespace ByteCodePlatform.Infrastructure.Extensions
             services.AddScoped<ICourseRepository, CourseRepository>();
             
             //Клиенты
-            services.AddScoped<IAuthGrpcService, AuthGrpcClientService>();
+            services.AddScoped<IAuthGrpcService, AuthServiceGrpcServiceClient>();
 
             services.AddApplication();
 

@@ -31,9 +31,11 @@ namespace Services.AuthService.Infrastructure.Extensions
             services.AddScoped<IAuthDbContext, AuthDbContext>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRefreshToken, RefreshToken>();
+            services.AddScoped<IAccountVerificationRepository, AccountVerificationRepository>();
             
             //Клиенты
-            services.AddScoped<IUserCoreGrpcService, CoreUserServiceClient>();
+            services.AddScoped<ICoreGrpcServiceClient, CoreGrpcServiceClient>();
+            services.AddScoped<IMailServiceGrpcServiceClient, MailServiceGrpcServiceClient>();
 
             services.AddApplication();
 

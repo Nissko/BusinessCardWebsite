@@ -34,15 +34,15 @@ namespace ByteCodePlatform.Domain.Extensions.Course
         public static bool CheckProperties(this IEnumerable<CourseModuleFieldPropertyEntity> properties)
         {
             var courseModuleFieldProperties = properties.ToList();
-            if (!courseModuleFieldProperties.Any()) throw new("Properties cannot be empty");
+            if (!courseModuleFieldProperties.Any()) throw new("Свойства не могут быть пустыми");
 
             if (courseModuleFieldProperties.All(x => x.FieldPropertyTypeId != FieldPropertyTypesEnum.DisplayOrder))
                 throw new(
-                    $"Required property '{FieldPropertyTypesEnum.DisplayOrder}' not found");
+                    $"Требуемое свойство '{FieldPropertyTypesEnum.DisplayOrder}' не найдено");
 
             if (courseModuleFieldProperties.All(x => x.FieldPropertyTypeId != FieldPropertyTypesEnum.IsShow))
                 throw new(
-                    $"Required property '{FieldPropertyTypesEnum.IsShow}' not found");
+                    $"Требуемое свойство '{FieldPropertyTypesEnum.IsShow}' не найдено");
             
             return true;
         }

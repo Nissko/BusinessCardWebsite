@@ -1,4 +1,4 @@
-﻿namespace Services.MailService.Domain.Models
+﻿namespace Requests.Email
 {
     public record EmailMessageRequest(
         // Список основных получателей
@@ -19,6 +19,8 @@
         string Subject,
         // Тело письма
         string Body,
-        bool IsHtml
+        bool IsHtml,
+        // Название шаблона
+        string TemplateName
     );
 }

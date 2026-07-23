@@ -27,12 +27,11 @@ namespace Services.AuthService.Infrastructure.Repositories
                 throw new ArgumentException("Expiration date must be in the future", nameof(expiresAt));
 
             /*TODO: Борьба с мульти-устройствами --> возможно надо убрать*/
-            var oldTokens = _context.RefreshToken.Where(x => x.UserId == Guid.Parse(userId)).ToList();
-            foreach (var oldToken in oldTokens)
-            {
-                oldToken.ChangeIsRevoked(true);
-                _context.RefreshToken.Update(oldToken);
-            }
+            var oldTokens = await _context.RefreshToken
+                .Where(x => x.UserId == Guid.Parse(userId)).ToListAsync(cancellationToken: ct);
+            
+            foreach (var oldToken in oldTokens) oldToken.ChangeIsRevoked(true);
+            _context.RefreshToken.UpdateRange(oldTokens);
             
             var tokenHash = HashToken(refreshToken);
             var newRefreshToken = new RefreshTokenEntity(
@@ -49,16 +48,18 @@ namespace Services.AuthService.Infrastructure.Repositories
 
         public async Task<RefreshTokenInfo?> GetAndInvalidateAsync(string refreshToken, CancellationToken ct = default)
         {
-            if (string.IsNullOrWhiteSpace(refreshToken))
-                return null;
+            if (string.IsNullOrWhiteSpace(refreshToken)) return null;
 
             var tokenHash = HashToken(refreshToken);
             var refreshTokenEntity = await _context.RefreshToken
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.TokenHash == tokenHash, ct);
 
-            if (refreshTokenEntity == null || refreshTokenEntity.IsRevoked || refreshTokenEntity.ExpiresAtUtc < SystemClock.Instance.GetCurrentInstant())
+            if (refreshTokenEntity == null || refreshTokenEntity.IsRevoked ||
+                refreshTokenEntity.ExpiresAtUtc < SystemClock.Instance.GetCurrentInstant())
+            {
                 return null;
+            }
 
             refreshTokenEntity.ChangeIsRevoked(true);
             _context.RefreshToken.Update(refreshTokenEntity);
@@ -73,8 +74,7 @@ namespace Services.AuthService.Infrastructure.Repositories
 
         public async Task RevokeAsync(string refreshToken, CancellationToken ct = default)
         {
-            if (string.IsNullOrWhiteSpace(refreshToken))
-                return;
+            if (string.IsNullOrWhiteSpace(refreshToken)) return;
 
             var tokenHash = HashToken(refreshToken);
             var refreshTokenEntity = await _context.RefreshToken.FindAsync([tokenHash], cancellationToken: ct);
@@ -88,8 +88,7 @@ namespace Services.AuthService.Infrastructure.Repositories
 
         public async Task RevokeAllForUserAsync(string userId, CancellationToken ct = default)
         {
-            if (string.IsNullOrWhiteSpace(userId))
-                return;
+            if (string.IsNullOrWhiteSpace(userId)) return;
 
             var userGuid = Guid.Parse(userId);
             var affected = await _context.RefreshToken
@@ -105,8 +104,7 @@ namespace Services.AuthService.Infrastructure.Repositories
         /// </summary>
         private static string HashToken(string token)
         {
-            if (string.IsNullOrWhiteSpace(token))
-                throw new ArgumentException("Token cannot be empty", nameof(token));
+            if (string.IsNullOrWhiteSpace(token)) throw new ArgumentException("Token cannot be empty", nameof(token));
             var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(token));
             return Convert.ToBase64String(hashBytes);
         }

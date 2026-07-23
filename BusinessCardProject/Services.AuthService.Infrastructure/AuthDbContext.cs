@@ -17,6 +17,7 @@ namespace Services.AuthService.Infrastructure
         public DbSet<UserEntity> User { get; set; }
         public DbSet<UserRolesEntity>  UserRole { get; set; }
         public DbSet<RefreshTokenEntity> RefreshToken { get; set; }
+        public DbSet<AccountActivationEntity> AccountVerification { get; set; }
 
         public void Migrate()
         {
@@ -32,6 +33,7 @@ namespace Services.AuthService.Infrastructure
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
             modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
+            
 
             #endregion
 

@@ -29,6 +29,11 @@ namespace Services.AuthService.Application.Common.Interfaces
         Task<bool> VerifyPassword(Guid userId, string plainPassword);
 
         /// <summary>
+        /// Проверка верификации аккаунта
+        /// </summary>
+        Task<bool> CheckVerificationAcc(Guid userId);
+
+        /// <summary>
         /// Список ролей пользователя
         /// </summary>
         Task<List<string>> GetRoles(Guid userId);

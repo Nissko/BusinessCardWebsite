@@ -36,9 +36,9 @@ namespace ByteCodePlatform.Admin.Entities.Services.UserAuthentication
                     return true;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Login error: {ex.Message}");
+                return false;
             }
 
             return false;
@@ -65,9 +65,9 @@ namespace ByteCodePlatform.Admin.Entities.Services.UserAuthentication
                     return true;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Login error: {ex.Message}");
+                return false;
             }
 
             return false;
@@ -93,9 +93,9 @@ namespace ByteCodePlatform.Admin.Entities.Services.UserAuthentication
 
                 ClearToken();
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Login error: {ex.Message}");
+                return false;
             }
 
             return false;

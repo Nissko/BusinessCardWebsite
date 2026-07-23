@@ -27,6 +27,42 @@ namespace Services.AuthService.Infrastructure.Persistence.Migrations.postgre
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Services.AuthService.Domain.Entities.AccountActivationEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasComment("Время создания записи");
+
+                    b.Property<Instant>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasComment("Время истечения срока");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Instant?>("VerificationAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasComment("Время подтверждения");
+
+                    b.Property<string>("VerificationToken")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasComment("Токен верификации");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VerificationToken")
+                        .IsUnique();
+
+                    b.ToTable("AccountActivationRecords", "bytecode_auth");
+                });
+
             modelBuilder.Entity("Services.AuthService.Domain.Entities.RefreshTokenEntity", b =>
                 {
                     b.Property<string>("TokenHash")
@@ -111,6 +147,12 @@ namespace Services.AuthService.Infrastructure.Persistence.Migrations.postgre
                         .HasColumnType("timestamp with time zone")
                         .HasComment("Дата изменения");
 
+                    b.Property<bool>("VerifyMail")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasComment("Подтверждение аккаунта");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -143,6 +185,17 @@ namespace Services.AuthService.Infrastructure.Persistence.Migrations.postgre
                     b.ToTable("UserRoles", "bytecode_auth");
                 });
 
+            modelBuilder.Entity("Services.AuthService.Domain.Entities.AccountActivationEntity", b =>
+                {
+                    b.HasOne("Services.AuthService.Domain.Entities.UserEntity", "User")
+                        .WithMany("UserVerifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Services.AuthService.Domain.Entities.UserRolesEntity", b =>
                 {
                     b.HasOne("Services.AuthService.Domain.Entities.UserEntity", "User")
@@ -157,6 +210,8 @@ namespace Services.AuthService.Infrastructure.Persistence.Migrations.postgre
             modelBuilder.Entity("Services.AuthService.Domain.Entities.UserEntity", b =>
                 {
                     b.Navigation("UserRoles");
+
+                    b.Navigation("UserVerifications");
                 });
 #pragma warning restore 612, 618
         }

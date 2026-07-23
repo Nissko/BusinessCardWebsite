@@ -48,6 +48,11 @@ builder.Services.AddGrpcClient<UserGrpcService.UserGrpcServiceClient>(options =>
     options.Address = new Uri(builder.Configuration["GrpcServices:CoreServiceUrl"] ?? throw new Exception("Grpc services url is missing"));
 });
 
+builder.Services.AddGrpcClient<SmtpMailService.Proto.SmtpMailGrpcService.SmtpMailGrpcServiceClient>(options =>
+{
+    options.Address = new Uri(builder.Configuration["GrpcServices:SmtpServiceUrl"] ?? throw new Exception("Grpc services url is missing"));
+});
+
 builder.Services.AddGrpc();
 builder.Services.AddCollectionInfrastructure(builder.Configuration)
     .AddApplication();

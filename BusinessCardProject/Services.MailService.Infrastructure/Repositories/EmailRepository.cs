@@ -2,8 +2,8 @@
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Requests.Email;
 using Services.MailService.Application.Common.Interfaces;
-using Services.MailService.Domain.Models;
 using Services.MailService.Infrastructure.Settings;
 
 namespace Services.MailService.Infrastructure.Repositories

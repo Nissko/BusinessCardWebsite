@@ -1,4 +1,4 @@
-﻿using Services.MailService.Domain.Models;
+﻿using Requests.Email;
 
 namespace Services.MailService.Application.Common.Interfaces
 {

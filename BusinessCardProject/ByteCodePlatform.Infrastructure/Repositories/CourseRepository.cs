@@ -61,9 +61,9 @@ namespace ByteCodePlatform.Infrastructure.Repositories
         {
             var programLanguage = await _dbContext.ProgrammingLanguageCategory
                                       .FirstAsync(x => x.Id == request.ProgrammingLanguageId) ??
-                                  throw new Exception("Programming language not found");
+                                  throw new Exception("Язык программирования не найден");
             var author = await _dbContext.Author.FirstOrDefaultAsync(x => x.Id == request.AuthorId) ??
-                         throw new Exception("Author not found");
+                         throw new Exception("Автор не найден");
             var newTheme = new CourseThemeEntity(request.Name, request.Description, request.AvatarUrl, request.Price,
                 request.OldPrice, programLanguage.Id, author.Id,
                 SystemClock.Instance.GetCurrentInstant());
@@ -81,7 +81,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             var themes = await _dbContext.CourseTheme.ToListAsync();
             if (themes.Any(theme => !theme.ThemeFieldProperties.CheckProperties()))
             {
-                throw new("Course theme properties are not allowed");
+                throw new("Свойства темы курса не найдены");
             }
 
             List<CourseThemeEntity> orderedThemes;
@@ -113,18 +113,18 @@ namespace ByteCodePlatform.Infrastructure.Repositories
 
             return theme.ThemeFieldProperties.CheckProperties()
                 ? theme.GetCourseThemeDto()
-                : throw new Exception("Course theme properties are not allowed");
+                : throw new Exception("Свойства темы курса не найдены");
         }
 
         public async Task<CourseThemeDto> UpdateCourseTheme(UpdateCourseThemeRequest request)
         {
             var theme = await _dbContext.CourseTheme.FirstOrDefaultAsync(x => x.Id == request.Id) ??
-                        throw new("Course theme not found");
+                        throw new("Тема курса не найдена");
             theme.Update(request.Name, request.Description, request.AvatarUrl, request.Price, request.OldPrice,
                 request.ProgrammingLanguageId);
 
             if (!theme.ThemeFieldProperties.CheckProperties())
-                throw new("Course theme properties are not allowed");
+                throw new("Свойства темы курса не найдены");
 
             var isShow = theme.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.IsShow);
             var displayOrder = theme.ThemeFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder);
@@ -163,7 +163,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
                                             .AsNoTracking()
                                             .Where(x => x.CourseThemeId == courseThemeId)
                                             .ToListAsync() ??
-                                        throw new Exception("Course theme properties not found");
+                                        throw new Exception("Свойства темы курса не найдены");
             return courseThemeProperties.GetCourseThemePropertiesDto();
         }
 
@@ -174,7 +174,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
         public async Task<CourseModuleDto> AddCourseModule(CreateCourseModuleRequest request)
         {
             var courseTheme = await _dbContext.CourseTheme.FirstOrDefaultAsync(x => x.Id == request.CourseThemeId) ??
-                              throw new Exception("Course theme not found");
+                              throw new Exception("Тема курса не найдена");
             var newModule = new CourseModuleEntity(request.Name, courseTheme.Id,
                 SystemClock.Instance.GetCurrentInstant());
             newModule.ModuleFieldProperties.SetDefault(newModule.Id);
@@ -191,7 +191,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             var modules = await _dbContext.CourseModule.ToListAsync();
             if (modules.Any(module => !module.ModuleFieldProperties.CheckProperties()))
             {
-                throw new("Course module properties are not allowed");
+                throw new("Свойства модуля курса не найдены");
             }
 
             var orderedModules = modules.Where(x =>
@@ -210,7 +210,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             var modules = await _dbContext.CourseModule.Where(x => x.CourseThemeId == courseId).ToListAsync();
             if (modules.Any(module => !module.ModuleFieldProperties.CheckProperties()))
             {
-                throw new("Course module properties are not allowed");
+                throw new("Свойства модуля курса не найдены");
             }
 
             List<CourseModuleEntity> orderedModules;
@@ -240,11 +240,11 @@ namespace ByteCodePlatform.Infrastructure.Repositories
         public async Task<CourseModuleDto> UpdateCourseModule(UpdateCourseModuleRequest request)
         {
             var module = await _dbContext.CourseModule.FirstOrDefaultAsync(x => x.Id == request.Id) ??
-                         throw new("Course module not found");
+                         throw new("Модуль курса не найден");
             module.Update(request.Name, request.CourseThemeId);
 
             if (!module.ModuleFieldProperties.CheckProperties())
-                throw new("Course module properties are not allowed");
+                throw new("Использование свойств содержимого курса не найдены");
 
             var isShow = module.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.IsShow);
             var displayOrder = module.ModuleFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder);
@@ -264,7 +264,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
                                              .AsNoTracking()
                                              .Where(x => x.CourseModuleId == courseModuleId)
                                              .ToListAsync() ??
-                                         throw new Exception("Course module properties not found");
+                                         throw new Exception("Свойства модуля курса не найдены");
             return courseModuleProperties.GetCourseModulePropertiesDto();
         }
 
@@ -276,7 +276,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
         {
             var courseModule = await _dbContext.CourseModule
                                    .FirstOrDefaultAsync(x => x.Id == request.CourseModuleId) ??
-                               throw new Exception("Course module not found");
+                               throw new Exception("Модуль курса не найден");
             var newContent = new CourseContentEntity(request.Name, request.LinkOnRutube, request.LinkOnVk,
                 request.LinkOnYoutube, request.ImgUrl, SystemClock.Instance.GetCurrentInstant(),
                 courseModule.Id);
@@ -294,7 +294,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             var contents = await _dbContext.CourseContent.ToListAsync();
             if (contents.Any(theme => !theme.ContentFieldProperties.CheckProperties()))
             {
-                throw new("Course content properties are not allowed");
+                throw new("Использование свойств содержимого курса не найдены");
             }
 
             var orderedContents = contents.Where(x =>
@@ -315,7 +315,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
                 .ToListAsync();
             if (contents.Any(theme => !theme.ContentFieldProperties.CheckProperties()))
             {
-                throw new("Course content properties are not allowed");
+                throw new("Использование свойств содержимого курса не найдены");
             }
 
             List<CourseContentEntity> orderedContents;
@@ -347,12 +347,12 @@ namespace ByteCodePlatform.Infrastructure.Repositories
             var courseModule = await _dbContext.CourseModule.FirstOrDefaultAsync(x => x.Id == request.CourseModuleId) ??
                                null;
             var content = await _dbContext.CourseContent.FirstOrDefaultAsync(x => x.Id == request.Id) ??
-                          throw new("Course content not found");
+                          throw new("Содержание курса не найдено");
             content.Update(request.Name, request.LinkOnRutube, request.LinkOnVk, request.LinkOnYoutube, request.ImgUrl,
                 courseModule?.Id);
 
             if (!content.ContentFieldProperties.CheckProperties())
-                throw new("Course content properties are not allowed");
+                throw new("Использование свойств содержимого курса не найдены");
 
             var isShow = content.ContentFieldProperties.GetProperty(FieldPropertyTypesEnum.IsShow);
             var displayOrder = content.ContentFieldProperties.GetProperty(FieldPropertyTypesEnum.DisplayOrder);
@@ -372,7 +372,7 @@ namespace ByteCodePlatform.Infrastructure.Repositories
                                               .AsNoTracking()
                                               .Where(x => x.CourseContentId == courseContentId)
                                               .ToListAsync() ??
-                                          throw new Exception("Course content properties not found");
+                                          throw new Exception("Свойства содержимого курса не найдены");
             return courseContentProperties.GetCourseContentPropertiesDto();
         }
 

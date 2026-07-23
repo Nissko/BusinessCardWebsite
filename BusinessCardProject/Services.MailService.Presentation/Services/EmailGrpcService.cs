@@ -1,6 +1,6 @@
 using Grpc.Core;
+using Requests.Email;
 using Services.MailService.Application.Common.Interfaces;
-using Services.MailService.Domain.Models;
 using SmtpMailService.Proto;
 
 namespace Services.MailService.Presentation.Services
@@ -20,7 +20,7 @@ namespace Services.MailService.Presentation.Services
             {
                 var sendEmail = await _emailSender.SendAsync(new EmailMessageRequest(request.To, request.Cc,
                     request.Bcc, request.From, request.DisplayName, request.ReplyTo, request.ReplyToName,
-                    request.Subject, request.Body, request.IsHtml), CancellationToken.None);
+                    request.Subject, request.Body, request.IsHtml, request.TemplateName), CancellationToken.None);
                 
                 return new()
                 {

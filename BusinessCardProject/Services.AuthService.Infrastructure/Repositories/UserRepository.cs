@@ -11,16 +11,17 @@ using Services.AuthService.Domain.Extensions;
 
 namespace Services.AuthService.Infrastructure.Repositories
 {
-    public class UserRepository(IAuthDbContext context, IUserCoreGrpcService userCoreGrpcService) : IUserRepository
+    public class UserRepository(IAuthDbContext context, ICoreGrpcServiceClient coreGrpcServiceClient, IAccountVerificationRepository accVerifRepository) : IUserRepository
     {
         private readonly IAuthDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
+        private readonly IAccountVerificationRepository _accVerifRepository = accVerifRepository
+                                                                              ?? throw new ArgumentNullException(
+                                                                                  nameof(accVerifRepository));
 
         public async Task<bool> CreateUser(CreateUserRequest request)
         {
-            if (_context.User.Any(x => x.Email == request.Email))
-                throw new("User email already exists");
-            if (_context.User.Any(x => x.NickName == request.NickName))
-                throw new("User nickname already exists");
+            if (_context.User.Any(x => x.Email == request.Email)) throw new("Электронная почта пользователя уже существует");
+            if (_context.User.Any(x => x.NickName == request.NickName)) throw new("Псевдоним пользователя уже существует");
 
             var user = new UserEntity(request.Surname, request.Name, request.NickName, request.Email,
                 BCrypt.Net.BCrypt.HashPassword(request.Password, workFactor: 12),
@@ -29,7 +30,7 @@ namespace Services.AuthService.Infrastructure.Repositories
 
             try
             {
-                await userCoreGrpcService.CreateUser(user.Id);
+                await coreGrpcServiceClient.CreateUser(user.Id);
             }
             catch (Exception ex)
             {
@@ -38,18 +39,19 @@ namespace Services.AuthService.Infrastructure.Repositories
             
             _context.User.Add(user);
             await _context.SaveChangesAsync(CancellationToken.None);
+            
+            //Для подтверждения аккаунта
+            await _accVerifRepository.CreateRecord(user.Id);
 
             return true;
         }
 
         public async Task<bool> UpdateUser(UpdateUserRequest request)
         {
-            if (_context.User.Any(x => x.Email == request.Email))
-                throw new("User email already exists");
-            if (_context.User.Any(x => x.NickName == request.NickName))
-                throw new("User nickname already exists");
+            if (_context.User.Any(x => x.Email == request.Email)) throw new("Электронная почта пользователя уже существует");
+            if (_context.User.Any(x => x.NickName == request.NickName)) throw new("Псевдоним пользователя уже существует");
 
-            var user = _context.User.FirstOrDefault(x => x.Id == request.Id) ?? throw new("User not found");
+            var user = await _context.User.FindAsync(request.Id) ?? throw new("Пользователь не найден");
             user.UpdateUser(request.Surname, request.Name, request.NickName, request.Email,
                 SystemClock.Instance.GetCurrentInstant());
 
@@ -61,32 +63,37 @@ namespace Services.AuthService.Infrastructure.Repositories
 
         public async Task<UserDto> GetUser(Guid userId)
         {
-            var user = await _context.User.FirstOrDefaultAsync(x => x.Id == userId) ??
-                       throw new("User not found");
+            var user = await _context.User.FindAsync([userId]) ?? throw new("Пользователь не найден");
             return user.GetUserDto();
         }
 
         public async Task<UserDto> GetUserByEmail(string email)
         {
             var user = await _context.User.FirstOrDefaultAsync(x => x.Email == email)
-                       ?? throw new("User not found");
+                       ?? throw new("Пользователь не найден");
             return user.GetUserDto();
         }
 
         public async Task<bool> VerifyPassword(Guid userId, string plainPassword)
         {
-            var user = await _context.User.FirstOrDefaultAsync(x => x.Id == userId)
-                       ?? throw new("User not found");
+            var user = await _context.User.FindAsync([userId])
+                       ?? throw new("Пользователь не найден");
             return BCrypt.Net.BCrypt.Verify(plainPassword, user.PasswordHash);
+        }
+
+        public async Task<bool> CheckVerificationAcc(Guid userId)
+        {
+            var user = await _context.User.FindAsync([userId]) ?? throw new Exception("Пользователь не найден");
+            return user.VerifyMail;
         }
 
         public async Task<bool> AddAuthorRole(Guid userId)
         {
-            var user = await _context.User.FirstOrDefaultAsync(x => x.Id == userId) ?? throw new("User not found");
+            var user = await _context.User.FindAsync([userId]) ?? throw new("Пользователь не найден");
 
             if (user.UserRoles.Any(x => x.RoleId == UserRoleEnum.Author.Id))
             {
-                throw new("User already has an author");
+                throw new("Пользователь уже является автором");
             }
 
             user.SetAuthor(true);
@@ -161,8 +168,7 @@ namespace Services.AuthService.Infrastructure.Repositories
 
         public async Task<List<string>> GetRoles(Guid userId)
         {
-            var user = await _context.User
-                .FirstOrDefaultAsync(x => x.Id == userId) ?? throw new Exception("User not found");
+            var user = await _context.User.FindAsync([userId]) ?? throw new Exception("Пользователь не найден");
             return user.UserRoles.Select(role => role.RoleId.ToString()).ToList();
         }
     }

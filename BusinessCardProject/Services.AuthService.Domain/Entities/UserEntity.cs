@@ -8,6 +8,7 @@ namespace Services.AuthService.Domain.Entities
         public UserEntity()
         {
             UserRoles = new HashSet<UserRolesEntity>();
+            UserVerifications = new HashSet<AccountActivationEntity>();
         }
         
         public UserEntity(string surname, string name, string nickName, string email, string passwordHash,
@@ -23,6 +24,7 @@ namespace Services.AuthService.Domain.Entities
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
             DeletedAt = deletedAt;
+            VerifyMail = false;
         }
 
         /// <summary>
@@ -71,9 +73,19 @@ namespace Services.AuthService.Domain.Entities
         public Instant? DeletedAt { get; private set; }
 
         /// <summary>
+        /// Активация аккаунта через подтверждение в письме
+        /// </summary>
+        public bool VerifyMail { get; private set; } = false;
+
+        /// <summary>
         /// Роли пользователя
         /// </summary>
         public virtual ICollection<UserRolesEntity> UserRoles { get; private set; }
+        
+        /// <summary>
+        /// Записи активации пользователя
+        /// </summary>
+        public virtual ICollection<AccountActivationEntity> UserVerifications { get; private set; }
         
         /// <summary>
         /// Обновление информации пользователя
@@ -96,5 +108,7 @@ namespace Services.AuthService.Domain.Entities
             IsAuthor = isAuthor;
             UpdatedAt = SystemClock.Instance.GetCurrentInstant();
         }
+
+        public void SetVerified() => VerifyMail = true;
     }
 }

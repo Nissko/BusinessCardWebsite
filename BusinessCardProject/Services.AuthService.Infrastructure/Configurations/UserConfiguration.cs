@@ -51,6 +51,10 @@ namespace Services.AuthService.Infrastructure.Configurations
                 .IsRequired(false)
                 .HasComment("Дата удаления");
 
+            builder.Property(x => x.VerifyMail)
+                .HasDefaultValue(false)
+                .HasComment("Подтверждение аккаунта");
+
             builder.HasIndex(x => x.NickName).IsUnique();
             builder.HasIndex(x => x.Email).IsUnique();
         }

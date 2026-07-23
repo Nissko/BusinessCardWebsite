@@ -12,7 +12,7 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
 
         public ClientAuthenticationService(TokenStore tokenStore)
         {
-            _tokenStore = tokenStore;
+            _tokenStore = tokenStore ?? throw new ArgumentNullException(nameof(tokenStore));
         }
 
         public async Task<bool> Login(string email, string password)
@@ -36,9 +36,9 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
                     return true;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Login error: {ex.Message}");
+                return false;
             }
 
             return false;
@@ -65,9 +65,9 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
                     return true;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Login error: {ex.Message}");
+                return false;
             }
 
             return false;
@@ -93,12 +93,36 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
 
                 ClearToken();
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Login error: {ex.Message}");
+                return false;
             }
 
             return false;
+        }
+        
+        public static async Task<bool> VerificationAccount(Guid userId, string verificationCode)
+        {
+            var handler = new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler());
+            var channel = GrpcChannel.ForAddress(AddressLink,
+                new GrpcChannelOptions { HttpHandler = handler });
+
+            var client = new AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient(channel);
+
+            try
+            {
+                var response = await client.VerificationAccountAsync(new VerificationAccountRequest
+                {
+                    UserId = userId.ToString(),
+                    VerificationCode = verificationCode
+                });
+
+                return response.Success;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public string? GetToken() => _tokenStore.GetAccessToken();

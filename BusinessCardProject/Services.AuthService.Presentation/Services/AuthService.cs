@@ -20,13 +20,18 @@ namespace Services.AuthService.Presentation.Services
         private readonly IMediator _mediator;
         private readonly IRefreshToken _refreshToken;
         private readonly IUserRepository _users;
+        private readonly IAccountVerificationRepository _accountVerifications;
+        
         private TimeSpan AccessTokenLifetime => TimeSpan.FromMinutes(15);
 
-        public AuthService(IMediator mediator, IRefreshToken refreshToken, IUserRepository users)
+        public AuthService(IMediator mediator, IRefreshToken refreshToken, IUserRepository users, 
+            IAccountVerificationRepository accountVerifications)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _refreshToken = refreshToken ?? throw new ArgumentNullException(nameof(refreshToken));
             _users = users ?? throw new ArgumentNullException(nameof(users));
+            _accountVerifications = accountVerifications ??
+                                    throw new ArgumentNullException(nameof(accountVerifications));
         }
 
         [AllowAnonymous]
@@ -37,7 +42,14 @@ namespace Services.AuthService.Presentation.Services
                 var user = await _users.GetUserByEmail(request.Email) ??
                            throw new RpcException(new Status(StatusCode.Unauthenticated, "Invalid or expired email"));
                 if (!await _users.VerifyPassword(user.Id, request.Password))
+                {
                     throw new RpcException(new Status(StatusCode.Unauthenticated, "Invalid credentials"));
+                }
+
+                if (!await _users.CheckVerificationAcc(user.Id))
+                {
+                    throw new RpcException(new Status(StatusCode.Unauthenticated, "Account not verified"));
+                }
 
                 var accessToken = await _mediator.Send(new TokenGenerateAccessTokenCommand(user));
                 var refreshToken = await _mediator.Send(new TokenGenerateRefreshTokenCommand());
@@ -104,7 +116,26 @@ namespace Services.AuthService.Presentation.Services
                 throw new RpcException(new(StatusCode.Aborted, ex.Message));
             }
         }
-        
+
+        [AllowAnonymous]
+        public override async Task<VerificationAccountResponse> VerificationAccount(VerificationAccountRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var result = await _accountVerifications
+                    .VerificationRecord(request.UserId.ToGuid(), request.VerificationCode);
+                
+                return new VerificationAccountResponse
+                {
+                    Success = result
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
         [AllowAnonymous]
         public override async Task<UserBooleanResponse> CreateUser(CreateUserRequest request, ServerCallContext context)
         {

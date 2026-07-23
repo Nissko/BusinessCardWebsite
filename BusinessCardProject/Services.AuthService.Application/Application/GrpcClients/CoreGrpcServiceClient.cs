@@ -4,11 +4,11 @@ using UserService.Proto;
 
 namespace Services.AuthService.Application.Application.GrpcClients
 {
-    public class CoreUserServiceClient : IUserCoreGrpcService
+    public class CoreGrpcServiceClient : ICoreGrpcServiceClient
     {
         private readonly UserGrpcService.UserGrpcServiceClient  _userGrpcService;
 
-        public CoreUserServiceClient(UserGrpcService.UserGrpcServiceClient userGrpcService)
+        public CoreGrpcServiceClient(UserGrpcService.UserGrpcServiceClient userGrpcService)
         {
             _userGrpcService = userGrpcService ?? throw new ArgumentNullException(nameof(userGrpcService));
         }

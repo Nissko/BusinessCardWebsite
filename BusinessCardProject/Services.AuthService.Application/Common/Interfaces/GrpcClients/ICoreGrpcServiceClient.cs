@@ -1,6 +1,6 @@
 namespace Services.AuthService.Application.Common.Interfaces.GrpcClients
 {
-    public interface IUserCoreGrpcService
+    public interface ICoreGrpcServiceClient
     {
         /// <summary>
         /// Создание пользователя

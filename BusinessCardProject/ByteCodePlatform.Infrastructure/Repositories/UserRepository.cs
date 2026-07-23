@@ -29,10 +29,10 @@ namespace ByteCodePlatform.Infrastructure.Repositories
         public async Task<UserAuthorDto> CreateAuthorUser(CreateAuthorRequest request)
         {
             var user = await _context.User.FirstOrDefaultAsync(x => x.UserId == request.UserId) ??
-                       throw new("User not found");
+                       throw new("Пользователь не найден");
             var newAuthor = new AuthorEntity(SystemClock.Instance.GetCurrentInstant(), null, null, request.UserId);
             var addRole = await _authGrpcService.AddAuthorRole(newAuthor.UserId);
-            if (!addRole) throw new Exception("Failed to add role");
+            if (!addRole) throw new Exception("Не удалось добавить роль");
             
             _context.Author.Add(newAuthor);
             _context.User.Update(user);

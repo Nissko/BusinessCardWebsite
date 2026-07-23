@@ -35,10 +35,8 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
                     Settings = JsonSerializer.Deserialize<UserSettingsEntity>(json) ?? new();
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                // Логирование ошибки (если есть логгер)
-                Console.WriteLine($"Failed to load preferences: {ex.Message}");
                 Settings = new();
             }
         }
@@ -54,9 +52,9 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
                 await _jsRuntime.InvokeVoidAsync("localStorage.setItem", StorageKey, json);
                 OnChange?.Invoke();
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Failed to save preferences: {ex.Message}");
+                Console.WriteLine("Failed to save preferences");
             }
         }
     }
