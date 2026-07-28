@@ -47,7 +47,7 @@
                                                      ExpandedChanged="@((expanded) => OnVideoCourseExpandedChanged(videoId, expanded))">
                                         <MudGrid Class="pt-4 pb-4 pr-7">
                                             <MudItem xs="12" md="12">
-                                                <MudImage Src="images/sweden.jpg"
+                                                <MudImage Src="@GetVideoCoursePreview(videoCourse.ImgUrl)"
                                                           Alt="Swedish Farm House"
                                                           Style="width: 100%"
                                                           Elevation="25"

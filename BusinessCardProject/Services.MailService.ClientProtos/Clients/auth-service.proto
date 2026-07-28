@@ -1,0 +1,141 @@
+syntax = "proto3";
+package AuthGrpcService;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "AuthorizationService.Proto";
+
+service AuthorizationService {
+  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
+  rpc Logout (LogoutRequest) returns (LogoutResponse);
+  rpc VerificationAccount(VerificationAccountRequest) returns (VerificationAccountResponse);
+  // Создание пользователя
+  rpc CreateUser(CreateUserRequest) returns (UserBooleanResponse);
+  // Изменение пользовательских данных
+  rpc UpdateUser(UpdateUserRequest) returns (UserBooleanResponse);
+  // Получение пользователя
+  rpc GetUser(GetUserRequest) returns (UserInfoResponse);
+  // Получение пользователя по Email
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (UserInfoResponse);
+  // Добавление роли автора из ядра
+  rpc AddAuthorRole(AddAuthorRoleRequest) returns (AddAuthorRoleResponse);
+  // Получение пользователей для админки
+  rpc GetUsersFromSearch(GetUsersFromSearchRequest) returns (GetUsersFromSearchResponse);
+}
+
+message CreateUserRequest{
+  // Фамилия
+  string surname = 1;
+  // Имя
+  string name = 2;
+  // Никнейм
+  string nickName = 3;
+  // Почта
+  string email = 4;
+  // Пароль
+  string password = 5;
+}
+
+message UpdateUserRequest{
+  // Идентификатор пользователя
+  string user_id = 1;
+  // Фамилия
+  optional string surname = 2;
+  // Имя
+  optional string name = 3;
+  // Отчество
+  optional string nickName = 4;
+  // Почта
+  optional string email = 5;
+}
+
+message GetUserRequest{
+  // Идентификатор пользователя
+  string user_id = 1;
+}
+
+message GetUserByEmailRequest{
+  string user_email = 1;
+}
+
+message UserInfoResponse{
+  string user_id = 1;
+  string surname = 2;
+  string name = 3;
+  string nickname = 4;
+  string email = 5;
+  bool isAuthor = 6;
+  google.protobuf.Timestamp createdAt = 7;
+  optional google.protobuf.Timestamp updatedAt = 8;
+  optional google.protobuf.Timestamp deletedAt = 9;
+}
+
+message UserBooleanResponse{
+  bool success = 1;
+}
+
+message UserAuthorInfoResponse{
+  string author_id = 1;
+  UserInfoResponse user = 2;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  int32 expires_in = 3;
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  int32 expires_in = 3;
+}
+
+message LogoutRequest {
+  string refresh_token = 1;
+}
+
+message VerificationAccountRequest{
+  string user_id = 1;
+  string verification_code = 2;
+}
+
+message AddAuthorRoleRequest{
+  // Идентификатор пользователя
+  string user_id = 1;
+}
+
+message AddAuthorRoleResponse{
+  bool success = 1;
+}
+
+message LogoutResponse {}
+
+message VerificationAccountResponse{
+  bool success = 1;
+}
+
+//Запрос для поиска пользователей в админке
+message GetUsersFromSearchRequest{
+  int32 page = 1;
+  int32 pageSize = 2;
+  string search = 3;
+  string sortBy = 4;
+  string sortDirection = 5;
+}
+
+message GetUsersFromSearchResponse{
+  repeated UserInfoResponse Items = 1;
+  int32 TotalCount = 2;
+}

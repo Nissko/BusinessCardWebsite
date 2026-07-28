@@ -5,22 +5,19 @@ using SmtpMailService.Proto;
 
 namespace Services.MailService.Presentation.Services
 {
-    public class EmailGrpcService : SmtpMailGrpcService.SmtpMailGrpcServiceBase
+    public class EmailGrpcService(IEmailRepository emailRepository) : SmtpMailGrpcService.SmtpMailGrpcServiceBase
     {
-        private readonly IEmailSender _emailSender;
-
-        public EmailGrpcService(IEmailSender emailSender)
-        {
-            _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
-        }
+        private readonly IEmailRepository _emailRepository = emailRepository ?? throw new ArgumentNullException(nameof(emailRepository));
 
         public override async Task<SendEmailResponse> SendEmail(SendEmailRequest request, ServerCallContext context)
         {
             try
             {
-                var sendEmail = await _emailSender.SendAsync(new EmailMessageRequest(request.To, request.Cc,
-                    request.Bcc, request.From, request.DisplayName, request.ReplyTo, request.ReplyToName,
-                    request.Subject, request.Body, request.IsHtml, request.TemplateName), CancellationToken.None);
+                var sendEmail = await _emailRepository.SendAsync(new EmailMessageRequest(request.To, request.Cc,
+                        request.Bcc, request.From, request.DisplayName, request.ReplyTo, request.ReplyToName,
+                        request.Subject, request.Body, request.IsHtml,
+                        request.TemplateName),
+                    CancellationToken.None);
                 
                 return new()
                 {

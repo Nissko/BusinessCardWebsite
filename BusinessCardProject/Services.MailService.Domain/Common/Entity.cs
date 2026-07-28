@@ -1,4 +1,4 @@
-﻿namespace ByteCodePlatform.Domain.Common
+﻿namespace Services.MailService.Domain.Common
 {
     public class Entity
     {

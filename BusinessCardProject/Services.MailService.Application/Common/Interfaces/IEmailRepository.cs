@@ -2,7 +2,7 @@
 
 namespace Services.MailService.Application.Common.Interfaces
 {
-    public interface IEmailSender
+    public interface IEmailRepository
     {
         /// <summary>
         /// Отправка сообщения пользователю

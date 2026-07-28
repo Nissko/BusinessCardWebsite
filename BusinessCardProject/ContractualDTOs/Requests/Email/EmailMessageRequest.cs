@@ -21,6 +21,6 @@
         string Body,
         bool IsHtml,
         // Название шаблона
-        string TemplateName
+        string? TemplateName
     );
 }

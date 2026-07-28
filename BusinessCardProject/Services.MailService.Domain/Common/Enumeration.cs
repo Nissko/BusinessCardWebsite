@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace ByteCodePlatform.Domain.Common
+namespace Services.MailService.Domain.Common
 {
     public abstract class Enumeration
         : IComparable

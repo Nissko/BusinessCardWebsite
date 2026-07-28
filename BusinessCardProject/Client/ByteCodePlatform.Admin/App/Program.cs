@@ -18,6 +18,7 @@ builder.Services.AddMudBlazorResizeListener();
 
 /*Инициализация кэша*/
 builder.Services.AddSingleton<UserSettingService>();
+builder.Services.AddScoped<FileUploadService>();
 builder.Services.AddSingleton<TokenStore>();
 builder.Services.AddScoped<AuthenticationDelegatingHandler>();
 builder.Services.AddScoped<AuthenticationInterceptor>();
@@ -30,6 +31,28 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddGrpcClient<CourseService.Proto.CourseService.CourseServiceClient>(options =>
     {
         options.Address = new Uri("https://localhost:7117");
+        //options.Address = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/CourseGrpcService");
+    })
+    .ConfigurePrimaryHttpMessageHandler(sp =>
+    {
+        var tokenStore = sp.GetRequiredService<TokenStore>();
+        var navManager = sp.GetRequiredService<NavigationManager>();
+        var jsRuntime = sp.GetRequiredService<IJSRuntime>();
+        var clientAuth = sp.GetRequiredService<ClientAuthenticationService>();
+
+        var authHandler = new AuthenticationDelegatingHandler(tokenStore, navManager, jsRuntime, clientAuth)
+        {
+            InnerHandler = new HttpClientHandler()
+        };
+
+        return new GrpcWebHandler(GrpcWebMode.GrpcWeb, authHandler);
+    })
+    .AddInterceptor(sp => sp.GetRequiredService<AuthenticationInterceptor>());
+
+builder.Services.AddGrpcClient<FilesService.Proto.FilesService.FilesServiceClient>(options =>
+    {
+        options.Address = new Uri("https://localhost:7146");
+        /*TODO: заменить на правильную ссылку прода*/
         //options.Address = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/CourseGrpcService");
     })
     .ConfigurePrimaryHttpMessageHandler(sp =>

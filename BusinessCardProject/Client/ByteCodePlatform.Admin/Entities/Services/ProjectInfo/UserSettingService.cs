@@ -35,7 +35,7 @@ namespace ByteCodePlatform.Admin.Entities.Services.ProjectInfo
                     Settings = JsonSerializer.Deserialize<UserSettingsEntity>(json) ?? new();
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 Settings = new();
             }

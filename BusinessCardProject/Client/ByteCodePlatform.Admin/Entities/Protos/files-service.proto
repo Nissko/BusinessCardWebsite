@@ -1,0 +1,36 @@
+syntax = "proto3";
+package FilesServiceGrpcService;
+
+option csharp_namespace = "FilesService.Proto";
+
+
+service FilesService {
+  // Загрузка файла
+  rpc UploadImage (stream UploadImageRequest) returns (UploadImageResponse);
+  // Получение файла
+  rpc GetImage (GetImageRequest) returns (stream GetImageResponse);
+}
+
+message UploadImageRequest {
+  oneof payload {
+    ImageMetadata metadata = 1;
+    bytes chunk = 2;
+  }
+}
+
+message ImageMetadata {
+  string file_name = 1;
+  string content_type = 2;
+}
+
+message UploadImageResponse {
+  string file_id = 1;
+}
+
+message GetImageRequest {
+  string file_id = 1;
+}
+
+message GetImageResponse {
+  bytes chunk = 1;
+}

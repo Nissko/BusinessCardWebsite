@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Services.MailService.Application.Application.GrpcClients;
 using Services.MailService.Application.Common.Interfaces;
+using Services.MailService.Application.Common.Interfaces.GrpcClients;
 using Services.MailService.Application.Extensions;
 using Services.MailService.Infrastructure.Repositories;
 using Services.MailService.Infrastructure.Settings;
@@ -22,7 +24,10 @@ namespace Services.MailService.Infrastructure.Extensions
                 ).UseLazyLoadingProxies());
             
             services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
-            services.AddTransient<IEmailSender, EmailRepository>();
+            
+            services.AddTransient<IEmailRepository, EmailRepository>();
+            services.AddScoped<IEmailTemplateService, EmailTemplateService>();
+            services.AddScoped<IAuthServiceGrpcServiceClient, AuthServiceGrpcServiceClient>();
         
             services.AddApplication();
             

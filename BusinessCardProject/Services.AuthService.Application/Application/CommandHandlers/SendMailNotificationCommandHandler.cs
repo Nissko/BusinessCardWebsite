@@ -41,7 +41,7 @@ namespace Services.AuthService.Application.Application.CommandHandlers
                     Subject: request.Subject,   
                     Body: request.Body,   
                     IsHtml: request.IsHtml,
-                    TemplateName: request.TemplateName ?? ""
+                    TemplateName: request.TemplateName ?? null
                 ));
                 
                 return result;

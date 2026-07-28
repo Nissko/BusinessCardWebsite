@@ -7,6 +7,7 @@
         Number,
         Boolean,
         Select,
-        MultiSelect
+        MultiSelect,
+        Image
     }
 }

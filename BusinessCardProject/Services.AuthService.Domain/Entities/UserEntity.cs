@@ -75,7 +75,7 @@ namespace Services.AuthService.Domain.Entities
         /// <summary>
         /// Активация аккаунта через подтверждение в письме
         /// </summary>
-        public bool VerifyMail { get; private set; } = false;
+        public bool VerifyMail { get; private set; }
 
         /// <summary>
         /// Роли пользователя
@@ -97,7 +97,7 @@ namespace Services.AuthService.Domain.Entities
             Name = name ?? Name;
             NickName = nickName ?? NickName;
             Email = email ?? Email;
-            UpdatedAt = updatedAt ?? UpdatedAt;
+            UpdatedAt = updatedAt ?? SetUpdatedAt();
         }
 
         /// <summary>
@@ -106,9 +106,18 @@ namespace Services.AuthService.Domain.Entities
         public void SetAuthor(bool isAuthor)
         {
             IsAuthor = isAuthor;
-            UpdatedAt = SystemClock.Instance.GetCurrentInstant();
+            UpdatedAt = SetUpdatedAt();
         }
-
-        public void SetVerified() => VerifyMail = true;
+        
+        public void SetVerified()
+        {
+            VerifyMail = true;
+            UpdatedAt = SetUpdatedAt();
+        }
+        
+        private static Instant? SetUpdatedAt()
+        {
+            return SystemClock.Instance.GetCurrentInstant();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using GlobalEnums.EmailNotifications;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Services.AuthService.Application.Application.Command;
 using Services.AuthService.Application.Common.Interfaces;
@@ -43,7 +44,7 @@ namespace Services.AuthService.Infrastructure.Repositories
             _emailRecipients.Add(user.Email);
             await SendMailNotification(_emailRecipients,
                 $"{_clientUrl}/verification-account/{record.UserId}/{record.VerificationToken}",
-                "VerificationAccTemp");
+                nameof(EmailTemplatesEnum.VerificationAccountTemplate));
             
             return true;
         }

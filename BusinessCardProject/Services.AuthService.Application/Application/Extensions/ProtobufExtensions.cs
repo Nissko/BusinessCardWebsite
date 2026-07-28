@@ -1,3 +1,4 @@
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using NodaTime;
 using NodaTime.Extensions;
@@ -17,5 +18,8 @@ namespace Services.AuthService.Application.Application.Extensions
         
         public static Guid? ToGuidOrNull(this string id) =>
             Guid.TryParse(id, out var guid) ? guid : null;
+
+        public static ByteString ToProtoByte(this byte value)
+            => ByteString.CopyFrom(value);
     }
 }

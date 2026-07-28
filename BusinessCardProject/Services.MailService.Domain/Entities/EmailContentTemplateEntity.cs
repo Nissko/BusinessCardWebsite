@@ -1,4 +1,4 @@
-﻿using ByteCodePlatform.Domain.Common;
+﻿using Services.MailService.Domain.Common;
 
 namespace Services.MailService.Domain.Entities
 {

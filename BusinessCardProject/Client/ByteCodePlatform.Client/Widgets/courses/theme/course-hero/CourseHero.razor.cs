@@ -7,5 +7,7 @@ namespace BusinessCardProject.Client.Widgets.courses.theme.course_hero
     {
         [Parameter, EditorRequired]
         public CourseThemeInfoResponse Course { get; set; } = null!;
+
+        private string PreviewUrl => $"https://localhost:7146/{Course.AvatarUrl}";
     }
 }

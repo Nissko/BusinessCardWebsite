@@ -1,70 +1,99 @@
-﻿<MudDialog>
+﻿<MudDialog MaxWidth="MaxWidth.Small">
     <DialogContent>
         @switch (InputType)
         {
             case DynamicInputType.Text:
-                <MudTextField T="string"
-                              InputType="MudBlazor.InputType.Text"
-                              Variant="Variant.Outlined"
-                              Label="@LabelTextString"
-                              Required="true"
-                              MaxLength="200"
-                              @bind-Value="InputValueString"
+                <MudTextField T="string" InputType="MudBlazor.InputType.Text" Variant="Variant.Outlined"
+                              Label="@LabelTextString" Required="true" MaxLength="200" @bind-Value="InputValueString"
                               RequiredError="Значение не должно быть пустым"/>
                 break;
 
             case DynamicInputType.TextArea:
-                <MudTextField T="string"
-                              Label="@LabelTextString"
-                              Variant="Variant.Outlined"
-                              Lines="3"
-                              MaxLines="10"
-                              MaxLength="1000"
-                              @bind-Value="InputValueString"/>
+                <MudTextField T="string" Label="@LabelTextString" Variant="Variant.Outlined" Lines="3" MaxLines="10"
+                              MaxLength="1000" @bind-Value="InputValueString"/>
                 break;
 
             case DynamicInputType.Number:
-                <MudNumericField T="int?"
-                                 Label="@LabelTextString"
-                                 @bind-Value="_currentNumberValue"
-                                 Min="0"
-                                 Immediate="true"/>
+                <MudNumericField T="int?" Label="@LabelTextString" @bind-Value="_currentNumberValue" Min="0"
+                                 Immediate="true" Variant="Variant.Outlined"/>
                 break;
 
             case DynamicInputType.Boolean:
-                var newListString = new List<string> { "true", "false" };
-
-                <MudSelect T="string"
-                           @bind-Value="_currentBoolValue"
-                           Label="@LabelTextString">
-                    @foreach (var value in newListString)
+                var boolList = new List<string> { "true", "false" };
+                <MudSelect T="string" @bind-Value="_currentBoolValue" Label="@LabelTextString"
+                           Variant="Variant.Outlined">
+                    @foreach (var value in boolList)
                     {
-                        <MudSelectItem Value="@value"
-                                       Disabled="@(bool.Parse(InputValueString) == bool.Parse(value))">
+                        <MudSelectItem Value="@value" Disabled="@(bool.Parse(InputValueString) == bool.Parse(value))">
                             @(bool.Parse(value) ? "Да" : "Нет")
                         </MudSelectItem>
                     }
                 </MudSelect>
                 break;
 
+            case DynamicInputType.Image:
+                <div class="d-flex flex-column gap-4">
+                    <MudText Typo="Typo.subtitle2">@LabelTextString</MudText>
+                    
+                    @if (!string.IsNullOrEmpty(_previewUrl) && _selectedFile == null)
+                    {
+                        <MudPaper Class="d-flex justify-center align-center pa-2" Elevation="1"
+                                  Style="border-radius: 8px;">
+                            <MudImage Src="@_previewUrl" Alt="Текущая обложка" Width="200" Height="200"
+                                      ObjectFit="ObjectFit.Cover" Class="rounded"/>
+                        </MudPaper>
+                    }
+                    
+                    <InputFile OnChange="OnFilesSelected"
+                               accept="image/jpeg,image/png,image/webp"
+                               style="display: none;"
+                               id="@($"fileInput_{RecordId}")"/>
+                    
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.CloudUpload"
+                               Disabled="@_isLoading"
+                               HtmlTag="label"
+                               For="@($"fileInput_{RecordId}")">
+                        @(_selectedFile != null ? "Заменить изображение" : "Выбрать изображение")
+                    </MudButton>
+                    
+                    @if (_selectedFile != null)
+                    {
+                        <MudAlert Severity="Severity.Info" Variant="Variant.Filled" Class="mt-2">
+                            <MudText Typo="Typo.body2">
+                                <MudIcon Icon="@Icons.Material.Filled.Image" Size="Size.Small" Class="mr-2"/>
+                                Выбрано: <b>@_selectedFile.Name</b> (@(Math.Round(_selectedFile.Size / 1024.0, 1)) KB)
+                            </MudText>
+                        </MudAlert>
+                    }
+
+                    @if (_isLoading)
+                    {
+                        <MudProgressLinear Color="Color.Primary" Indeterminate="true"/>
+                        <MudText Typo="Typo.caption" Align="Align.Center">Загрузка файла на сервер...</MudText>
+                    }
+                </div>
+                break;
+
             case DynamicInputType.Select:
-                <MudText>@nameof(DynamicInputType.Select) - в разработке</MudText>
+                <MudText Color="Color.Warning">@nameof(DynamicInputType.Select) - в разработке</MudText>
                 break;
 
             case DynamicInputType.MultiSelect:
-                <MudText>@nameof(DynamicInputType.MultiSelect) - в разработке</MudText>
+                <MudText Color="Color.Warning">@nameof(DynamicInputType.MultiSelect) - в разработке</MudText>
                 break;
 
             default:
-                <MudText Color="Color.Error">Неподдерживаемый тип ввода: @InputType</MudText>
+                <MudText Color="Color.Error">Неподдерживаемый тип поля: @InputType</MudText>
                 break;
         }
     </DialogContent>
 
     <DialogActions>
-        <MudButton OnClick="Cancel">Отмена</MudButton>
-        <MudButton Color="Color.Primary" OnClick="UpdateData" Disabled="_isLoading">
-            @(_isLoading ? "Загрузка..." : ButtonTextString)
+        <MudButton OnClick="Cancel" Disabled="@_isLoading">Отмена</MudButton>
+        <MudButton Color="Color.Primary" OnClick="UpdateData" Disabled="@_isLoading" Variant="Variant.Filled">
+            @(_isLoading ? "Сохранение..." : ButtonTextString)
         </MudButton>
     </DialogActions>
 </MudDialog>

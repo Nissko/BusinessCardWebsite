@@ -197,7 +197,7 @@ namespace Services.AuthService.Presentation.Services
             }
         }
 
-        [Authorize(Roles = UserRoleStaticEnum.Admin)]
+        [AllowAnonymous]
         public override async Task<UserInfoResponse> GetUserByEmail(GetUserByEmailRequest request, ServerCallContext context)
         {
             try

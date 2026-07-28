@@ -1,14 +1,19 @@
-﻿using ByteCodePlatform.Admin.Entities.Services.ProjectInfo.Interfaces;
+﻿using ByteCodePlatform.Admin.Entities.Services.ProjectInfo;
+using ByteCodePlatform.Admin.Entities.Services.ProjectInfo.Interfaces;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
+using Microsoft.JSInterop;
 
 namespace ByteCodePlatform.Admin.Features.admin.dynamic_edit_dialog
 {
-    public partial class DynamicEditDialog : ComponentBase
+    public partial class DynamicEditDialog : ComponentBase, IDisposable
     {
         [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
         [Inject] private IEntityUpdateService UpdateService { get; set; } = null!;
         [Inject] private ISnackbar Snackbar { get; set; } = null!;
+        [Inject] private FileUploadService FileUploadService { get; set; } = null!;
+        [Inject] private IJSRuntime Js { get; set; } = null!;
 
         [Parameter, EditorRequired] public string LabelTextString { get; set; } = string.Empty;
         [Parameter, EditorRequired] public Guid RecordId { get; set; }
@@ -21,6 +26,10 @@ namespace ByteCodePlatform.Admin.Features.admin.dynamic_edit_dialog
         private int? _currentNumberValue;
         private string? _currentBoolValue;
         private bool _isLoading;
+        
+        private IBrowserFile? _selectedFile;
+        private string? _previewUrl;
+        private string? _localObjectUrl;
 
         protected override void OnInitialized()
         {
@@ -32,6 +41,22 @@ namespace ByteCodePlatform.Admin.Features.admin.dynamic_edit_dialog
                 case DynamicInputType.Boolean when bool.TryParse(InputValueString, out var boolVal):
                     _currentBoolValue = boolVal ? "true" : "false";
                     break;
+                case DynamicInputType.Image:
+                    if (!string.IsNullOrEmpty(InputValueString))
+                    {
+                        _previewUrl = $"https://localhost:7146/{InputValueString}";
+                    }
+                    break;
+            }
+        }
+        
+        private void OnFilesSelected(InputFileChangeEventArgs e)
+        {
+            _selectedFile = e.File;
+        
+            if (_selectedFile != null)
+            {
+                _previewUrl = null;
             }
         }
 
@@ -41,29 +66,45 @@ namespace ByteCodePlatform.Admin.Features.admin.dynamic_edit_dialog
         {
             if (_isLoading) return;
 
-            // Определяем значение для отправки
-            object? valueToSend = InputType switch
-            {
-                DynamicInputType.Number => _currentNumberValue,
-                DynamicInputType.Boolean => bool.TryParse(_currentBoolValue, out var b) ? b : null,
-                _ => InputValueString
-            };
-
-            // Валидация
-            if (valueToSend == null || (valueToSend is string s && string.IsNullOrEmpty(s)))
-            {
-                if (InputType != DynamicInputType.Boolean)
-                {
-                    Snackbar.Add("Значение не должно быть пустым", Severity.Warning);
-                    return;
-                }
-            }
-
-            _isLoading = true;
-            StateHasChanged();
-
             try
             {
+                object? valueToSend;
+                if (InputType == DynamicInputType.Image)
+                {
+                    if (_selectedFile == null && string.IsNullOrEmpty(InputValueString))
+                    {
+                        Snackbar.Add("Пожалуйста, выберите изображение", Severity.Warning);
+                        return;
+                    }
+                    
+                    if (_selectedFile != null)
+                    {
+                        _isLoading = true;
+                        StateHasChanged();
+                        
+                        valueToSend = await FileUploadService.UploadImageAsync(_selectedFile);
+                    }
+                    else
+                    {
+                        valueToSend = InputValueString;
+                    }
+                }
+                else
+                {
+                    valueToSend = InputType switch
+                    {
+                        DynamicInputType.Number => _currentNumberValue,
+                        DynamicInputType.Boolean => bool.TryParse(_currentBoolValue, out var b) ? b : null,
+                        _ => InputValueString
+                    };
+
+                    if (valueToSend == null || (valueToSend is string s && string.IsNullOrEmpty(s)))
+                    {
+                        Snackbar.Add("Значение не должно быть пустым", Severity.Warning);
+                        return;
+                    }
+                }
+
                 var success = await UpdateService.UpdateFieldAsync(EntityType, RecordId, FieldName, valueToSend);
 
                 if (success)
@@ -85,6 +126,10 @@ namespace ByteCodePlatform.Admin.Features.admin.dynamic_edit_dialog
                 _isLoading = false;
                 StateHasChanged();
             }
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

@@ -34,6 +34,9 @@
     <Protobuf Include="Entities\Protos\course-service.proto">
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
+    <Protobuf Include="Entities\Protos\files-service.proto">
+      <Generator>MSBuild:Compile</Generator>
+    </Protobuf>
     <Protobuf Include="Entities\Protos\user-service.proto">
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
@@ -46,6 +49,10 @@
   <ItemGroup>
     <AdditionalFiles Include="Features\auth\login-form\LoginForm.razor" />
     <AdditionalFiles Include="Pages\auth\Login.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

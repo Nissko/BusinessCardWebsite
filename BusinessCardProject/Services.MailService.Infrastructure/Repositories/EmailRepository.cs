@@ -8,62 +8,79 @@ using Services.MailService.Infrastructure.Settings;
 
 namespace Services.MailService.Infrastructure.Repositories
 {
-    public class EmailRepository : IEmailSender
+    public class EmailRepository : IEmailRepository
     {
         private readonly MailSettings _settings;
+        private readonly MailDbContext _context;
+        private readonly IEmailTemplateService _emailTemplateService;
 
-        public EmailRepository(IOptions<MailSettings> options)
+        public EmailRepository(IOptions<MailSettings> options, MailDbContext context,
+            IEmailTemplateService emailTemplateService)
         {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _emailTemplateService =
+                emailTemplateService ?? throw new ArgumentNullException(nameof(emailTemplateService));
             _settings = options.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
-        public async Task<bool> SendAsync(EmailMessageRequest messageRequest, CancellationToken cancellationToken)
+        public async Task<bool> SendAsync(EmailMessageRequest request, CancellationToken cancellationToken)
         {
             try
             {
                 var mail = new MimeMessage();
 
-                var senderName = string.IsNullOrEmpty(messageRequest.DisplayName)
+                var senderName = string.IsNullOrEmpty(request.DisplayName)
                     ? _settings.DisplayName
-                    : messageRequest.DisplayName;
-                var senderEmail = string.IsNullOrEmpty(messageRequest.From)
+                    : request.DisplayName;
+                var senderEmail = string.IsNullOrEmpty(request.From)
                     ? _settings.From
-                    : messageRequest.From;
+                    : request.From;
 
                 mail.From.Add(new MailboxAddress(senderName, senderEmail));
                 mail.Sender = new MailboxAddress(senderName, senderEmail);
 
-                foreach (var to in messageRequest.To.Where(x => !string.IsNullOrWhiteSpace(x)))
+                foreach (var to in request.To.Where(x => !string.IsNullOrWhiteSpace(x)))
                 {
                     mail.To.Add(MailboxAddress.Parse(to));
                 }
 
-                foreach (var cc in messageRequest.Cc.Where(x => !string.IsNullOrWhiteSpace(x)))
+                foreach (var cc in request.Cc.Where(x => !string.IsNullOrWhiteSpace(x)))
                 {
                     mail.Cc.Add(MailboxAddress.Parse(cc));
                 }
 
-                foreach (var bcc in messageRequest.Bcc.Where(x => !string.IsNullOrWhiteSpace(x)))
+                foreach (var bcc in request.Bcc.Where(x => !string.IsNullOrWhiteSpace(x)))
                 {
                     mail.Bcc.Add(MailboxAddress.Parse(bcc));
                 }
 
-                if (!string.IsNullOrEmpty(messageRequest.ReplyTo))
+                if (!string.IsNullOrEmpty(request.ReplyTo))
                 {
-                    mail.ReplyTo.Add(new MailboxAddress(messageRequest.ReplyToName
-                                                        ?? "Reply", messageRequest.ReplyTo));
+                    mail.ReplyTo.Add(new MailboxAddress(request.ReplyToName
+                                                        ?? "Reply", request.ReplyTo));
                 }
 
-                mail.Subject = messageRequest.Subject;
+                mail.Subject = request.Subject;
                 var bodyBuilder = new BodyBuilder();
 
-                if (messageRequest.IsHtml)
+                if (request.IsHtml)
                 {
-                    bodyBuilder.HtmlBody = messageRequest.Body;
+                    var template = _context.EmailContentTemplate.FirstOrDefault(x =>
+                        x.TemplateName == request.TemplateName);
+
+                    if (template != null)
+                    {
+                        bodyBuilder.HtmlBody = await _emailTemplateService
+                            .GetTemplateBody(template.TemplateName, template.Body, request);
+                    }
+                    else
+                    {
+                        bodyBuilder.HtmlBody = request.Body;
+                    }
                 }
                 else
                 {
-                    bodyBuilder.TextBody = messageRequest.Body;
+                    bodyBuilder.TextBody = request.Body;
                 }
 
                 mail.Body = bodyBuilder.ToMessageBody();

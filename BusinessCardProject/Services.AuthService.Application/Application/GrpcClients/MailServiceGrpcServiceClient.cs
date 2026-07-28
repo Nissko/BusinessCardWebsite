@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using Requests.Email;
+using Services.AuthService.Application.Application.Extensions;
 using Services.AuthService.Application.Common.Interfaces.GrpcClients;
 using SmtpMailService.Proto;
 
@@ -10,7 +11,7 @@ namespace Services.AuthService.Application.Application.GrpcClients
     /// </summary>
     public class MailServiceGrpcServiceClient : IMailServiceGrpcServiceClient
     {
-        private readonly SmtpMailService.Proto.SmtpMailGrpcService.SmtpMailGrpcServiceClient _client;
+        private readonly SmtpMailGrpcService.SmtpMailGrpcServiceClient _client;
 
         public MailServiceGrpcServiceClient(SmtpMailGrpcService.SmtpMailGrpcServiceClient client)
         {
