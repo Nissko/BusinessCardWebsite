@@ -11,5 +11,6 @@ namespace Dtos.DTO.User
         bool IsAuthor,
         Instant CreatedAt,
         Instant? UpdatedAt,
-        Instant? DeletedAt);
+        Instant? DeletedAt,
+        bool IsVerified);
 }

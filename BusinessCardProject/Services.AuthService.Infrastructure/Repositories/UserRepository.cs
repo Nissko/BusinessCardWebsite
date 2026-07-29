@@ -159,7 +159,8 @@ namespace Services.AuthService.Infrastructure.Repositories
                     u.IsAuthor,
                     u.CreatedAt,
                     u.UpdatedAt,
-                    u.DeletedAt
+                    u.DeletedAt,
+                    u.VerifyMail
                 ))
                 .ToListAsync();
 

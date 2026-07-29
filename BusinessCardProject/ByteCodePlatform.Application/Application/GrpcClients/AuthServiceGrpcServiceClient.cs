@@ -1,6 +1,6 @@
 ﻿using AuthorizationService.Proto;
 using ByteCodePlatform.Application.Common.Interfaces.GrpcClients;
-using ByteCodePlatform.ClientProto.ProtoMappers.User;
+using ByteCodePlatform.Application.Common.ProtobufClientExtensions;
 using Dtos.DTO.Pagination;
 using Dtos.DTO.User;
 using Grpc.Core;

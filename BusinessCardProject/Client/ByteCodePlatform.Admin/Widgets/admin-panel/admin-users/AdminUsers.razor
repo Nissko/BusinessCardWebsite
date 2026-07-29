@@ -76,7 +76,7 @@
             </MudTd>
             <MudTd DataLabel="Активен">
                 <MudText Align="Align.Center" Typo="Typo.body2">
-                    @(context.DeletedAt == null ? "Да" : "Нет")
+                    @(context.IsVerified ? "Да" : "Нет")
                 </MudText>
             </MudTd>
             <MudTd>

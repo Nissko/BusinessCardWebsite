@@ -5,10 +5,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-  
-  <ItemGroup>
-    <Protobuf Include="Clients\auth-service.proto" GrpcServices="Both" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Google.Api.CommonProtos" Version="2.16.0"/>
@@ -24,7 +20,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <Protobuf Include="auth-service.proto" GrpcServices="Both" />
+    <Protobuf Include="course-service.proto" GrpcServices="Both" />
+    <Protobuf Include="files-service.proto" GrpcServices="Both" />
+    <Protobuf Include="smtp-email.proto" GrpcServices="Both" />
+    <Protobuf Include="user-service.proto" GrpcServices="Both" />
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\ContractualDTOs\Dtos\Dtos.csproj" />
   </ItemGroup>

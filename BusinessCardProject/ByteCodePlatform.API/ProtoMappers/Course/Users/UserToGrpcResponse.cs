@@ -18,7 +18,8 @@ namespace ByteCodePlatform.API.ProtoMappers.Course.Users
                 IsAuthor = dto.IsAuthor,
                 CreatedAt = dto.CreatedAt.ToTimestamp(),
                 UpdatedAt = dto.UpdatedAt?.ToTimestamp(),
-                DeletedAt = dto.DeletedAt?.ToTimestamp()
+                DeletedAt = dto.DeletedAt?.ToTimestamp(),
+                IsVerified = dto.IsVerified
             };
         }
         

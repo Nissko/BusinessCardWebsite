@@ -18,7 +18,8 @@ namespace Services.AuthService.Domain.Extensions
                 e.IsAuthor,
                 e.CreatedAt,
                 e.UpdatedAt ?? null,
-                e.DeletedAt ?? null
+                e.DeletedAt ?? null,
+                e.VerifyMail
             );
         }
 
@@ -33,7 +34,8 @@ namespace Services.AuthService.Domain.Extensions
                 e.IsAuthor,
                 e.CreatedAt,
                 e.UpdatedAt ?? null,
-                e.DeletedAt ?? null
+                e.DeletedAt ?? null,
+                e.VerifyMail
             )).ToList();
         }
         

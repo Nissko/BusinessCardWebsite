@@ -29,10 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="Protos\auth-service.proto" GrpcServices="Both" />
-    </ItemGroup>
-
-    <ItemGroup>
+      <ProjectReference Include="..\Protos\Protos.csproj" />
       <ProjectReference Include="..\Services.AuthService.Application\Services.AuthService.Application.csproj" />
       <ProjectReference Include="..\Services.AuthService.Infrastructure\Services.AuthService.Infrastructure.csproj" />
     </ItemGroup>

@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\GlobalEnums\GlobalEnums.csproj" />
+      <ProjectReference Include="..\Enums\Enums.csproj" />
       <ProjectReference Include="..\Services.AuthService.Application\Services.AuthService.Application.csproj" />
     </ItemGroup>
 

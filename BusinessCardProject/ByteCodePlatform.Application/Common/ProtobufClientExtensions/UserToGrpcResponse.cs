@@ -1,7 +1,8 @@
 ﻿using AuthorizationService.Proto;
+using ByteCodePlatform.Application.Application.Extensions;
 using Dtos.DTO.User;
 
-namespace ByteCodePlatform.ClientProto.ProtoMappers.User
+namespace ByteCodePlatform.Application.Common.ProtobufClientExtensions
 {
     public static class UserToGrpcResponse
     {
@@ -16,7 +17,8 @@ namespace ByteCodePlatform.ClientProto.ProtoMappers.User
                 IsAuthor: proto.IsAuthor,
                 CreatedAt: proto.CreatedAt.ToInstant(),
                 UpdatedAt: proto.UpdatedAt?.ToInstant(),
-                DeletedAt: proto.DeletedAt?.ToInstant()
+                DeletedAt: proto.DeletedAt?.ToInstant(),
+                IsVerified: proto.IsVerified
             );
         }
 

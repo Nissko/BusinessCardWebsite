@@ -9,7 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ContractualDTOs\Dtos\Dtos.csproj" />
       <ProjectReference Include="..\ContractualDTOs\Requests\Requests.csproj" />
-      <ProjectReference Include="..\Services.AuthService.ClientProtos\Services.AuthService.ClientProtos.csproj" />
+      <ProjectReference Include="..\Protos\Protos.csproj" />
       <ProjectReference Include="..\Services.AuthService.Domain\Services.AuthService.Domain.csproj" />
     </ItemGroup>
 
