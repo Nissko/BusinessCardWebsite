@@ -1,15 +1,39 @@
-﻿@using BusinessCardProject.Client.Widgets.courses.theme.course_module_item
+﻿@namespace BusinessCardProject.Client.Widgets.courses.theme.course_content
+@using BusinessCardProject.Client.Widgets.courses.theme.course_module_item
 
-<MudText Typo="Typo.h4" HtmlTag="p" Color="Color.Primary" Style="font-weight: bold;" Class="mb-2">
-    Содержание курса:
-</MudText>
+<MudPaper Elevation="2" Class="content-card pa-4 pa-sm-5 pa-md-6">
+    <div class="content-header mb-4">
+        <div class="d-flex align-center">
+            <MudIcon Icon="@Icons.Material.Rounded.MenuBook" Color="Color.Primary" Class="mr-2"/>
+            <div>
+                <MudText Typo="Typo.h6" Style="font-weight: 700;">Содержание курса</MudText>
+                <MudText Typo="Typo.caption" Style="color: #95a5a6;">
+                    @(CourseModules?.CourseModules?.Count ?? 0) модулей
+                </MudText>
+            </div>
+        </div>
+    </div>
 
-<MudTreeView Style="user-select: none;" T="string" Hover="true" ExpandOnClick="true">
-    @if (CourseModules != null)
-    {
-        foreach (var module in CourseModules.CourseModules)
+    <MudTreeView T="string" Hover="true" ExpandOnClick="true" Dense="true">
+        @if (CourseModules != null)
         {
-            <CourseModuleItem Module="module" CourseGrpc="CourseGrpc"/>
+            foreach (var (module, _) in CourseModules.CourseModules.Select((m, i) => (m, i)))
+            {
+                <CourseModuleItem Module="module" CourseGrpc="CourseGrpc"/>
+            }
         }
+    </MudTreeView>
+</MudPaper>
+
+<style>
+    .content-card {
+        border-radius: 16px;
+        border: 1px solid #eee;
+        overflow: hidden;
     }
-</MudTreeView>
+
+    .content-header {
+        padding-bottom: .75rem;
+        border-bottom: 1px solid #f0f0f0;
+    }
+</style>

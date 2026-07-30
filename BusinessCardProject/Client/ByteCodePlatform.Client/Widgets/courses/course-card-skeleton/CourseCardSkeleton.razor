@@ -1,28 +1,38 @@
-﻿<MudCard Elevation="25" Class="rounded-lg pb-4">
-    <MudCardHeader>
-        <CardHeaderContent>
-            <MudSkeleton Animation="Animation.Wave"/>
-        </CardHeaderContent>
-    </MudCardHeader>
+﻿<MudCard Elevation="1" Class="modern-card rounded-xl overflow-hidden"
+         Style="max-width: 380px; margin: auto; border-top: 4px solid var(--mud-palette-primary);">
 
-    <MudCardContent>
-        <div class="d-flex justify-center">
-            <MudSkeleton Animation="Animation.Wave" Style="width: 250px; height: 56px;"/>
+    <MudCardContent Class="pb-4">
+        <div class="d-flex justify-space-between align-start mb-3">
+            <MudSkeleton Animation="Animation.Wave"
+                         SkeletonType="SkeletonType.Text"
+                         Width="65%"
+                         Style="height: 28px; border-radius: 6px;"/>
+
+            <MudSkeleton Animation="Animation.Wave"
+                         SkeletonType="SkeletonType.Rectangle"
+                         Style="width: 90px; height: 28px; border-radius: 16px;"/>
         </div>
-        <MudList T="string" Class="mx-auto mt-4" Style="width:300px;">
-            <MudListItem Icon="@Icons.Material.Rounded.CheckCircle">
-                <MudSkeleton Animation="Animation.Wave"/>
-            </MudListItem>
-            <MudListItem Icon="@Icons.Material.Rounded.CheckCircle">
-                <MudSkeleton Animation="Animation.Wave"/>
-            </MudListItem>
-            <MudListItem Icon="@Icons.Material.Rounded.CheckCircle">
-                <MudSkeleton Animation="Animation.Wave"/>
-            </MudListItem>
-        </MudList>
+        
+        <MudSkeleton Animation="Animation.Wave"
+                     SkeletonType="SkeletonType.Rectangle"
+                     Style="width: 100%; height: 1px; margin-bottom: 1.5rem;"/>
+        
+        <div class="d-flex align-center gap-2 mb-4">
+            <MudSkeleton Animation="Animation.Wave"
+                         SkeletonType="SkeletonType.Circle"
+                         Style="width: 20px; height: 20px;"/>
+            <MudSkeleton Animation="Animation.Wave"
+                         SkeletonType="SkeletonType.Text"
+                         Width="40%"
+                         Style="height: 24px; border-radius: 6px;"/>
+            <MudSkeleton Animation="Animation.Wave"
+                         SkeletonType="SkeletonType.Text"
+                         Width="25%"
+                         Style="height: 16px; border-radius: 4px; margin-left: 8px;"/>
+        </div>
+        
+        <MudSkeleton Animation="Animation.Wave"
+                     SkeletonType="SkeletonType.Rectangle"
+                     Style="width: 100%; height: 48px; border-radius: 12px; margin-top: 0.5rem;"/>
     </MudCardContent>
-
-    <MudCardActions Class="d-flex justify-center">
-        <MudSkeleton Style="width:50%;"/>
-    </MudCardActions>
 </MudCard>

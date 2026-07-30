@@ -1,39 +1,107 @@
-﻿<MudTreeViewItem T="string" Text="@($"Урок {Index + 1}. {VideoCourse.Name}")"
-                 TextTypo="Typo.h5" 
-                 Class="mt-1 mb-1">
-    <MudGrid Class="pt-4 pb-4 pr-7">
-        <MudItem xs="12" md="3">
-            <MudImage Src="@PreviewUrl"
-                      Alt="VideoImage"
-                      Style="width: 100%"
-                      Elevation="25" 
-                      ObjectFit="ObjectFit.Contain"
-                      Class="rounded-lg"/>
-        </MudItem>
-        @*TODO: подумать, нужно ли описание*@
-        @* <MudItem xs="12" md="9" Class="d-flex flex-column justify-start"> *@
-        @*     <MudText Typo="Typo.body1" Class="pb-2"> *@
-        @*         @VideoCourse.Description *@
-        @*     </MudText> *@
-        @* </MudItem> *@
-        <MudItem xs="12" md="3" Class="pt-2 d-flex align-center">
-            <MudButton Class="mt-2" 
-                       Style="width: 100%;" 
-                       Color="Color.Primary"
-                       Variant="Variant.Filled"
-                       OnClick="@OnWatchClick">
-                Смотреть
-            </MudButton>
-            
-            @*TODO: Сделать изменение текста в зависимости от статуса авторизации пользователя*@
-            <MudTooltip Text="Необходимо авторизоваться" 
-                        Placement="Placement.Top">
-                <MudIconButton Class="mt-2 ml-1"
-                               Icon="@Icons.Material.Rounded.Favorite"
-                               Color="Color.Secondary"
-                               Disabled="true"
-                               OnClick="@OnFavoriteClick"/>
-            </MudTooltip>
-        </MudItem>
-    </MudGrid>
+﻿@namespace BusinessCardProject.Client.Widgets.courses.theme.course_video_item
+
+<MudTreeViewItem T="string" Class="video-item">
+    <BodyContent>
+        <div class="d-flex align-center" style="min-width:0;">
+            <MudIcon Icon="@Icons.Material.Rounded.PlayCircleOutline"
+                     Color="Color.Primary" Size="Size.Small" Class="mr-1 flex-shrink-0"/>
+            <MudText Typo="Typo.body2" Style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                Урок @(Index + 1). @VideoCourse.Name
+            </MudText>
+        </div>
+    </BodyContent>
+
+    <ChildContent>
+        <MudPaper Elevation="0" Class="video-card pa-3 pa-sm-4 mt-1">
+            <MudGrid Spacing="3">
+                <MudItem xs="12" sm="5" md="4">
+                    <div class="video-preview" @onclick="OnWatchClick">
+                        <MudImage Src="@PreviewUrl"
+                                  Alt="Preview"
+                                  ObjectFit="ObjectFit.Cover"
+                                  Style="width:100%;height:160px;border-radius:10px;display:block;"/>
+                        <div class="play-btn">
+                            <MudIcon Icon="@Icons.Material.Filled.PlayArrow" Style="color:#fff;font-size:2rem;"/>
+                        </div>
+                    </div>
+                </MudItem>
+                
+                <MudItem xs="12" sm="7" md="8" Class="d-flex flex-column justify-center">
+                    <MudText Typo="Typo.subtitle1" Class="mb-1" Style="font-weight:600; color: black;">
+                        @VideoCourse.Name
+                    </MudText>
+
+                    @*@if (!string.IsNullOrEmpty(VideoCourse.Description))
+                    {
+                        <MudText Typo="Typo.body2" Class="mb-3" Style="color:#7f8c8d;line-height:1.5;">
+                            @VideoCourse.Description
+                        </MudText>
+                    }*@
+                    
+                    <div class="d-flex align-center flex-wrap" style="gap:8px;">
+                        <MudButton Color="Color.Primary"
+                                   Variant="Variant.Filled"
+                                   Size="Size.Small"
+                                   StartIcon="@Icons.Material.Rounded.PlayArrow"
+                                   OnClick="OnWatchClick"
+                                   Style="flex:1;min-width:140px;max-width:220px;">
+                            Смотреть
+                        </MudButton>
+                        
+                        <MudIconButton Icon="@(true
+                                    ? Icons.Material.Filled.Favorite
+                                    : Icons.Material.Rounded.FavoriteBorder)"
+                                       Color="@(true ? Color.Error : Color.Default)"
+                                       Size="Size.Small"
+                                       Style="opacity:.7;transition:opacity .2s;"
+                                       Class="fav-btn"/>
+                    </div>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </ChildContent>
 </MudTreeViewItem>
+
+<style>
+    .video-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+    }
+
+    .video-preview {
+        position: relative;
+        cursor: pointer;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .play-btn {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,0,0,.35);
+        opacity: 0;
+        transition: opacity .25s;
+    }
+
+    .video-preview:hover .play-btn,
+    .video-preview:active .play-btn {
+        opacity: 1;
+    }
+
+    .fav-btn {
+        flex-shrink: 0;
+    }
+
+    .fav-btn:hover {
+        opacity: 1 !important;
+    }
+
+    @@media (max-width: 600px) {
+        .video-card {
+            padding: 12px !important;
+        }
+    }
+</style>

@@ -1,4 +1,8 @@
-﻿using CourseService.Proto;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using CourseService.Proto;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -14,7 +18,7 @@ namespace BusinessCardProject.Client.Widgets.courses.course_list
 
         private List<CourseThemeInfoResponse>? _courses;
         private readonly List<CourseThemePropertiesResponse>? _courseThemeProperties = new();
-        private int _skeletonCount = 6;
+        private int _skeletonCount = 9;
         private Guid _viewportSubscriptionId;
 
         protected override async Task OnInitializedAsync()
@@ -70,11 +74,11 @@ namespace BusinessCardProject.Client.Widgets.courses.course_list
         {
             return breakpoint switch
             {
-                Breakpoint.Xxl => 9,
-                Breakpoint.Xl or Breakpoint.Lg or Breakpoint.Md => 6,
-                Breakpoint.Sm => 4,
-                Breakpoint.Xs => 2,
-                _ => 6
+                Breakpoint.Xxl => 12,
+                Breakpoint.Xl or Breakpoint.Lg or Breakpoint.Md => 9,
+                Breakpoint.Sm => 6,
+                Breakpoint.Xs => 4,
+                _ => 9
             };
         }
 

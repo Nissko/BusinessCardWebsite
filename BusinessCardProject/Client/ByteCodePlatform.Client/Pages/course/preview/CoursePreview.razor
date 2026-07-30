@@ -11,17 +11,24 @@
 
 @if (CourseThemeInfo != null)
 {
-    <MudContainer Class="py-4 py-sm-8 py-md-12 py-lg-16 py-xl-20">
-        <MudGrid>
-            <CourseHero Course="CourseThemeInfo"/>
-            <CourseAuthor />
-            <MudItem xs="12" Class="mt-6">
-                <CourseContent Course="CourseThemeInfo" CourseGrpc="CourseGrpc"/>
-            </MudItem>
-        </MudGrid>
-    </MudContainer>
+    <div class="course-page">
+        <CourseHero Course="CourseThemeInfo"/>
+
+        <MudContainer MaxWidth="MaxWidth.Large" Class="px-3 px-sm-4 py-6 py-md-8">
+            <MudGrid Spacing="4">
+                <MudItem xs="12" md="8">
+                    <CourseContent Course="CourseThemeInfo" CourseGrpc="CourseGrpc"/>
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <CourseAuthor/>
+                </MudItem>
+            </MudGrid>
+        </MudContainer>
+    </div>
 }
 
-@code {
-    
-}
+<style>
+    .course-page {
+        overflow-x: hidden;
+    }
+</style>

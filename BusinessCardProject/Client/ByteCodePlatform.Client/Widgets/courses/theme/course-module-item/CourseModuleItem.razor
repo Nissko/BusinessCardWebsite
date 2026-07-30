@@ -1,14 +1,55 @@
-﻿@using BusinessCardProject.Client.Widgets.courses.theme.course_video_item
-<MudTreeViewItem Style="user-select: none;" T="string" Text="@Module.Name" TextTypo="Typo.h4" Class="mb-1">
-    @if (VideoCourses != null && VideoCourses.CourseContents.Any())
-    {
-        @foreach (var (videoCourse, index) in VideoCourses.CourseContents.Select((v, i) => (v, i)))
-        {
-            <CourseVideoItem VideoCourse="videoCourse" Index="index" />
+﻿@namespace BusinessCardProject.Client.Widgets.courses.theme.course_module_item
+@using BusinessCardProject.Client.Widgets.courses.theme.course_video_item
+
+<MudTreeViewItem T="string" Class="module-item">
+    <BodyContent>
+        <div class="d-flex align-center" style="min-width:0;">
+            <div style="min-width:0;">
+                <MudText Typo="Typo.subtitle2" Style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                    @Module.Name
+                </MudText>
+                <MudText Typo="Typo.caption" Style="color:#95a5a6;">
+                    @(VideoCourses?.CourseContents?.Count ?? 0) уроков
+                </MudText>
+            </div>
+        </div>
+    </BodyContent>
+
+    <ChildContent>
+        <div class="module-children">
+            @if (VideoCourses != null && VideoCourses.CourseContents.Any())
+            {
+                @foreach (var (vc, i) in VideoCourses.CourseContents.Select((v, i) => (v, i)))
+                {
+                    <CourseVideoItem VideoCourse="vc" Index="i"/>
+                }
+            }
+            else
+            {
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Dense="true" Class="mt-1">
+                    В разработке
+                </MudAlert>
+            }
+        </div>
+    </ChildContent>
+</MudTreeViewItem>
+
+<style>
+    .module-item {
+        border-radius: 10px;
+        margin-bottom: 4px;
+    }
+
+    .module-children {
+        border-left: 2px solid #e8e8e8;
+        margin-left: 14px;
+        padding-left: 12px;
+    }
+
+    @@media (max-width: 600px) {
+        .module-children {
+            margin-left: 8px;
+            padding-left: 8px;
         }
     }
-    else
-    {
-        <MudTreeViewItem T="string" Text="В разработке!" Disabled="true"/>
-    }
-</MudTreeViewItem>
+</style>

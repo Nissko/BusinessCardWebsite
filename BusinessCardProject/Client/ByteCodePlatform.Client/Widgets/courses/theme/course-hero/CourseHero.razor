@@ -1,14 +1,111 @@
-﻿<MudItem xs="12">
-    <MudImage ObjectFit="ObjectFit.Cover" 
+﻿@namespace BusinessCardProject.Client.Widgets.courses.theme.course_hero
+
+<div class="course-hero">
+    <MudImage ObjectFit="ObjectFit.Cover"
               Src="@PreviewUrl"
               Alt="@Course.Name"
-              Class="rounded-lg" 
-              Height="256" 
-              Style="width: 100%"/>
-</MudItem>
+              Class="hero-image"/>
 
-<MudItem xs="12" md="9" Class="mt-4">
-    <MudText Typo="Typo.h6" HtmlTag="p" Align="Align.Justify">
-        @Course.Description
-    </MudText>
-</MudItem>
+    <div class="hero-overlay">
+        <MudContainer MaxWidth="MaxWidth.Large" Class="px-3 px-sm-4">
+            <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small" Class="mb-2">
+                <MudIcon Icon="@Icons.Material.Rounded.School" Size="Size.Small" Class="mr-1"/>
+                Курс
+            </MudChip>
+
+            <MudText Typo="Typo.h4" Class="hero-title mb-2">
+                @Course.Name
+            </MudText>
+
+            <MudText Typo="Typo.body1" Class="hero-desc mb-3">
+                @Course.Description
+            </MudText>
+
+            <div class="hero-stats">
+                <span class="stat-pill">
+                    <MudIcon Icon="@Icons.Material.Rounded.PlayCircle" Size="Size.Small"/>
+                    999 уроков
+                </span>
+                @*TODO: для доработки*@
+                @*<span class="stat-pill">
+                    <MudIcon Icon="@Icons.Material.Rounded.AccessTime" Size="Size.Small"/>
+                    999 ч
+                </span>
+                <span class="stat-pill">
+                    <MudIcon Icon="@Icons.Material.Rounded.Star" Size="Size.Small"/>
+                    5.0
+                </span>*@
+            </div>
+        </MudContainer>
+    </div>
+</div>
+
+<style>
+    .course-hero {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .hero-image {
+        width: 100%;
+        height: 320px;
+        display: block;
+        object-fit: cover;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,.82) 0%, rgba(0,0,0,.45) 60%, transparent 100%);
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 2rem;
+    }
+
+    .hero-title {
+        color: #fff;
+        font-weight: 800;
+        word-break: break-word;
+        line-height: 1.2;
+    }
+
+    .hero-desc {
+        color: rgba(255,255,255,.9);
+        line-height: 1.5;
+        max-width: 640px;
+    }
+
+    .hero-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem;
+    }
+
+    .stat-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(255,255,255,.12);
+        border: 1px solid rgba(255,255,255,.2);
+        backdrop-filter: blur(6px);
+        color: #fff;
+        font-size: .8rem;
+        padding: 4px 10px;
+        border-radius: 20px;
+    }
+
+    .stat-pill .mud-icon-root {
+        font-size: 1rem !important;
+        color: #fff !important;
+    }
+
+    @@media (min-width: 600px) {
+        .hero-image { height: 400px; }
+        .hero-title { font-size: 2rem !important; }
+    }
+
+    @@media (min-width: 960px) {
+        .hero-image { height: 440px; }
+    }
+</style>

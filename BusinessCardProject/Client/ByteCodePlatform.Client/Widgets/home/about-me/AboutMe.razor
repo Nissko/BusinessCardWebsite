@@ -1,15 +1,40 @@
 ﻿@namespace BusinessCardProject.Client.Widgets.home.about_me
 
-<MudContainer MaxWidth="MaxWidth.Large"
-              Class="py-8 px-4 text-center d-flex flex-column justify-center align-center">
-    <MudText Typo="Typo.h4" Align="Align.Center" Class="mb-4" Style="font-weight: bold">
-        Знания и опыт, доступные каждому! — фундамент устойчивого роста и конкурентного преимущества.
-    </MudText>
-    
-    <MudText Typo="Typo.body1" HtmlTag="p" Align="Align.Justify" Class="mb-8">
-        <MudDivider Class="mb-4" DividerType="DividerType.Middle" />
-        Меня зовут Никита. Моя задача — убрать барьеры в обучении разработке.
-        Платформа объединяет курсы по основам синтаксиса и практику интеграции современных инструментов.
-        Результат — не просто знание языка, а способность самостоятельно проектировать и писать рабочий код.
-    </MudText>
-</MudContainer>
+<MudPaper Elevation="3" Class="pa-4 pa-sm-6 pa-md-8 rounded-xl mx-3 mx-sm-0"
+          Style="background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%); border: 1px solid #e0e0e0;">
+
+    <MudContainer MaxWidth="MaxWidth.Medium" Class="d-flex flex-column align-center text-center px-0">
+
+        <!-- Замена MudChip на MudPaper для корректного многострочного отображения -->
+        <MudPaper  Style="background-color: var(--mud-palette-primary); text-align: center;" Class="d-inline-block text-center rounded-pill px-4 py-2 mb-4" Elevation="0">
+            <MudText Typo="Typo.caption" 
+                     Style="letter-spacing: 1px; text-transform: uppercase; font-weight: 600; line-height: 1.5; color: var(--mud-palette-primary-text); white-space: normal;">
+                Создавайте технологии завтрашнего дня
+            </MudText>
+        </MudPaper>
+
+        <MudIcon Icon="@Icons.Material.Filled.School" Size="Size.Large" Color="Color.Primary" Class="mb-4"/>
+
+        <MudText Align="Align.Center" Typo="Typo.h4" Class="mb-2" Style="font-weight: 800; color: #2c3e50; word-break: break-word;">
+            Знания и опыт, доступные каждому!
+        </MudText>
+
+        <MudText Align="Align.Center" Typo="Typo.h6" Class="mb-6" Style="color: #546e7a; font-weight: 500; line-height: 1.4;">
+            Фундамент устойчивого роста и конкурентного преимущества.
+        </MudText>
+
+        <MudDivider Class="mb-6"
+                    Style="width: 75%; border-width: 3px; border-color: var(--mud-palette-primary);"/>
+
+        <MudText Align="Align.Center" Typo="Typo.body1" Class="mb-4 px-2 px-sm-0"
+                 Style="line-height: 1.7; color: #34495e; max-width: 700px;">
+            Наша задача — убрать барьеры в обучении разработке.
+        </MudText>
+
+        <MudText Typo="Typo.body1" Class="px-2 px-sm-0" Style="line-height: 1.7; color: #34495e; max-width: 700px;">
+            Платформа объединяет курсы по основам синтаксиса и практику интеграции современных инструментов.
+            Результат — не просто знание языка, а способность самостоятельно проектировать и писать рабочий код.
+        </MudText>
+
+    </MudContainer>
+</MudPaper>

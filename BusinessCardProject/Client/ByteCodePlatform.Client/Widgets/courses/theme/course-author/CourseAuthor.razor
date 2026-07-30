@@ -1,15 +1,55 @@
-﻿<MudItem xs="12" md="3" Class="d-flex flex-column align-center">
-    <MudAvatar Class="mb-2" Color="Color.Default" Variant="Variant.Filled" Size="Size.Large">
-        <MudIcon Color="Color.Dark" Icon="@Icons.Material.Rounded.Person" Size="Size.Large"/>
+﻿@namespace BusinessCardProject.Client.Widgets.courses.theme.course_author
+
+<MudPaper Elevation="2" Class="author-card pa-4 pa-sm-5 text-center">
+    <MudAvatar Size="Size.Large" Color="Color.Primary" Class="mx-auto mb-2"
+               Style="width:72px;height:72px;">
+        <MudIcon Icon="@Icons.Material.Rounded.Person" Size="Size.Large"/>
     </MudAvatar>
-    <MudText Typo="Typo.h5" Class="mb-2">Никита С.</MudText>
-    <MudSkeleton Animation="Animation.False" 
-                 SkeletonType="SkeletonType.Rectangle" 
-                 Height="4px" 
-                 Width="20%"
-                 Class="mb-4" 
-                 Style="background-color: var(--mud-palette-primary);"/>
-    <MudText Align="Align.Center" Typo="Typo.body2">
-        Бла-бла, описание, да-да
+
+    <MudText Typo="Typo.subtitle1" Style="font-weight:700;">Никита С.</MudText>
+    <MudText Typo="Typo.caption" Class="mb-3" Style="color:#95a5a6;">Преподаватель курса</MudText>
+
+    <MudDivider Style="margin-top: .75rem; border-bottom: 1px solid white;" Class="mb-3"/>
+
+    @*TODO: доработать*@
+    <MudText Typo="Typo.body2" Align="Align.Center" Style="line-height:1.6;">
+        Опытный разработчик с 5+ годами практики в создании веб-приложений и обучении начинающих программистов.
     </MudText>
-</MudItem>
+
+    @*TODO: для доработки*@
+    @*<div class="author-stats mt-3 mb-3">
+        <div class="stat">
+            <MudText Typo="Typo.subtitle1" Style="font-weight:700;color:var(--mud-palette-primary);">15+</MudText>
+            <MudText Typo="Typo.caption" Style="color:#95a5a6;">Курсов</MudText>
+        </div>
+        <div class="stat">
+            <MudText Typo="Typo.subtitle1" Style="font-weight:700;color:var(--mud-palette-primary);">500+</MudText>
+            <MudText Typo="Typo.caption" Style="color:#95a5a6;">Студентов</MudText>
+        </div>
+        <div class="stat">
+            <MudText Typo="Typo.subtitle1" Style="font-weight:700;color:var(--mud-palette-primary);">4.9</MudText>
+            <MudText Typo="Typo.caption" Style="color:#95a5a6;">Рейтинг</MudText>
+        </div>
+    </div>*@
+</MudPaper>
+
+<style>
+    .author-card {
+        border-radius: 16px;
+        border: 1px solid #eee;
+    }
+
+    .author-stats {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .stat { text-align: center; }
+    
+    @@media (min-width: 960px) {
+        .author-card {
+            position: sticky;
+            top: 1.5rem;
+        }
+    }
+</style>
