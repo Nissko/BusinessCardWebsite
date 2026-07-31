@@ -4,9 +4,9 @@ namespace Services.AuthService.Application.Common.Interfaces
 {
     public interface IFailedLoginAttemptRepository
     {
-        Task RecordAttemptAsync(Guid userId, CancellationToken ct = default);
-        Task<bool> IsLockedOutAsync(Guid userId, CancellationToken ct = default);
-        Task ClearAttemptsAsync(Guid userId, CancellationToken ct = default);
-        Task<int> GetConsecutiveFailuresAsync(Guid userId, Instant windowStart, CancellationToken ct = default);
+        Task RecordAttempt(Guid userId, CancellationToken ct = default);
+        Task<bool> IsLockedOut(Guid userId, CancellationToken ct = default);
+        Task ClearAttempts(Guid userId, CancellationToken ct = default);
+        Task<int> GetConsecutiveFailures(Guid userId, Instant windowStart, CancellationToken ct = default);
     }
 }

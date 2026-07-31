@@ -42,7 +42,7 @@ namespace BusinessCardProject.Client.Pages
         {
             try
             {
-                await ClientAuthenticationService.RevokeSession(tokenId);
+                await AuthenticationService.RevokeSession(tokenId);
                 Snackbar.Add("Сессия закрыта", Severity.Success);
                 await LoadActiveSessions();
             }
@@ -67,5 +67,5 @@ namespace BusinessCardProject.Client.Pages
         }
     }
 
-    public record SessionInfo(string TokenId, DateTime CreatedAt, DateTime ExpiresAt);
+    public record SessionInfo(string TokenId, DateTimeOffset CreatedAt, DateTimeOffset ExpiresAt);
 }

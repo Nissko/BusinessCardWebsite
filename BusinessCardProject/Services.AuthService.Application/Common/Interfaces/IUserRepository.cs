@@ -48,6 +48,6 @@ namespace Services.AuthService.Application.Common.Interfaces
         /// </summary>
         Task<PaginationDto<UserDto>> GetUsersFromSearch(GetUsersSearchRequest request);
         
-        Task<bool> UpdatePasswordAsync(Guid userId, string passwordHash);
+        Task<bool> UpdatePassword(Guid userId, string passwordHash);
     }
 }

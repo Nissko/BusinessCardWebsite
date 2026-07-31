@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using System.Text;
 using Dtos.DTO.Auth;
@@ -17,7 +18,7 @@ namespace Services.AuthService.Infrastructure.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task SaveAsync(string refreshToken, string userId, Instant expiresAt, CancellationToken ct = default)
+        public async Task Save(string refreshToken, string userId, Instant expiresAt, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(refreshToken))
                 throw new ArgumentException("Refresh token cannot be empty", nameof(refreshToken));
@@ -46,7 +47,7 @@ namespace Services.AuthService.Infrastructure.Repositories
             await _context.SaveChangesAsync(ct);
         }
 
-        public async Task<RefreshTokenInfo?> GetAndInvalidateAsync(string refreshToken, CancellationToken ct = default)
+        public async Task<RefreshTokenInfo?> GetAndInvalidate(string refreshToken, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(refreshToken)) return null;
 
@@ -72,7 +73,7 @@ namespace Services.AuthService.Infrastructure.Repositories
             );
         }
 
-        public async Task RevokeAsync(string refreshToken, CancellationToken ct = default)
+        public async Task Revoke(string refreshToken, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(refreshToken)) return;
 
@@ -86,7 +87,7 @@ namespace Services.AuthService.Infrastructure.Repositories
             }
         }
 
-        public async Task RevokeAllForUserAsync(string userId, CancellationToken ct = default)
+        public async Task RevokeAllForUser(string userId, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(userId)) return;
 
@@ -99,12 +100,16 @@ namespace Services.AuthService.Infrastructure.Repositories
                     ct);
         }
 
-        public async Task<IReadOnlyList<SessionInfo>> GetActiveSessionsAsync(Guid userId, int limit, CancellationToken ct = default)
+        public async Task<IReadOnlyList<SessionInfo>> GetActiveSessions(string accessToken, int limit, CancellationToken ct = default)
         {
+            var userName = GetNameFromJwtToken(accessToken);
+            var user = await _context.User.FirstOrDefaultAsync(x => x.NickName == userName, ct)
+                       ?? throw new Exception("Пользователь не найден");
             var now = SystemClock.Instance.GetCurrentInstant();
+            
             return await _context.RefreshToken
                 .AsNoTracking()
-                .Where(t => t.UserId == userId && !t.IsRevoked && t.ExpiresAtUtc > now)
+                .Where(t => t.UserId == user.Id && !t.IsRevoked && t.ExpiresAtUtc > now)
                 .OrderByDescending(t => t.CreatedAtUtc)
                 .Take(limit)
                 .Select(t => new SessionInfo(t.TokenHash, t.CreatedAtUtc, t.ExpiresAtUtc))
@@ -119,6 +124,17 @@ namespace Services.AuthService.Infrastructure.Repositories
             if (string.IsNullOrWhiteSpace(token)) throw new ArgumentException("Token cannot be empty", nameof(token));
             var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(token));
             return Convert.ToBase64String(hashBytes);
+        }
+        
+        public static string? GetNameFromJwtToken(string accessToken)
+        {
+            var handler = new JwtSecurityTokenHandler();
+
+            if (!handler.CanReadToken(accessToken))
+                return null;
+
+            var jwt = handler.ReadJwtToken(accessToken);
+            return jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value;
         }
     }
 }

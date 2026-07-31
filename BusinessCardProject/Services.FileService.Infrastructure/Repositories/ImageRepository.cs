@@ -12,7 +12,7 @@ namespace Services.FileService.Infrastructure.Repositories
             ChunkSizeBytes = 1048576, // ограничение в 1 MB
         });
 
-        public async Task<string> SaveAsync(Stream stream, string fileName, string contentType, CancellationToken ct)
+        public async Task<string> SaveImage(Stream stream, string fileName, string contentType, CancellationToken ct)
         {
             var options = new GridFSUploadOptions
             {
@@ -27,7 +27,7 @@ namespace Services.FileService.Infrastructure.Repositories
             return id.ToString();
         }
 
-        public async Task<(Stream Stream, string ContentType)> GetAsync(string fileId, CancellationToken ct)
+        public async Task<(Stream Stream, string ContentType)> GetImage(string fileId, CancellationToken ct)
         {
             var objectId = MongoDB.Bson.ObjectId.Parse(fileId);
             var filter = Builders<GridFSFileInfo>.Filter.Eq(x => x.Id, objectId);

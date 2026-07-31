@@ -8,7 +8,7 @@ namespace Services.FileService.Application.Application.CommandHandlers
     {
         public async Task<(Stream, string)> Handle(GetImageQuery request, CancellationToken ct)
         {
-            return await repository.GetAsync(request.FileId, ct);
+            return await repository.GetImage(request.FileId, ct);
         }
     }
 }

@@ -181,10 +181,11 @@ namespace Services.AuthService.Infrastructure.Repositories
             return user.UserRoles.Select(role => role.RoleId.ToString()).ToList();
         }
 
-        public async Task<bool> UpdatePasswordAsync(Guid userId, string passwordHash)
+        public async Task<bool> UpdatePassword(Guid userId, string newPassword)
         {
             var user = await _context.User.FindAsync([userId]) ?? throw new("Пользователь не найден");
-            user.UpdatePassword(passwordHash);
+            
+            user.UpdatePassword(BCrypt.Net.BCrypt.HashPassword(newPassword, workFactor: 12));
             
             _context.User.Update(user);
             await _context.SaveChangesAsync(CancellationToken.None);

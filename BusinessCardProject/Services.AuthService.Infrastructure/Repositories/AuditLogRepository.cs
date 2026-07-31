@@ -14,14 +14,14 @@ namespace Services.AuthService.Infrastructure.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task LogAsync(Guid userId, string action, string? details = null, CancellationToken ct = default)
+        public async Task Log(Guid userId, string action, string? details = null, CancellationToken ct = default)
         {
             var log = new AuditLogEntity(userId, action, details);
             _context.AuditLogs.Add(log);
             await _context.SaveChangesAsync(ct);
         }
 
-        public async Task<IReadOnlyList<AuditLogDto>> GetLogsForUserAsync(Guid userId, int page, int pageSize, CancellationToken ct = default)
+        public async Task<IReadOnlyList<AuditLogDto>> GetLogsForUser(Guid userId, int page, int pageSize, CancellationToken ct = default)
         {
             var skip = (page - 1) * pageSize;
             return await _context.AuditLogs

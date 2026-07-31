@@ -18,15 +18,15 @@ namespace Services.AuthService.Application.Application.CommandHandlers
         public async Task<bool> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
             var record =
-                await _passwordResetRepo.GetValidRecordAsync(request.UserId, request.ResetToken, cancellationToken);
+                await _passwordResetRepo.GetValidRecord(request.UserId, request.ResetToken, cancellationToken);
             if (record == null) throw new Exception("Токен сброса пароля недействителен или истек");
 
             var user = await _userRepository.GetUser(request.UserId);
 
-            await _userRepository.UpdatePasswordAsync(user.Id, request.NewPassword);
+            await _userRepository.UpdatePassword(user.Id, request.NewPassword);
 
-            await _passwordResetRepo.MarkAsUsedAsync(request.UserId, request.ResetToken, cancellationToken);
-            await _passwordResetRepo.RevokeAllForUserAsync(request.UserId, cancellationToken);
+            await _passwordResetRepo.MarkAsUsed(request.UserId, request.ResetToken, cancellationToken);
+            await _passwordResetRepo.RevokeAllForUser(request.UserId, cancellationToken);
 
             return true;
         }

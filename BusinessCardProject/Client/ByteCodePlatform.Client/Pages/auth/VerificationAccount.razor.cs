@@ -19,7 +19,7 @@ namespace BusinessCardProject.Client.Pages.auth
 
             try
             {
-                var isSuccess = await ClientAuthenticationService.VerificationAccount(UserId, VerificationToken);
+                var isSuccess = await AuthenticationService.VerificationAccount(UserId, VerificationToken);
 
                 if (isSuccess)
                 {

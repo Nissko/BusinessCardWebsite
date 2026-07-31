@@ -52,7 +52,7 @@ namespace Services.AuthService.Presentation.Services
                            ?? throw new RpcException(new Status(StatusCode.Unauthenticated,
                                "Invalid or expired email"));
 
-                if (await _failedLoginAttempts.IsLockedOutAsync(user.Id))
+                if (await _failedLoginAttempts.IsLockedOut(user.Id))
                 {
                     _logger.LogWarning("Пользователь {UserId} заблокирован по причине превышения попыток входа",
                         user.Id);
@@ -62,8 +62,8 @@ namespace Services.AuthService.Presentation.Services
 
                 if (!await _users.VerifyPassword(user.Id, request.Password))
                 {
-                    await _failedLoginAttempts.RecordAttemptAsync(user.Id);
-                    var failures = await _failedLoginAttempts.GetConsecutiveFailuresAsync(
+                    await _failedLoginAttempts.RecordAttempt(user.Id);
+                    var failures = await _failedLoginAttempts.GetConsecutiveFailures(
                         user.Id, SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromHours(24)));
 
                     if (failures >= 5)
@@ -75,7 +75,7 @@ namespace Services.AuthService.Presentation.Services
                     throw new RpcException(new Status(StatusCode.Unauthenticated, "Неверный email или пароль"));
                 }
 
-                await _failedLoginAttempts.ClearAttemptsAsync(user.Id);
+                await _failedLoginAttempts.ClearAttempts(user.Id);
 
                 if (!await _users.CheckVerificationAcc(user.Id))
                 {
@@ -85,12 +85,12 @@ namespace Services.AuthService.Presentation.Services
                 var accessToken = await _mediator.Send(new TokenGenerateAccessTokenCommand(user));
                 var refreshToken = await _mediator.Send(new TokenGenerateRefreshTokenCommand());
 
-                await _refreshToken.SaveAsync(refreshToken, user.Id.ToString(),
+                await _refreshToken.Save(refreshToken, user.Id.ToString(),
                     SystemClock.Instance.GetCurrentInstant() + Duration.FromDays(1));
 
                 var ipAddress = context.Peer ?? "unknown";
 
-                await _auditLog.LogAsync(user.Id, nameof(Login), 
+                await _auditLog.Log(user.Id, nameof(Login), 
                     $"Successful login from {ipAddress}");
                 
                 return new LoginResponse
@@ -113,7 +113,7 @@ namespace Services.AuthService.Presentation.Services
         {
             try
             {
-                var tokenInfo = await _refreshToken.GetAndInvalidateAsync(request.RefreshToken);
+                var tokenInfo = await _refreshToken.GetAndInvalidate(request.RefreshToken);
                 if (tokenInfo == null || tokenInfo.IsExpired)
                     throw new RpcException(new Status(StatusCode.Unauthenticated, "Invalid or expired refresh token"));
 
@@ -125,7 +125,7 @@ namespace Services.AuthService.Presentation.Services
                 var newAccessToken = await _mediator.Send(new TokenGenerateAccessTokenCommand(user));
                 var newRefreshToken = await _mediator.Send(new TokenGenerateRefreshTokenCommand());
 
-                await _refreshToken.SaveAsync(newRefreshToken, user.Id.ToString(),
+                await _refreshToken.Save(newRefreshToken, user.Id.ToString(),
                     SystemClock.Instance.GetCurrentInstant() + Duration.FromDays(1));
 
                 return new RefreshTokenResponse
@@ -147,7 +147,7 @@ namespace Services.AuthService.Presentation.Services
         {
             try
             {
-                await _refreshToken.RevokeAsync(request.RefreshToken);
+                await _refreshToken.Revoke(request.RefreshToken);
                 return new LogoutResponse();
             }
             catch (Exception ex)
@@ -343,7 +343,7 @@ namespace Services.AuthService.Presentation.Services
             try
             {
                 var userId = Guid.Parse(request.UserId);        
-                await _refreshToken.RevokeAllForUserAsync(userId.ToString());
+                await _refreshToken.RevokeAllForUser(userId.ToString());
         
                 return new LogoutAllResponse { Success = true };
             }
@@ -359,8 +359,10 @@ namespace Services.AuthService.Presentation.Services
         {
             try
             {
-                var userId = Guid.Parse(request.UserId);
-                var sessions = await _refreshToken.GetActiveSessionsAsync(userId, request.Limit, context.CancellationToken);
+                var accessToken = !string.IsNullOrEmpty(request.AccessToken)
+                    ? request.AccessToken
+                    : throw new Exception("Пользователь не авторизован");
+                var sessions = await _refreshToken.GetActiveSessions(accessToken, request.Limit, context.CancellationToken);
 
                 var response = new ActiveSessionsResponse();
                 foreach (var s in sessions)

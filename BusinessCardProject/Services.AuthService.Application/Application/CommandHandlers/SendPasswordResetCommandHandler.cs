@@ -31,11 +31,11 @@ namespace Services.AuthService.Application.Application.CommandHandlers
             var userDto = await _userRepository.GetUserByEmail(request.Email);
             var userId = userDto.Id;
 
-            await _passwordResetRepo.CreateRecordAsync(userId, cancellationToken);
+            var resetToken = await _passwordResetRepo.CreateRecord(userId, cancellationToken);
 
             var clientUrl = _configuration.GetValue<string>("FrontendLink:Url") 
                             ?? "https://it-bytecode.splinterkeenetic.netcraze.club";
-            var resetLink = $"{clientUrl}/reset-password/{userId}";
+            var resetLink = $"{clientUrl}/reset-password/{userId}/{resetToken}";
 
             /*TODO: сделать шаблон письма*/
             await _mailService.SendEmailMessageAsync(new EmailMessageRequest(
@@ -49,7 +49,7 @@ namespace Services.AuthService.Application.Application.CommandHandlers
                 Subject: "Сброс пароля",
                 Body: resetLink,
                 IsHtml: false,
-                TemplateName: null
+                TemplateName: ""
             ));
 
             return true;

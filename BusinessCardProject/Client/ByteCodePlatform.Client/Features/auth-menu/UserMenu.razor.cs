@@ -22,7 +22,7 @@ namespace BusinessCardProject.Client.Features.auth_menu
 
         private void OnLogoutClick()
         {
-            _ = ClientAuthentication.Logout(ClientAuthentication.GetToken());
+            _ = ClientAuthentication.Logout();
             IsAuthenticated = false;
             OnLoginClick();
         }

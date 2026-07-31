@@ -4,7 +4,7 @@ namespace Services.AuthService.Application.Common.Interfaces
 {
     public interface IAuditLogRepository
     {
-        Task LogAsync(Guid userId, string action, string? details = null, CancellationToken ct = default);
-        Task<IReadOnlyList<AuditLogDto>> GetLogsForUserAsync(Guid userId, int page, int pageSize, CancellationToken ct = default);
+        Task Log(Guid userId, string action, string? details = null, CancellationToken ct = default);
+        Task<IReadOnlyList<AuditLogDto>> GetLogsForUser(Guid userId, int page, int pageSize, CancellationToken ct = default);
     }
 }

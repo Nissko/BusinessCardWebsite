@@ -5,11 +5,11 @@
         /// <summary>
         /// Сохранение
         /// </summary>
-        Task<string> SaveAsync(Stream stream, string fileName, string contentType, CancellationToken ct);
+        Task<string> SaveImage(Stream stream, string fileName, string contentType, CancellationToken ct);
 
         /// <summary>
         /// Получение файла
         /// </summary>
-        Task<(Stream Stream, string ContentType)> GetAsync(string fileId, CancellationToken ct);
+        Task<(Stream Stream, string ContentType)> GetImage(string fileId, CancellationToken ct);
     }
 }

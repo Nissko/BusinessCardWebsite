@@ -36,7 +36,7 @@ namespace BusinessCardProject.Client.Pages.auth
 
             try
             {
-                var result = await ClientAuthenticationService.ResetPassword(Guid.Parse(UserId), ResetToken, _newPassword);
+                var result = await AuthenticationService.ResetPassword(Guid.Parse(UserId), ResetToken, _newPassword);
                 if (result)
                 {
                     _success = true;

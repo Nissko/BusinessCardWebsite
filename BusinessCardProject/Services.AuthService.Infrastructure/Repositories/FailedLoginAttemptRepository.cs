@@ -21,7 +21,7 @@ namespace Services.AuthService.Infrastructure.Repositories
             _cleanupWindow = TimeSpan.FromHours(configuration.GetValue<double>("AuthSettings:CleanupWindowHours", 24));
         }
 
-        public async Task RecordAttemptAsync(Guid userId, CancellationToken ct = default)
+        public async Task RecordAttempt(Guid userId, CancellationToken ct = default)
         {
             var now = SystemClock.Instance.GetCurrentInstant();
             var windowStart = now.Minus(Duration.FromTicks(_cleanupWindow.Ticks));
@@ -40,7 +40,7 @@ namespace Services.AuthService.Infrastructure.Repositories
             }
         }
 
-        public async Task<bool> IsLockedOutAsync(Guid userId, CancellationToken ct = default)
+        public async Task<bool> IsLockedOut(Guid userId, CancellationToken ct = default)
         {
             var now = SystemClock.Instance.GetCurrentInstant();
             var lockoutStart = now.Minus(Duration.FromTicks(_lockoutDuration.Ticks));
@@ -51,7 +51,7 @@ namespace Services.AuthService.Infrastructure.Repositories
             return count >= _maxAttempts;
         }
 
-        public async Task ClearAttemptsAsync(Guid userId, CancellationToken ct = default)
+        public async Task ClearAttempts(Guid userId, CancellationToken ct = default)
         {
             var attempts = await _context.FailedLoginAttempts
                 .Where(x => x.UserId == userId)
@@ -61,7 +61,7 @@ namespace Services.AuthService.Infrastructure.Repositories
             await _context.SaveChangesAsync(ct);
         }
 
-        public async Task<int> GetConsecutiveFailuresAsync(Guid userId, Instant windowStart, CancellationToken ct = default)
+        public async Task<int> GetConsecutiveFailures(Guid userId, Instant windowStart, CancellationToken ct = default)
         {
             return await _context.FailedLoginAttempts
                 .CountAsync(x => x.UserId == userId && x.AttemptedAt >= windowStart, ct);

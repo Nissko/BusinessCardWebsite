@@ -8,7 +8,7 @@ namespace Services.FileService.Application.Application.CommandHandlers
     {
         public async Task<string> Handle(UploadImageCommand request, CancellationToken ct)
         {
-            return await _repository.SaveAsync(request.FileStream, request.FileName, request.ContentType, ct);
+            return await _repository.SaveImage(request.FileStream, request.FileName, request.ContentType, ct);
         }
     }
 }

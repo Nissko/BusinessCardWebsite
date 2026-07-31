@@ -52,7 +52,7 @@ message LogoutAllResponse {
 }
 
 message GetActiveSessionsRequest {
-  string user_id = 1;
+  string access_token = 1;
   int32 limit = 2;
 }
 

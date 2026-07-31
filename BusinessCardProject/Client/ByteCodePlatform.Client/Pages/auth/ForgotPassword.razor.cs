@@ -23,7 +23,7 @@ namespace BusinessCardProject.Client.Pages.auth
 
             try
             {
-                var result = await ClientAuthenticationService.SendPasswordReset(_email);
+                var result = await AuthenticationService.SendPasswordReset(_email);
                 if (result)
                     _success = true;
                 else

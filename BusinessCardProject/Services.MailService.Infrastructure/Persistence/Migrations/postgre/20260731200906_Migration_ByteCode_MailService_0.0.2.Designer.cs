@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Services.MailService.Infrastructure;
@@ -11,9 +12,11 @@ using Services.MailService.Infrastructure;
 namespace Services.MailService.Infrastructure.Persistence.Migrations.postgre
 {
     [DbContext(typeof(MailDbContext))]
-    partial class MailDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260731200906_Migration_ByteCode_MailService_0.0.2")]
+    partial class Migration_ByteCode_MailService_002
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
