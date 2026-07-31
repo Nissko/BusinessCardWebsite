@@ -1,5 +1,23 @@
-﻿<MudPaper>
-    <MudText Typo="Typo.h6" Class="mt-2 px-2 py-2" Color="Color.Info">
-        AuditComponents находится в разработке
-    </MudText>
+﻿<MudPaper Class="pa-4">
+    <MudText Typo="Typo.h6" Class="mb-3">Журнал действий пользователей</MudText>
+
+    @*<MudDataGrid T="AuditLogItem" Items="@_logs" IsLoading="@_isLoading" ItemsTotal="@_totalCount">
+        <ToolBarContent>
+            <MudTextField @bind-Value="_searchQuery" Label="Поиск" Variant="Variant.Outlined" Dense="true" />
+            <MudButton Variant="Variant.Text" OnClick="@LoadLogs">Обновить</MudButton>
+        </ToolBarContent>
+
+        <PropertyColumn Property="@((AuditLogItem x) => x.UserId)">
+            <TextContent>@context.UserId.ToString()</TextContent>
+        </PropertyColumn>
+        <PropertyColumn Property="@((AuditLogItem x) => x.Action)">
+            <TextContent>@context.Action</TextContent>
+        </PropertyColumn>
+        <PropertyColumn Property="@((AuditLogItem x) => x.Details)">
+            <TextContent>@context.Details</TextContent>
+        </PropertyColumn>
+        <PropertyColumn Property="@((AuditLogItem x) => x.CreatedAt)">
+            <TextContent>@context.CreatedAt.ToString("dd.MM.yyyy HH:mm:ss")</TextContent>
+        </PropertyColumn>
+    </MudDataGrid>*@
 </MudPaper>

@@ -91,12 +91,24 @@ namespace Services.AuthService.Infrastructure.Repositories
             if (string.IsNullOrWhiteSpace(userId)) return;
 
             var userGuid = Guid.Parse(userId);
-            var affected = await _context.RefreshToken
+            await _context.RefreshToken
                 .Where(t => t.UserId == userGuid && !t.IsRevoked)
                 .ExecuteUpdateAsync(
                     setters => setters.SetProperty(t => t.IsRevoked, true)
                         .SetProperty(t => t.ExpiresAtUtc, SystemClock.Instance.GetCurrentInstant()),
                     ct);
+        }
+
+        public async Task<IReadOnlyList<SessionInfo>> GetActiveSessionsAsync(Guid userId, int limit, CancellationToken ct = default)
+        {
+            var now = SystemClock.Instance.GetCurrentInstant();
+            return await _context.RefreshToken
+                .AsNoTracking()
+                .Where(t => t.UserId == userId && !t.IsRevoked && t.ExpiresAtUtc > now)
+                .OrderByDescending(t => t.CreatedAtUtc)
+                .Take(limit)
+                .Select(t => new SessionInfo(t.TokenHash, t.CreatedAtUtc, t.ExpiresAtUtc))
+                .ToListAsync(ct);
         }
 
         /// <summary>

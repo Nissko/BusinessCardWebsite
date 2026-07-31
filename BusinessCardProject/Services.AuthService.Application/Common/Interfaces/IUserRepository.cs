@@ -47,5 +47,7 @@ namespace Services.AuthService.Application.Common.Interfaces
         /// Получение всех пользователей для админки
         /// </summary>
         Task<PaginationDto<UserDto>> GetUsersFromSearch(GetUsersSearchRequest request);
+        
+        Task<bool> UpdatePasswordAsync(Guid userId, string passwordHash);
     }
 }

@@ -13,14 +13,17 @@ namespace Services.MailService.Infrastructure.Configurations
 
             builder.Property(x => x.TemplateName)
                 .IsRequired()
+                .HasMaxLength(200)
                 .HasComment("Название шаблона");
 
             builder.Property(x => x.Subject)
                 .IsRequired()
+                .HasMaxLength(256)
                 .HasComment("Название темы из шаблона");
 
             builder.Property(x => x.Body)
                 .IsRequired()
+                .IsUnicode(false)
                 .HasComment("Тело письма");
         }
     }

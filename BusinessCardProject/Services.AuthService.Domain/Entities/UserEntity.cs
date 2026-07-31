@@ -119,5 +119,11 @@ namespace Services.AuthService.Domain.Entities
         {
             return SystemClock.Instance.GetCurrentInstant();
         }
+        
+        public void UpdatePassword(string passwordHash)
+        {
+            PasswordHash = passwordHash;
+            UpdatedAt = SetUpdatedAt();
+        }
     }
 }

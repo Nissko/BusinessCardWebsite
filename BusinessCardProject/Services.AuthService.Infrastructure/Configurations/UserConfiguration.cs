@@ -33,7 +33,8 @@ namespace Services.AuthService.Infrastructure.Configurations
         
             builder.Property(x=>x.PasswordHash)
                 .IsRequired()
-                .HasComment("Пароль");
+                .HasMaxLength(256)
+                .HasComment("Хеш пароля");
         
             builder.Property(x => x.IsAuthor)
                 .IsRequired()

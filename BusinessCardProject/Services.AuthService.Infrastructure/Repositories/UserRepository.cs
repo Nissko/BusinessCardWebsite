@@ -11,17 +11,23 @@ using Services.AuthService.Domain.Extensions;
 
 namespace Services.AuthService.Infrastructure.Repositories
 {
-    public class UserRepository(IAuthDbContext context, ICoreGrpcServiceClient coreGrpcServiceClient, IAccountVerificationRepository accVerifRepository) : IUserRepository
+    public class UserRepository(
+        IAuthDbContext context,
+        ICoreGrpcServiceClient coreGrpcServiceClient,
+        IAccountVerificationRepository accVerifRepository) : IUserRepository
     {
         private readonly IAuthDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
+
         private readonly IAccountVerificationRepository _accVerifRepository = accVerifRepository
                                                                               ?? throw new ArgumentNullException(
                                                                                   nameof(accVerifRepository));
 
         public async Task<bool> CreateUser(CreateUserRequest request)
         {
-            if (_context.User.Any(x => x.Email == request.Email)) throw new("Электронная почта пользователя уже существует");
-            if (_context.User.Any(x => x.NickName == request.NickName)) throw new("Псевдоним пользователя уже существует");
+            if (_context.User.Any(x => x.Email == request.Email))
+                throw new("Электронная почта пользователя уже существует");
+            if (_context.User.Any(x => x.NickName == request.NickName))
+                throw new("Псевдоним пользователя уже существует");
 
             var user = new UserEntity(request.Surname, request.Name, request.NickName, request.Email,
                 BCrypt.Net.BCrypt.HashPassword(request.Password, workFactor: 12),
@@ -36,10 +42,10 @@ namespace Services.AuthService.Infrastructure.Repositories
             {
                 throw new Exception(ex.Message);
             }
-            
+
             _context.User.Add(user);
             await _context.SaveChangesAsync(CancellationToken.None);
-            
+
             //Для подтверждения аккаунта
             await _accVerifRepository.CreateRecord(user.Id);
 
@@ -48,8 +54,10 @@ namespace Services.AuthService.Infrastructure.Repositories
 
         public async Task<bool> UpdateUser(UpdateUserRequest request)
         {
-            if (_context.User.Any(x => x.Email == request.Email)) throw new("Электронная почта пользователя уже существует");
-            if (_context.User.Any(x => x.NickName == request.NickName)) throw new("Псевдоним пользователя уже существует");
+            if (_context.User.Any(x => x.Email == request.Email))
+                throw new("Электронная почта пользователя уже существует");
+            if (_context.User.Any(x => x.NickName == request.NickName))
+                throw new("Псевдоним пользователя уже существует");
 
             var user = await _context.User.FindAsync(request.Id) ?? throw new("Пользователь не найден");
             user.UpdateUser(request.Surname, request.Name, request.NickName, request.Email,
@@ -98,11 +106,11 @@ namespace Services.AuthService.Infrastructure.Repositories
 
             user.SetAuthor(true);
             var newRole = new UserRolesEntity(user.Id, UserRoleEnum.Author.Id);
-            
+
             _context.UserRole.Add(newRole);
             _context.User.Update(user);
             await _context.SaveChangesAsync(CancellationToken.None);
-            
+
             return true;
         }
 
@@ -112,9 +120,9 @@ namespace Services.AuthService.Infrastructure.Repositories
             if (!string.IsNullOrWhiteSpace(request.Search))
             {
                 var searchTerm = $"%{request.Search}%";
-                query = query.Where(u => 
-                    EF.Functions.ILike(u.Name, searchTerm) || 
-                    EF.Functions.ILike(u.Surname, searchTerm) || 
+                query = query.Where(u =>
+                    EF.Functions.ILike(u.Name, searchTerm) ||
+                    EF.Functions.ILike(u.Surname, searchTerm) ||
                     EF.Functions.ILike(u.NickName, searchTerm) ||
                     EF.Functions.ILike(u.Email, searchTerm)
                 );
@@ -123,24 +131,24 @@ namespace Services.AuthService.Infrastructure.Repositories
             var isDescending = request.SortDirection?.Equals("desc", StringComparison.OrdinalIgnoreCase) == true;
             query = request.SortBy?.ToLower() switch
             {
-                "name" => isDescending 
-                    ? query.OrderByDescending(u => u.Name) 
+                "name" => isDescending
+                    ? query.OrderByDescending(u => u.Name)
                     : query.OrderBy(u => u.Name),
-                "surname" => isDescending 
-                    ? query.OrderByDescending(u => u.Surname) 
+                "surname" => isDescending
+                    ? query.OrderByDescending(u => u.Surname)
                     : query.OrderBy(u => u.Surname),
-                "nickname" => isDescending 
-                    ? query.OrderByDescending(u => u.NickName) 
+                "nickname" => isDescending
+                    ? query.OrderByDescending(u => u.NickName)
                     : query.OrderBy(u => u.NickName),
-                "email" => isDescending 
-                    ? query.OrderByDescending(u => u.Email) 
+                "email" => isDescending
+                    ? query.OrderByDescending(u => u.Email)
                     : query.OrderBy(u => u.Email),
-                "createdat" => isDescending 
-                    ? query.OrderByDescending(u => u.CreatedAt) 
+                "createdat" => isDescending
+                    ? query.OrderByDescending(u => u.CreatedAt)
                     : query.OrderBy(u => u.CreatedAt),
-                _ => isDescending 
-                    ? query.OrderByDescending(u => u.Id) 
-                    : query.OrderBy(u => u.Id) 
+                _ => isDescending
+                    ? query.OrderByDescending(u => u.Id)
+                    : query.OrderBy(u => u.Id)
             };
 
             var page = request.Page <= 0 ? 1 : request.Page;
@@ -171,6 +179,17 @@ namespace Services.AuthService.Infrastructure.Repositories
         {
             var user = await _context.User.FindAsync([userId]) ?? throw new Exception("Пользователь не найден");
             return user.UserRoles.Select(role => role.RoleId.ToString()).ToList();
+        }
+
+        public async Task<bool> UpdatePasswordAsync(Guid userId, string passwordHash)
+        {
+            var user = await _context.User.FindAsync([userId]) ?? throw new("Пользователь не найден");
+            user.UpdatePassword(passwordHash);
+            
+            _context.User.Update(user);
+            await _context.SaveChangesAsync(CancellationToken.None);
+            
+            return true;
         }
     }
 }

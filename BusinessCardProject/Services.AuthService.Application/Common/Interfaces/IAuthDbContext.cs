@@ -12,6 +12,9 @@ namespace Services.AuthService.Application.Common.Interfaces
         public DbSet<UserRolesEntity> UserRole { get; set; }
         public DbSet<RefreshTokenEntity> RefreshToken { get; set; }
         public DbSet<AccountActivationEntity> AccountVerification { get; set; }
+        public DbSet<FailedLoginAttemptEntity> FailedLoginAttempts { get; set; }
+        public DbSet<PasswordResetEntity> PasswordResets { get; set; }
+        public DbSet<AuditLogEntity> AuditLogs { get; set; }
 
         void Migrate();
 

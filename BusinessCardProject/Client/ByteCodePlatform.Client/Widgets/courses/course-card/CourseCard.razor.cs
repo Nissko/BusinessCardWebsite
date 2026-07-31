@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using CourseService.Proto;
+﻿using CourseService.Proto;
 using Microsoft.AspNetCore.Components;
 
 namespace BusinessCardProject.Client.Widgets.courses.course_card

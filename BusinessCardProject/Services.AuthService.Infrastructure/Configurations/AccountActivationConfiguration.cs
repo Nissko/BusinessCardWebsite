@@ -31,8 +31,14 @@ namespace Services.AuthService.Infrastructure.Configurations
                 .WithMany(x => x.UserVerifications)
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
-        
+
             builder.HasIndex(x => x.VerificationToken).IsUnique();
+
+            builder.HasIndex(x => x.ExpiresAt)
+                .HasDatabaseName("IX_AccountActivationRecords_ExpiresAt");
+
+            builder.HasIndex(x => new { x.UserId, x.ExpiresAt })
+                .HasDatabaseName("IX_AccountActivationRecords_UserId_ExpiresAt");
         }
     }
 }

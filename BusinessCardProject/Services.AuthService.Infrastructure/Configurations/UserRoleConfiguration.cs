@@ -13,11 +13,11 @@ namespace Services.AuthService.Infrastructure.Configurations
 
             builder.Property(x => x.RoleId)
                 .IsRequired()
-                .HasComment("Фамилия");
+                .HasComment("Идентификатор роли");
 
             builder.Property(x => x.UserId)
                 .IsRequired()
-                .HasComment("Фамилия");
+                .HasComment("Идентификатор пользователя");
 
             builder.HasOne(x => x.User)
                 .WithMany(x => x.UserRoles)

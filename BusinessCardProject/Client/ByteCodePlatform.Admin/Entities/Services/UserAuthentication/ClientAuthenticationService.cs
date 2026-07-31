@@ -73,34 +73,6 @@ namespace ByteCodePlatform.Admin.Entities.Services.UserAuthentication
             return false;
         }
 
-        public async Task<bool> Logout(string? refreshToken)
-        {
-            var handler = new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler());
-            var channel = GrpcChannel.ForAddress(AddressLink,
-                new GrpcChannelOptions
-                {
-                    HttpHandler = handler
-                });
-
-            var client = new AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient(channel);
-
-            try
-            {
-                _ = await client.LogoutAsync(new LogoutRequest()
-                {
-                    RefreshToken = refreshToken
-                });
-
-                ClearToken();
-            }
-            catch
-            {
-                return false;
-            }
-
-            return false;
-        }
-
         public string? GetToken() => _tokenStore.GetAccessToken();
         private void ClearToken() => _ = _tokenStore.ClearAsync();
     }

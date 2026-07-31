@@ -10,6 +10,7 @@ using Services.AuthService.Application.Common.Interfaces;
 using Services.AuthService.Domain.Enums;
 using Services.AuthService.Presentation.ProtoMappers.Users;
 using CreateUserRequest = AuthorizationService.Proto.CreateUserRequest;
+using LoginRequest = AuthorizationService.Proto.LoginRequest;
 using UpdateUserRequest = AuthorizationService.Proto.UpdateUserRequest;
 
 namespace Services.AuthService.Presentation.Services
@@ -21,12 +22,16 @@ namespace Services.AuthService.Presentation.Services
         private readonly IRefreshToken _refreshToken;
         private readonly IUserRepository _users;
         private readonly IAccountVerificationRepository _accountVerifications;
+        private readonly IFailedLoginAttemptRepository _failedLoginAttempts;
+        private readonly IAuditLogRepository _auditLog;
+
         private readonly ILogger<AuthService> _logger;
 
         private TimeSpan AccessTokenLifetime => TimeSpan.FromMinutes(15);
 
         public AuthService(IMediator mediator, IRefreshToken refreshToken, IUserRepository users,
-            IAccountVerificationRepository accountVerifications, ILogger<AuthService> logger)
+            IAccountVerificationRepository accountVerifications, ILogger<AuthService> logger,
+            IFailedLoginAttemptRepository failedLoginAttempts, IAuditLogRepository auditLog)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _refreshToken = refreshToken ?? throw new ArgumentNullException(nameof(refreshToken));
@@ -34,6 +39,8 @@ namespace Services.AuthService.Presentation.Services
             _accountVerifications = accountVerifications ??
                                     throw new ArgumentNullException(nameof(accountVerifications));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _failedLoginAttempts = failedLoginAttempts;
+            _auditLog = auditLog ?? throw new ArgumentNullException(nameof(auditLog));
         }
 
         [AllowAnonymous]
@@ -41,12 +48,34 @@ namespace Services.AuthService.Presentation.Services
         {
             try
             {
-                var user = await _users.GetUserByEmail(request.Email) ??
-                           throw new RpcException(new Status(StatusCode.Unauthenticated, "Invalid or expired email"));
+                var user = await _users.GetUserByEmail(request.Email)
+                           ?? throw new RpcException(new Status(StatusCode.Unauthenticated,
+                               "Invalid or expired email"));
+
+                if (await _failedLoginAttempts.IsLockedOutAsync(user.Id))
+                {
+                    _logger.LogWarning("Пользователь {UserId} заблокирован по причине превышения попыток входа",
+                        user.Id);
+                    throw new RpcException(new Status(StatusCode.ResourceExhausted,
+                        "Аккаунт временно заблокирован. Попробуйте позже"));
+                }
+
                 if (!await _users.VerifyPassword(user.Id, request.Password))
                 {
-                    throw new RpcException(new Status(StatusCode.Unauthenticated, "Invalid credentials"));
+                    await _failedLoginAttempts.RecordAttemptAsync(user.Id);
+                    var failures = await _failedLoginAttempts.GetConsecutiveFailuresAsync(
+                        user.Id, SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromHours(24)));
+
+                    if (failures >= 5)
+                    {
+                        throw new RpcException(new Status(StatusCode.ResourceExhausted,
+                            "Аккаунт временно заблокирован. Попробуйте позже"));
+                    }
+
+                    throw new RpcException(new Status(StatusCode.Unauthenticated, "Неверный email или пароль"));
                 }
+
+                await _failedLoginAttempts.ClearAttemptsAsync(user.Id);
 
                 if (!await _users.CheckVerificationAcc(user.Id))
                 {
@@ -59,6 +88,11 @@ namespace Services.AuthService.Presentation.Services
                 await _refreshToken.SaveAsync(refreshToken, user.Id.ToString(),
                     SystemClock.Instance.GetCurrentInstant() + Duration.FromDays(1));
 
+                var ipAddress = context.Peer ?? "unknown";
+
+                await _auditLog.LogAsync(user.Id, nameof(Login), 
+                    $"Successful login from {ipAddress}");
+                
                 return new LoginResponse
                 {
                     AccessToken = accessToken,
@@ -271,6 +305,79 @@ namespace Services.AuthService.Presentation.Services
             catch (Exception ex)
             {
                 throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+        
+        [AllowAnonymous]
+        public override async Task<UserBooleanResponse> SendPasswordReset(SendPasswordResetRequest request, ServerCallContext context)
+        {
+            try
+            {
+                await _mediator.Send(new SendPasswordResetCommand(request.Email));
+                return new UserBooleanResponse { Success = true };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Ошибка при отправке письма сброса пароля для {Email}", request.Email);
+                return new UserBooleanResponse { Success = true };
+            }
+        }
+
+        [AllowAnonymous]
+        public override async Task<UserBooleanResponse> ResetPassword(ResetPasswordRequest request, ServerCallContext context)
+        {
+            try
+            {
+                await _mediator.Send(new ResetPasswordCommand(request.UserId.ToGuid(), request.ResetToken, request.NewPassword));
+                return new UserBooleanResponse { Success = true };
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new Status(StatusCode.Aborted, ex.Message));
+            }
+        }
+        
+        [Authorize]
+        public override async Task<LogoutAllResponse> LogoutAll(LogoutAllRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var userId = Guid.Parse(request.UserId);        
+                await _refreshToken.RevokeAllForUserAsync(userId.ToString());
+        
+                return new LogoutAllResponse { Success = true };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при выходе со всех устройств");
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
+            }
+        }
+
+        [Authorize]
+        public override async Task<ActiveSessionsResponse> GetActiveSessions(GetActiveSessionsRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var userId = Guid.Parse(request.UserId);
+                var sessions = await _refreshToken.GetActiveSessionsAsync(userId, request.Limit, context.CancellationToken);
+
+                var response = new ActiveSessionsResponse();
+                foreach (var s in sessions)
+                {
+                    response.Sessions.Add(new ActiveSessionInfo
+                    {
+                        TokenId = s.TokenHash,
+                        CreatedAt = s.CreatedAtUtc.ToTimestamp(),
+                        ExpiresAt = s.ExpiresAtUtc.ToTimestamp()
+                    });
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при получении активных сессий");
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
     }

@@ -23,6 +23,47 @@ service AuthorizationService {
   rpc AddAuthorRole(AddAuthorRoleRequest) returns (AddAuthorRoleResponse);
   // Получение пользователей для админки
   rpc GetUsersFromSearch(GetUsersFromSearchRequest) returns (GetUsersFromSearchResponse);
+  //
+  rpc LogoutAll(LogoutAllRequest) returns (LogoutAllResponse);
+  //
+  rpc GetActiveSessions(GetActiveSessionsRequest) returns (ActiveSessionsResponse);
+  //
+  rpc SendPasswordReset(SendPasswordResetRequest) returns (UserBooleanResponse);
+  //
+  rpc ResetPassword(ResetPasswordRequest) returns (UserBooleanResponse);
+}
+
+message SendPasswordResetRequest {
+  string email = 1;
+}
+
+message ResetPasswordRequest {
+  string user_id = 1;
+  string reset_token = 2;
+  string new_password = 3;
+}
+
+message LogoutAllRequest {
+  string user_id = 1;
+}
+
+message LogoutAllResponse {
+  bool success = 1;
+}
+
+message GetActiveSessionsRequest {
+  string user_id = 1;
+  int32 limit = 2;
+}
+
+message ActiveSessionInfo {
+  string token_id = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.Timestamp expires_at = 3;
+}
+
+message ActiveSessionsResponse {
+  repeated ActiveSessionInfo sessions = 1;
 }
 
 message CreateUserRequest{

@@ -72,6 +72,12 @@ namespace BusinessCardProject.Client.Features.auth.login_form
                     Snackbar.Add(_errorMessage, Severity.Error);
                 }
             }
+            catch (Exception ex) when (ex.Message.Contains("временно заблокирован"))
+            {
+                _errorMessage = ex.Message;
+                _showError = true;
+                Snackbar.Add(_errorMessage, Severity.Error);
+            }
             catch (Exception ex)
             {
                 _errorMessage = $"Ошибка подключения: {ex.Message}";
@@ -91,6 +97,11 @@ namespace BusinessCardProject.Client.Features.auth.login_form
             {
                 await HandleLogin();
             }
+        }
+        
+        private void OnForgotPasswordClick()
+        {
+            NavManager.NavigateTo("/forgot-password");
         }
 
         public void Dispose()

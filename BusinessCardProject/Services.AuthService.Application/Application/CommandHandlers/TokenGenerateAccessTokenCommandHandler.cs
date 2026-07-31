@@ -24,10 +24,13 @@ namespace Services.AuthService.Application.Application.CommandHandlers
         {
             try
             {
+                var jti = Guid.NewGuid().ToString("N");
+    
                 var claims = new List<Claim>
                 {
                     new(JwtRegisteredClaimNames.Sub, request.User.Id.ToString()),
                     new(JwtRegisteredClaimNames.Name, request.User.NickName),
+                    new(JwtRegisteredClaimNames.Jti, jti),
                     new(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.Add(AccessTokenLifetime).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
                     new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
                 };

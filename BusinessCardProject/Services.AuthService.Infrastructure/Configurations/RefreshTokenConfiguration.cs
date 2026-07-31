@@ -38,6 +38,9 @@ namespace Services.AuthService.Infrastructure.Configurations
             builder.HasIndex(x => new { x.UserId, x.IsRevoked })
                 .HasDatabaseName("IX_RefreshTokens_UserId_IsRevoked")
                 .IsUnique(false);
+
+            builder.HasIndex(x => x.ExpiresAtUtc)
+                .HasDatabaseName("IX_RefreshTokens_ExpiresAtUtc");
         }
     }
 }
