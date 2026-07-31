@@ -6,8 +6,10 @@ using Services.FileService.Application.Application.Command;
 
 namespace Services.FileService.Presentation.Services
 {
-    public class FileGrpcService(IMediator mediator) : FilesService.Proto.FilesService.FilesServiceBase
+    public class FileGrpcService(IMediator mediator, ILogger<FileGrpcService> logger) : FilesService.Proto.FilesService.FilesServiceBase
     {
+        private readonly ILogger<FileGrpcService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        
         [AllowAnonymous]
         public override async Task<UploadImageResponse> UploadImage(
             IAsyncStreamReader<UploadImageRequest> requestStream,
@@ -44,7 +46,8 @@ namespace Services.FileService.Presentation.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(UploadImage));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 
@@ -76,7 +79,8 @@ namespace Services.FileService.Presentation.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(GetImage));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
     }

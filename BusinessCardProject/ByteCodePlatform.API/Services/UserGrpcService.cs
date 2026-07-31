@@ -15,10 +15,12 @@ namespace ByteCodePlatform.API.Services
     public class UserGrpcService : UserService.Proto.UserGrpcService.UserGrpcServiceBase
     {
         private readonly IUserRepository _userService;
+        private readonly ILogger<UserGrpcService> _logger;
 
-        public UserGrpcService(IUserRepository userService)
+        public UserGrpcService(IUserRepository userService, ILogger<UserGrpcService> logger)
         {
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [AllowAnonymous]
@@ -34,7 +36,8 @@ namespace ByteCodePlatform.API.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(CreateUser));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 

@@ -9,6 +9,11 @@ namespace Services.FileService.Presentation.Controllers
         [HttpGet("{fileId}")]
         public async Task<IActionResult> GetImage(string fileId, CancellationToken ct)
         {
+            if (fileId.Contains("..") || fileId.Contains('/') || fileId.Contains('\\'))
+            {
+                return BadRequest("Недопустимый идентификатор файла");
+            }
+            
             var (stream, contentType) = await mediator.Send(new GetImageQuery(fileId), ct);
             return File(stream, contentType);
         }

@@ -18,10 +18,12 @@ namespace ByteCodePlatform.API.Services
     public class CourseGrpcService : CourseService.Proto.CourseService.CourseServiceBase
     {
         private readonly ICourseRepository _courseService;
+        private readonly ILogger<CourseGrpcService> _logger;
 
-        public CourseGrpcService(ICourseRepository courseService)
+        public CourseGrpcService(ICourseRepository courseService, ILogger<CourseGrpcService> logger)
         {
             _courseService = courseService ?? throw new ArgumentNullException(nameof(courseService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [AllowAnonymous]
@@ -54,7 +56,8 @@ namespace ByteCodePlatform.API.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(GetProgrammingLanguages));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 
@@ -94,7 +97,8 @@ namespace ByteCodePlatform.API.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(GetCourseThemes));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
         
@@ -108,7 +112,8 @@ namespace ByteCodePlatform.API.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(GetCourseThemeById));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 
@@ -147,7 +152,8 @@ namespace ByteCodePlatform.API.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(GetCourseThemeProperties));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 
@@ -186,7 +192,8 @@ namespace ByteCodePlatform.API.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(GetCourseModules));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 
@@ -204,7 +211,8 @@ namespace ByteCodePlatform.API.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(GetCourseModulesByCourseId));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 
@@ -277,7 +285,8 @@ namespace ByteCodePlatform.API.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(GetCourseContents));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 
@@ -295,7 +304,8 @@ namespace ByteCodePlatform.API.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(GetCourseContentsByModuleId));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 

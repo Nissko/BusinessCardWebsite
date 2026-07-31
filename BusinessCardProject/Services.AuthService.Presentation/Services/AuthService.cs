@@ -21,17 +21,19 @@ namespace Services.AuthService.Presentation.Services
         private readonly IRefreshToken _refreshToken;
         private readonly IUserRepository _users;
         private readonly IAccountVerificationRepository _accountVerifications;
-        
+        private readonly ILogger<AuthService> _logger;
+
         private TimeSpan AccessTokenLifetime => TimeSpan.FromMinutes(15);
 
-        public AuthService(IMediator mediator, IRefreshToken refreshToken, IUserRepository users, 
-            IAccountVerificationRepository accountVerifications)
+        public AuthService(IMediator mediator, IRefreshToken refreshToken, IUserRepository users,
+            IAccountVerificationRepository accountVerifications, ILogger<AuthService> logger)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _refreshToken = refreshToken ?? throw new ArgumentNullException(nameof(refreshToken));
             _users = users ?? throw new ArgumentNullException(nameof(users));
             _accountVerifications = accountVerifications ??
                                     throw new ArgumentNullException(nameof(accountVerifications));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [AllowAnonymous]
@@ -66,7 +68,8 @@ namespace Services.AuthService.Presentation.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(Login));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 
@@ -82,8 +85,9 @@ namespace Services.AuthService.Presentation.Services
 
                 var user = await _users.GetUser(Guid.TryParse(tokenInfo.UserId, out var userId)
                     ? userId
-                    : throw new RpcException(new Status(StatusCode.Unauthenticated, "Invalid or expired refresh token")));
-            
+                    : throw new RpcException(new Status(StatusCode.Unauthenticated,
+                        "Invalid or expired refresh token")));
+
                 var newAccessToken = await _mediator.Send(new TokenGenerateAccessTokenCommand(user));
                 var newRefreshToken = await _mediator.Send(new TokenGenerateRefreshTokenCommand());
 
@@ -99,10 +103,11 @@ namespace Services.AuthService.Presentation.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(RefreshToken));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
-        
+
         [AllowAnonymous]
         public override async Task<LogoutResponse> Logout(LogoutRequest request, ServerCallContext context)
         {
@@ -113,18 +118,20 @@ namespace Services.AuthService.Presentation.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(Logout));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 
         [AllowAnonymous]
-        public override async Task<VerificationAccountResponse> VerificationAccount(VerificationAccountRequest request, ServerCallContext context)
+        public override async Task<VerificationAccountResponse> VerificationAccount(VerificationAccountRequest request,
+            ServerCallContext context)
         {
             try
             {
                 var result = await _accountVerifications
                     .VerificationRecord(request.UserId.ToGuid(), request.VerificationCode);
-                
+
                 return new VerificationAccountResponse
                 {
                     Success = result
@@ -132,7 +139,8 @@ namespace Services.AuthService.Presentation.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(VerificationAccount));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 
@@ -141,8 +149,15 @@ namespace Services.AuthService.Presentation.Services
         {
             try
             {
-                var newUser = await _users.CreateUser(new(request.Surname, request.Name, request.NickName,
-                    request.Email, request.Password));
+                var newUser = await _users.CreateUser(new()
+                {
+                    Surname = request.Surname,
+                    Name = request.Name,
+                    NickName = request.NickName,
+                    Email = request.Email,
+                    Password = request.Password
+                });
+
                 return new()
                 {
                     Success = newUser
@@ -150,7 +165,8 @@ namespace Services.AuthService.Presentation.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(CreateUser));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 
@@ -171,7 +187,7 @@ namespace Services.AuthService.Presentation.Services
                 throw new RpcException(new(StatusCode.Aborted, ex.Message));
             }
         }
-        
+
         [Authorize(Roles = UserRoleStaticEnum.Admin)]
         public override async Task<UserInfoResponse> GetUser(GetUserRequest request, ServerCallContext context)
         {
@@ -198,7 +214,8 @@ namespace Services.AuthService.Presentation.Services
         }
 
         [AllowAnonymous]
-        public override async Task<UserInfoResponse> GetUserByEmail(GetUserByEmailRequest request, ServerCallContext context)
+        public override async Task<UserInfoResponse> GetUserByEmail(GetUserByEmailRequest request,
+            ServerCallContext context)
         {
             try
             {
@@ -218,12 +235,14 @@ namespace Services.AuthService.Presentation.Services
             }
             catch (Exception ex)
             {
-                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(GetUserByEmail));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
 
-        [AllowAnonymous]
-        public override async Task<AddAuthorRoleResponse> AddAuthorRole(AddAuthorRoleRequest request, ServerCallContext context)
+        [Authorize(Roles = UserRoleStaticEnum.Admin)]
+        public override async Task<AddAuthorRoleResponse> AddAuthorRole(AddAuthorRoleRequest request,
+            ServerCallContext context)
         {
             try
             {
@@ -240,7 +259,8 @@ namespace Services.AuthService.Presentation.Services
         }
 
         [Authorize(Roles = UserRoleStaticEnum.Admin)]
-        public override async Task<GetUsersFromSearchResponse> GetUsersFromSearch(GetUsersFromSearchRequest request, ServerCallContext context)
+        public override async Task<GetUsersFromSearchResponse> GetUsersFromSearch(GetUsersFromSearchRequest request,
+            ServerCallContext context)
         {
             try
             {
