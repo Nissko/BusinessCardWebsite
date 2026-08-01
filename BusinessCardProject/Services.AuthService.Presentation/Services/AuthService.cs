@@ -39,7 +39,7 @@ namespace Services.AuthService.Presentation.Services
             _accountVerifications = accountVerifications ??
                                     throw new ArgumentNullException(nameof(accountVerifications));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _failedLoginAttempts = failedLoginAttempts;
+            _failedLoginAttempts = failedLoginAttempts ?? throw new ArgumentNullException(nameof(failedLoginAttempts));
             _auditLog = auditLog ?? throw new ArgumentNullException(nameof(auditLog));
         }
 
@@ -90,9 +90,9 @@ namespace Services.AuthService.Presentation.Services
 
                 var ipAddress = context.Peer ?? "unknown";
 
-                await _auditLog.Log(user.Id, nameof(Login), 
+                await _auditLog.Log(user.Id, nameof(Login),
                     $"Successful login from {ipAddress}");
-                
+
                 return new LoginResponse
                 {
                     AccessToken = accessToken,
@@ -307,9 +307,10 @@ namespace Services.AuthService.Presentation.Services
                 throw new RpcException(new(StatusCode.Aborted, ex.Message));
             }
         }
-        
+
         [AllowAnonymous]
-        public override async Task<UserBooleanResponse> SendPasswordReset(SendPasswordResetRequest request, ServerCallContext context)
+        public override async Task<UserBooleanResponse> SendPasswordReset(SendPasswordResetRequest request,
+            ServerCallContext context)
         {
             try
             {
@@ -324,11 +325,13 @@ namespace Services.AuthService.Presentation.Services
         }
 
         [AllowAnonymous]
-        public override async Task<UserBooleanResponse> ResetPassword(ResetPasswordRequest request, ServerCallContext context)
+        public override async Task<UserBooleanResponse> ResetPassword(ResetPasswordRequest request,
+            ServerCallContext context)
         {
             try
             {
-                await _mediator.Send(new ResetPasswordCommand(request.UserId.ToGuid(), request.ResetToken, request.NewPassword));
+                await _mediator.Send(new ResetPasswordCommand(request.UserId.ToGuid(), request.ResetToken,
+                    request.NewPassword));
                 return new UserBooleanResponse { Success = true };
             }
             catch (Exception ex)
@@ -336,15 +339,15 @@ namespace Services.AuthService.Presentation.Services
                 throw new RpcException(new Status(StatusCode.Aborted, ex.Message));
             }
         }
-        
+
         [Authorize]
         public override async Task<LogoutAllResponse> LogoutAll(LogoutAllRequest request, ServerCallContext context)
         {
             try
             {
-                var userId = Guid.Parse(request.UserId);        
+                var userId = Guid.Parse(request.UserId);
                 await _refreshToken.RevokeAllForUser(userId.ToString());
-        
+
                 return new LogoutAllResponse { Success = true };
             }
             catch (Exception ex)
@@ -355,14 +358,16 @@ namespace Services.AuthService.Presentation.Services
         }
 
         [Authorize]
-        public override async Task<ActiveSessionsResponse> GetActiveSessions(GetActiveSessionsRequest request, ServerCallContext context)
+        public override async Task<ActiveSessionsResponse> GetActiveSessions(GetActiveSessionsRequest request,
+            ServerCallContext context)
         {
             try
             {
                 var accessToken = !string.IsNullOrEmpty(request.AccessToken)
                     ? request.AccessToken
                     : throw new Exception("Пользователь не авторизован");
-                var sessions = await _refreshToken.GetActiveSessions(accessToken, request.Limit, context.CancellationToken);
+                var sessions =
+                    await _refreshToken.GetActiveSessions(accessToken, request.Limit, context.CancellationToken);
 
                 var response = new ActiveSessionsResponse();
                 foreach (var s in sessions)
@@ -374,11 +379,28 @@ namespace Services.AuthService.Presentation.Services
                         ExpiresAt = s.ExpiresAtUtc.ToTimestamp()
                     });
                 }
+
                 return response;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ошибка при получении активных сессий");
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
+            }
+        }
+
+        [AllowAnonymous]
+        public override async Task<ValidateRefreshTokenResponse> ValidateRefreshToken(RefreshTokenRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                var tokenInfo = await _refreshToken.Get(request.RefreshToken, context.CancellationToken);
+                return new ValidateRefreshTokenResponse { IsValid = tokenInfo != null };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при валидации refresh токена");
                 throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }

@@ -15,6 +15,7 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
         }
 
         public string? GetAccessToken() => _accessToken;
+        public bool IsExpired => _expiryTime.HasValue && _expiryTime.Value < DateTime.UtcNow;
 
         public async Task InitializeAsync()
         {

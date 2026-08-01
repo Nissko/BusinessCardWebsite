@@ -2,6 +2,7 @@ using BusinessCardProject.Client.App;
 using BusinessCardProject.Client.Entities.Services.ProjectInfo;
 using BusinessCardProject.Client.Entities.Services.UserAuthentication;
 using Grpc.Net.Client.Web;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
@@ -26,7 +27,7 @@ builder.Services.AddHttpClient("AuthRefreshClient", client =>
         client.BaseAddress = new Uri("https://localhost:7241");
         // client.BaseAddress = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService");
     })
-    .ConfigurePrimaryHttpMessageHandler(() => 
+    .ConfigurePrimaryHttpMessageHandler(() =>
         new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler())
     );
 
@@ -59,6 +60,16 @@ builder.Services.AddGrpcClient<CourseService.Proto.CourseService.CourseServiceCl
     .AddInterceptor(sp => sp.GetRequiredService<AuthenticationInterceptor>());
 
 builder.Logging.SetMinimumLevel(LogLevel.Warning);
+
 var host = builder.Build();
+
 await host.Services.GetRequiredService<TokenStore>().InitializeAsync();
+
+var auth = host.Services.GetRequiredService<ClientAuthenticationService>();
+if (!await auth.ValidateAndClearAsync())
+{
+    var navManager = host.Services.GetRequiredService<NavigationManager>();
+    navManager.NavigateTo("/login", forceLoad: true);
+}
+
 await host.RunAsync();

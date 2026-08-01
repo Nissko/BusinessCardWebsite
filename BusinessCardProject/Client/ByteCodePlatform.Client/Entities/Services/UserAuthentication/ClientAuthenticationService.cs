@@ -10,15 +10,17 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
         private readonly TokenStore _tokenStore;
         private readonly AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient _client;
         private readonly NavigationManager _navManager;
+        private readonly IServiceProvider _serviceProvider;
 
         public ClientAuthenticationService(
             TokenStore tokenStore,
             AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient client,
-            NavigationManager navManager)
+            NavigationManager navManager, IServiceProvider serviceProvider)
         {
             _tokenStore = tokenStore ?? throw new ArgumentNullException(nameof(tokenStore));
             _client = client ?? throw new ArgumentNullException(nameof(client));
             _navManager = navManager ?? throw new ArgumentNullException(nameof(navManager));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         public async Task<bool> Login(string email, string password)
@@ -33,7 +35,7 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
                 }
             }
             catch (RpcException) { }
-            
+
             return false;
         }
 
@@ -44,12 +46,15 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
             {
                 await _client.LogoutAsync(new LogoutRequest { RefreshToken = refreshToken });
             }
-            catch (RpcException) { }
+            catch (RpcException)
+            {
+            }
             finally
             {
                 await _tokenStore.ClearAsync();
                 _navManager.NavigateTo("/login", forceLoad: true);
             }
+
             return true;
         }
 
@@ -60,7 +65,9 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
             {
                 await _client.LogoutAsync(new LogoutRequest { RefreshToken = tokenId });
             }
-            catch (RpcException) { }
+            catch (RpcException)
+            {
+            }
         }
 
         public async Task<List<SessionInfo>> GetActiveSessions(int limit)
@@ -93,7 +100,9 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
             {
                 await _client.LogoutAllAsync(new LogoutAllRequest());
             }
-            catch (RpcException) { }
+            catch (RpcException)
+            {
+            }
             finally
             {
                 await _tokenStore.ClearAsync();
@@ -149,6 +158,60 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
             }
             catch (RpcException)
             {
+                return false;
+            }
+        }
+
+        public async Task<bool> ValidateAndClearAsync()
+        {
+            if (!_tokenStore.IsExpired)
+            {
+                return true;
+            }
+
+            var refreshToken = _tokenStore.GetRefreshToken();
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                await _tokenStore.ClearAsync();
+                return false;
+            }
+
+            try
+            {
+                var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
+                var httpClient = httpClientFactory.CreateClient("AuthRefreshClient");
+
+                var channel = Grpc.Net.Client.GrpcChannel.ForAddress(httpClient.BaseAddress,
+                    new Grpc.Net.Client.GrpcChannelOptions { HttpClient = httpClient });
+
+                var client = new AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient(channel);
+                var response = await client.ValidateRefreshTokenAsync(
+                    new RefreshTokenRequest { RefreshToken = refreshToken });
+
+                if (!response.IsValid)
+                {
+                    await _tokenStore.ClearAsync();
+                    return false;
+                }
+
+                var refreshResponse = await client.RefreshTokenAsync(
+                    new RefreshTokenRequest { RefreshToken = refreshToken });
+
+                if (!string.IsNullOrEmpty(refreshResponse.AccessToken))
+                {
+                    await _tokenStore.SetTokensAsync(
+                        refreshResponse.AccessToken,
+                        refreshResponse.RefreshToken,
+                        refreshResponse.ExpiresIn);
+                    return true;
+                }
+
+                await _tokenStore.ClearAsync();
+                return false;
+            }
+            catch
+            {
+                await _tokenStore.ClearAsync();
                 return false;
             }
         }

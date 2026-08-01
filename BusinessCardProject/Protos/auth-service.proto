@@ -31,6 +31,8 @@ service AuthorizationService {
   rpc SendPasswordReset(SendPasswordResetRequest) returns (UserBooleanResponse);
   //
   rpc ResetPassword(ResetPasswordRequest) returns (UserBooleanResponse);
+  // 
+  rpc ValidateRefreshToken(RefreshTokenRequest) returns (ValidateRefreshTokenResponse);
 }
 
 message SendPasswordResetRequest {
@@ -180,4 +182,8 @@ message GetUsersFromSearchRequest{
 message GetUsersFromSearchResponse{
   repeated UserInfoResponse Items = 1;
   int32 TotalCount = 2;
+}
+
+message ValidateRefreshTokenResponse {
+  bool is_valid = 1;
 }

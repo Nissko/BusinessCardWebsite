@@ -18,7 +18,8 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+            CancellationToken cancellationToken)
         {
             var tokenStore = _serviceProvider.GetRequiredService<TokenStore>();
             var navManager = _serviceProvider.GetRequiredService<NavigationManager>();
@@ -35,6 +36,18 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
             {
                 response.Dispose();
 
+                var refreshToken = tokenStore.GetRefreshToken();
+                if (!string.IsNullOrEmpty(refreshToken))
+                {
+                    var isValid = await ValidateRefreshTokenAsync(refreshToken, cancellationToken);
+                    if (!isValid)
+                    {
+                        await tokenStore.ClearAsync();
+                        navManager.NavigateTo("/login", forceLoad: true);
+                        return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                    }
+                }
+
                 var refreshSuccess = await TryRefreshTokenAsync(cancellationToken);
 
                 if (refreshSuccess)
@@ -46,11 +59,40 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
 
                 await tokenStore.ClearAsync();
                 navManager.NavigateTo("/login", forceLoad: true);
-                
+
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized);
             }
 
             return response;
+        }
+
+        private async Task<bool> ValidateRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
+                var httpClient = httpClientFactory.CreateClient("AuthRefreshClient");
+
+                var channel = Grpc.Net.Client.GrpcChannel.ForAddress(httpClient.BaseAddress,
+                    new Grpc.Net.Client.GrpcChannelOptions
+                    {
+                        HttpClient = httpClient
+                    });
+
+                var validateClient =
+                    new AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient(channel);
+
+                var response = await validateClient.ValidateRefreshTokenAsync(
+                    new AuthorizationService.Proto.RefreshTokenRequest { RefreshToken = refreshToken },
+                    cancellationToken: cancellationToken);
+
+                return response.IsValid;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка при валидации refresh токена");
+                return false;
+            }
         }
 
         private async Task<bool> TryRefreshTokenAsync(CancellationToken cancellationToken)
@@ -65,15 +107,17 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
                 var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
                 var httpClient = httpClientFactory.CreateClient("AuthRefreshClient");
 
-                var channel = Grpc.Net.Client.GrpcChannel.ForAddress(httpClient.BaseAddress, new Grpc.Net.Client.GrpcChannelOptions
-                {
-                    HttpClient = httpClient
-                });
+                var channel = Grpc.Net.Client.GrpcChannel.ForAddress(httpClient.BaseAddress,
+                    new Grpc.Net.Client.GrpcChannelOptions
+                    {
+                        HttpClient = httpClient
+                    });
 
-                var refreshClient = new AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient(channel);
+                var refreshClient =
+                    new AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient(channel);
 
                 var response = await refreshClient.RefreshTokenAsync(
-                    new AuthorizationService.Proto.RefreshTokenRequest { RefreshToken = refreshToken }, 
+                    new AuthorizationService.Proto.RefreshTokenRequest { RefreshToken = refreshToken },
                     cancellationToken: cancellationToken);
 
                 if (!string.IsNullOrEmpty(response.AccessToken))
@@ -81,7 +125,7 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
                     await tokenStore.SetTokensAsync(response.AccessToken, response.RefreshToken, response.ExpiresIn);
                     return true;
                 }
-                
+
                 return false;
             }
             catch (Exception ex)

@@ -116,6 +116,28 @@ namespace Services.AuthService.Infrastructure.Repositories
                 .ToListAsync(ct);
         }
 
+        public async Task<RefreshTokenInfo?> Get(string refreshToken, CancellationToken ct = default)
+        {
+            if (string.IsNullOrWhiteSpace(refreshToken)) return null;
+
+            var tokenHash = HashToken(refreshToken);
+            var refreshTokenEntity = await _context.RefreshToken
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.TokenHash == tokenHash, ct);
+
+            if (refreshTokenEntity == null || refreshTokenEntity.IsRevoked ||
+                refreshTokenEntity.ExpiresAtUtc < SystemClock.Instance.GetCurrentInstant())
+            {
+                return null;
+            }
+
+            return new RefreshTokenInfo(
+                UserId: refreshTokenEntity.UserId.ToString(),
+                ExpiresAt: refreshTokenEntity.ExpiresAtUtc,
+                IsRevoked: false
+            );
+        }
+
         /// <summary>
         /// Хэширует токен с помощью SHA256 для безопасного хранения.
         /// </summary>
