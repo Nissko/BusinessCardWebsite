@@ -73,7 +73,7 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
                 var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
                 var httpClient = httpClientFactory.CreateClient("AuthRefreshClient");
 
-                var channel = Grpc.Net.Client.GrpcChannel.ForAddress(httpClient.BaseAddress,
+                var channel = Grpc.Net.Client.GrpcChannel.ForAddress(httpClient.BaseAddress!,
                     new Grpc.Net.Client.GrpcChannelOptions
                     {
                         HttpClient = httpClient
@@ -107,7 +107,7 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
                 var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
                 var httpClient = httpClientFactory.CreateClient("AuthRefreshClient");
 
-                var channel = Grpc.Net.Client.GrpcChannel.ForAddress(httpClient.BaseAddress,
+                var channel = Grpc.Net.Client.GrpcChannel.ForAddress(httpClient.BaseAddress!,
                     new Grpc.Net.Client.GrpcChannelOptions
                     {
                         HttpClient = httpClient

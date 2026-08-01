@@ -23,20 +23,22 @@ namespace ByteCodePlatform.Admin.Features.auth.login_form
         private string _errorMessage = "";
         private bool _showError;
         private bool _isLoading;
+#pragma warning disable CS0414 // Field is assigned but its value is never used
         private bool _isSettingsLoaded;
+#pragma warning restore CS0414 // Field is assigned but its value is never used
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
             UserSettingService.OnChange += StateHasChanged;
-        
+
             if (UserSettingService.Settings.UpdateTime == null)
             {
                 await UserSettingService.LoadAsync();
                 UserSettingService.Settings.UpdateTime = DateTime.Now;
                 await UserSettingService.SaveAsync();
             }
-        
+
             _isSettingsLoaded = true;
         }
 

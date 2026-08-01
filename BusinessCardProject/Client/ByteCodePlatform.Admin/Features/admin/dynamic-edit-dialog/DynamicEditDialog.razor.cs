@@ -29,7 +29,6 @@ namespace ByteCodePlatform.Admin.Features.admin.dynamic_edit_dialog
         
         private IBrowserFile? _selectedFile;
         private string? _previewUrl;
-        private string? _localObjectUrl;
 
         protected override void OnInitialized()
         {

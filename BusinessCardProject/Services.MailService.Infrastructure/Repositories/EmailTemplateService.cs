@@ -20,9 +20,10 @@ namespace Services.MailService.Infrastructure.Repositories
             switch (templateName)
             {
                 case nameof(EmailTemplatesEnum.VerificationAccountTemplate):
+                {
                     return await _mediator.Send(new GetEmailVerificationAccountTemplateCommand(
                         templateBody, emailMessageRequest));
-                    break;
+                }
             }
             
             // В случае если не был найден шаблон, то просто возвращаю исходную строку из запроса

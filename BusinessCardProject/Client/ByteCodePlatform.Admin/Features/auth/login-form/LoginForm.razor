@@ -2,7 +2,7 @@
 @implements IDisposable
 
 <MudCard Class="mx-auto rounded-xl" 
-         MaxWidth="500px" 
+         MaxWidth="@MaxWidth.Small" 
          Style="padding: 14px;">
     <MudCardContent>
         <MudText Typo="Typo.h5" Class="mb-4">Вход в систему</MudText>
@@ -26,8 +26,8 @@
                           Margin="Margin.Dense"
                           Icon="@Icons.Material.Rounded.Lock"
                           InputType="InputType.Password"
-                          PasswordRevealIcon="Icons.Material.Rounded.Visibility"
-                          PasswordRevealIconActive="Icons.Material.Rounded.VisibilityOff"
+                          PasswordRevealIcon="@Icons.Material.Rounded.Visibility"
+                          PasswordRevealIconActive="@Icons.Material.Rounded.VisibilityOff"
                           @onkeydown="HandleEnter"/>
 
             @if (!string.IsNullOrEmpty(_errorMessage))
