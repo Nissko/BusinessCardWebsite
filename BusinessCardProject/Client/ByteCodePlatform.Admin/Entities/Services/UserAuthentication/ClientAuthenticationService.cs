@@ -13,13 +13,12 @@ namespace ByteCodePlatform.Admin.Entities.Services.UserAuthentication
 
         public ClientAuthenticationService(
             TokenStore tokenStore,
-            AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient client,
-            NavigationManager navManager, IServiceProvider serviceProvider)
+            NavigationManager navManager, IServiceProvider serviceProvider, AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient client)
         {
             _tokenStore = tokenStore ?? throw new ArgumentNullException(nameof(tokenStore));
-            _client = client ?? throw new ArgumentNullException(nameof(client));
             _navManager = navManager ?? throw new ArgumentNullException(nameof(navManager));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         public async Task<bool> Login(string email, string password)

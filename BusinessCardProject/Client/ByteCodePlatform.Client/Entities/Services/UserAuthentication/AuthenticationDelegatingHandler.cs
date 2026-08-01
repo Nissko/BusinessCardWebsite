@@ -27,6 +27,19 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
             var token = tokenStore.GetAccessToken();
             if (!string.IsNullOrEmpty(token))
             {
+                var refreshToken = tokenStore.GetRefreshToken();
+                
+                if (!string.IsNullOrEmpty(refreshToken))
+                {
+                    var isValid = await ValidateRefreshTokenAsync(refreshToken, cancellationToken);
+                    if (!isValid)
+                    {
+                        await tokenStore.ClearAsync();
+                        navManager.NavigateTo("/login", forceLoad: true);
+                        return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                    }
+                }
+                
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
 

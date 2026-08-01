@@ -32,7 +32,9 @@ namespace Services.AuthService.Infrastructure.Repositories
                 .Where(x => x.UserId == Guid.Parse(userId)).ToListAsync(cancellationToken: ct);
             
             foreach (var oldToken in oldTokens) oldToken.ChangeIsRevoked(true);
-            _context.RefreshToken.UpdateRange(oldTokens);
+            {
+                _context.RefreshToken.UpdateRange(oldTokens);
+            }
             
             var tokenHash = HashToken(refreshToken);
             var newRefreshToken = new RefreshTokenEntity(
@@ -47,28 +49,28 @@ namespace Services.AuthService.Infrastructure.Repositories
             await _context.SaveChangesAsync(ct);
         }
 
-        public async Task<RefreshTokenInfo?> GetAndInvalidate(string refreshToken, CancellationToken ct = default)
+        public async Task<RefreshTokenInfo?> GetAndInvalidate(string refreshTokenRequest, CancellationToken ct = default)
         {
-            if (string.IsNullOrWhiteSpace(refreshToken)) return null;
+            if (string.IsNullOrWhiteSpace(refreshTokenRequest)) return null;
 
-            var tokenHash = HashToken(refreshToken);
-            var refreshTokenEntity = await _context.RefreshToken
+            var tokenHash = HashToken(refreshTokenRequest);
+            var refreshToken = await _context.RefreshToken
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.TokenHash == tokenHash, ct);
 
-            if (refreshTokenEntity == null || refreshTokenEntity.IsRevoked ||
-                refreshTokenEntity.ExpiresAtUtc < SystemClock.Instance.GetCurrentInstant())
+            if (refreshToken == null || refreshToken.IsRevoked ||
+                refreshToken.ExpiresAtUtc < SystemClock.Instance.GetCurrentInstant())
             {
                 return null;
             }
 
-            refreshTokenEntity.ChangeIsRevoked(true);
-            _context.RefreshToken.Update(refreshTokenEntity);
+            refreshToken.ChangeIsRevoked(true);
+            _context.RefreshToken.Update(refreshToken);
             await _context.SaveChangesAsync(ct);
 
             return new RefreshTokenInfo(
-                UserId: refreshTokenEntity.UserId.ToString(),
-                ExpiresAt: refreshTokenEntity.ExpiresAtUtc,
+                UserId: refreshToken.UserId.ToString(),
+                ExpiresAt: refreshToken.ExpiresAtUtc,
                 IsRevoked: true
             );
         }
@@ -114,28 +116,6 @@ namespace Services.AuthService.Infrastructure.Repositories
                 .Take(limit)
                 .Select(t => new SessionInfo(t.TokenHash, t.CreatedAtUtc, t.ExpiresAtUtc))
                 .ToListAsync(ct);
-        }
-
-        public async Task<RefreshTokenInfo?> Get(string refreshToken, CancellationToken ct = default)
-        {
-            if (string.IsNullOrWhiteSpace(refreshToken)) return null;
-
-            var tokenHash = HashToken(refreshToken);
-            var refreshTokenEntity = await _context.RefreshToken
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.TokenHash == tokenHash, ct);
-
-            if (refreshTokenEntity == null || refreshTokenEntity.IsRevoked ||
-                refreshTokenEntity.ExpiresAtUtc < SystemClock.Instance.GetCurrentInstant())
-            {
-                return null;
-            }
-
-            return new RefreshTokenInfo(
-                UserId: refreshTokenEntity.UserId.ToString(),
-                ExpiresAt: refreshTokenEntity.ExpiresAtUtc,
-                IsRevoked: false
-            );
         }
 
         /// <summary>

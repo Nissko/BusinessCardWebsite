@@ -9,7 +9,7 @@ namespace ByteCodePlatform.Admin.Entities.Services.UserAuthentication
 
         public AuthenticationInterceptor(TokenStore tokenStore)
         {
-            _tokenStore = tokenStore;
+            _tokenStore = tokenStore ?? throw new ArgumentNullException(nameof(tokenStore));
         }
 
         public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(

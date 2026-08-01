@@ -30,10 +30,5 @@ namespace Services.AuthService.Application.Common.Interfaces
         /// </summary>
         Task<IReadOnlyList<SessionInfo>> GetActiveSessions(string accessToken, int limit,
             CancellationToken ct = default);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        Task<RefreshTokenInfo?> Get(string refreshToken, CancellationToken ct = default);
     }
 }

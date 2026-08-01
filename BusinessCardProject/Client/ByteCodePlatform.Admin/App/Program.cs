@@ -44,6 +44,13 @@ HttpMessageHandler CreateAuthHandler(IServiceProvider sp)
     return new GrpcWebHandler(GrpcWebMode.GrpcWeb, authHandler);
 }
 
+builder.Services.AddGrpcClient<AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient>(options =>
+    {
+        options.Address = new Uri("https://localhost:7241");
+        // options.Address = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService";
+    })
+    .ConfigurePrimaryHttpMessageHandler(CreateAuthHandler);
+
 builder.Services.AddGrpcClient<CourseService.Proto.CourseService.CourseServiceClient>(options =>
     {
         options.Address = new Uri("https://localhost:7117");

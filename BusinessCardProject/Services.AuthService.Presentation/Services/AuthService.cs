@@ -88,7 +88,7 @@ namespace Services.AuthService.Presentation.Services
                 await _refreshToken.Save(refreshToken, user.Id.ToString(),
                     SystemClock.Instance.GetCurrentInstant() + Duration.FromDays(1));
 
-                var ipAddress = context.Peer ?? "unknown";
+                var ipAddress = context.Peer;
 
                 await _auditLog.Log(user.Id, nameof(Login),
                     $"Successful login from {ipAddress}");
@@ -115,7 +115,9 @@ namespace Services.AuthService.Presentation.Services
             {
                 var tokenInfo = await _refreshToken.GetAndInvalidate(request.RefreshToken);
                 if (tokenInfo == null || tokenInfo.IsExpired)
+                {
                     throw new RpcException(new Status(StatusCode.Unauthenticated, "Invalid or expired refresh token"));
+                }
 
                 var user = await _users.GetUser(Guid.TryParse(tokenInfo.UserId, out var userId)
                     ? userId
@@ -395,7 +397,7 @@ namespace Services.AuthService.Presentation.Services
         {
             try
             {
-                var tokenInfo = await _refreshToken.Get(request.RefreshToken, context.CancellationToken);
+                var tokenInfo = await _refreshToken.GetAndInvalidate(request.RefreshToken, context.CancellationToken);
                 return new ValidateRefreshTokenResponse { IsValid = tokenInfo != null };
             }
             catch (Exception ex)
