@@ -75,6 +75,28 @@ namespace Services.AuthService.Infrastructure.Repositories
             );
         }
 
+        public async Task<RefreshTokenInfo?> CheckOfExpireRefreshToken(string refreshToken, CancellationToken ct = default)
+        {
+            if (string.IsNullOrWhiteSpace(refreshToken)) return null;
+
+            var tokenHash = HashToken(refreshToken);
+            var refreshTokenEntity = await _context.RefreshToken
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.TokenHash == tokenHash, ct);
+
+            if (refreshTokenEntity == null || refreshTokenEntity.IsRevoked ||
+                refreshTokenEntity.ExpiresAtUtc < SystemClock.Instance.GetCurrentInstant())
+            {
+                return null;
+            }
+
+            return new RefreshTokenInfo(
+                UserId: refreshTokenEntity.UserId.ToString(),
+                ExpiresAt: refreshTokenEntity.ExpiresAtUtc,
+                IsRevoked: false
+            );
+        }
+
         public async Task Revoke(string refreshToken, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(refreshToken)) return;

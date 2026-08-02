@@ -88,10 +88,12 @@ namespace Services.AuthService.Presentation.Services
                 await _refreshToken.Save(refreshToken, user.Id.ToString(),
                     SystemClock.Instance.GetCurrentInstant() + Duration.FromDays(1));
 
+                /*TODO: Сделать потом везде, чтобы можно было проводить аудит действий пользователя*/
                 var ipAddress = context.Peer;
+                var userAgent = context.RequestHeaders
+                    .FirstOrDefault(x => x.Key.Equals("user-agent", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
 
-                await _auditLog.Log(user.Id, nameof(Login),
-                    $"Successful login from {ipAddress}");
+                await _auditLog.Log(user.Id, nameof(Login), $"Успещный вход с IP - {ipAddress}", ipAddress, userAgent);
 
                 return new LoginResponse
                 {
@@ -397,7 +399,7 @@ namespace Services.AuthService.Presentation.Services
         {
             try
             {
-                var tokenInfo = await _refreshToken.GetAndInvalidate(request.RefreshToken, context.CancellationToken);
+                var tokenInfo = await _refreshToken.CheckOfExpireRefreshToken(request.RefreshToken, context.CancellationToken);
                 return new ValidateRefreshTokenResponse { IsValid = tokenInfo != null };
             }
             catch (Exception ex)

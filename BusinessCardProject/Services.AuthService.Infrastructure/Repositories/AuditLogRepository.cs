@@ -14,14 +14,16 @@ namespace Services.AuthService.Infrastructure.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task Log(Guid userId, string action, string? details = null, CancellationToken ct = default)
+        public async Task Log(Guid userId, string action, string? details = null, string? ipAddress = null,
+            string? userAgent = null, CancellationToken ct = default)
         {
-            var log = new AuditLogEntity(userId, action, details);
+            var log = new AuditLogEntity(userId, action, details,  ipAddress, userAgent);
             _context.AuditLogs.Add(log);
             await _context.SaveChangesAsync(ct);
         }
 
-        public async Task<IReadOnlyList<AuditLogDto>> GetLogsForUser(Guid userId, int page, int pageSize, CancellationToken ct = default)
+        public async Task<IReadOnlyList<AuditLogDto>> GetLogsForUser(Guid userId, int page, int pageSize,
+            CancellationToken ct = default)
         {
             var skip = (page - 1) * pageSize;
             return await _context.AuditLogs
@@ -30,7 +32,7 @@ namespace Services.AuthService.Infrastructure.Repositories
                 .Skip(skip)
                 .Take(pageSize)
                 .Select(l => new AuditLogDto(
-                    l.UserId, l.Action, l.Details, l.CreatedAt, l.IpAddress))
+                    l.UserId, l.Action, l.Details, l.CreatedAt, l.IpAddress, l.UserAgent))
                 .ToListAsync(ct);
         }
     }

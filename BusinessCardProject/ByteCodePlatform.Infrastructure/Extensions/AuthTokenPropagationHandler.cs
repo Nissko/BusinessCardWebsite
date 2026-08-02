@@ -9,7 +9,7 @@ namespace ByteCodePlatform.Infrastructure.Extensions
 
         public AuthTokenPropagationHandler(IAuthTokenAccessor tokenAccessor)
         {
-            _tokenAccessor = tokenAccessor;
+            _tokenAccessor = tokenAccessor ?? throw new ArgumentNullException(nameof(tokenAccessor));
         }
 
         protected override Task<HttpResponseMessage> SendAsync(

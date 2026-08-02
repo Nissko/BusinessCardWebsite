@@ -5,14 +5,15 @@ namespace Services.AuthService.Domain.Entities
 {
     public class AuditLogEntity : Entity
     {
-        public AuditLogEntity(Guid userId, string action, string? details = null)
+        public AuditLogEntity(Guid userId, string action, string? details = null, string? ipAddress = null,
+            string? userAgent = null)
         {
             UserId = userId;
             Action = action;
             Details = details;
             CreatedAt = SystemClock.Instance.GetCurrentInstant();
-            IpAddress = "";
-            UserAgent = "";
+            IpAddress = ipAddress ?? "";
+            UserAgent = userAgent ?? "";
         }
 
         public Guid UserId { get; private set; }
@@ -21,11 +22,5 @@ namespace Services.AuthService.Domain.Entities
         public Instant CreatedAt { get; private set; }
         public string IpAddress { get; private set; }
         public string UserAgent { get; private set; }
-
-        public void UpdateContext(string ipAddress, string userAgent)
-        {
-            IpAddress = ipAddress;
-            UserAgent = userAgent;
-        }
     }
 }

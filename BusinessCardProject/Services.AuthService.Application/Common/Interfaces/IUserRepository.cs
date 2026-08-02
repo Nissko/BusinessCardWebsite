@@ -20,12 +20,16 @@ namespace Services.AuthService.Application.Common.Interfaces
         /// Получение пользователя
         /// </summary>
         Task<UserDto> GetUser(Guid userId);
-        
+
         /// <summary>
         /// Поиск пользователя по почте
         /// </summary>
         Task<UserDto> GetUserByEmail(string email);
-        
+
+        /// <summary>
+        /// Проверка пароля
+        /// </summary>
+        /// <returns></returns>
         Task<bool> VerifyPassword(Guid userId, string plainPassword);
 
         /// <summary>
@@ -37,17 +41,20 @@ namespace Services.AuthService.Application.Common.Interfaces
         /// Список ролей пользователя
         /// </summary>
         Task<List<string>> GetRoles(Guid userId);
-        
+
         /// <summary>
         /// Добавление роли автора из ядра
         /// </summary>
         Task<bool> AddAuthorRole(Guid userId);
-        
+
         /// <summary>
         /// Получение всех пользователей для админки
         /// </summary>
         Task<PaginationDto<UserDto>> GetUsersFromSearch(GetUsersSearchRequest request);
-        
+
+        /// <summary>
+        /// Изменение пароля
+        /// </summary>
         Task<bool> UpdatePassword(Guid userId, string passwordHash);
     }
 }
