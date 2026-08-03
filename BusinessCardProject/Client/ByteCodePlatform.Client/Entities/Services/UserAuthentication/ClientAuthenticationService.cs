@@ -38,6 +38,26 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
 
             return false;
         }
+        
+        public async Task<bool> Register(string surname, string name, string nickName, string email, string password)
+        {
+            try
+            {
+                var response = await _client.CreateUserAsync(new CreateUserRequest
+                {
+                    Surname = surname,
+                    Name = name,
+                    NickName = nickName,
+                    Email = email,
+                    Password = password
+                });
+                return response.Success;
+            }
+            catch (RpcException)
+            {
+                return false;
+            }
+        }
 
         public async Task<bool> Logout()
         {
