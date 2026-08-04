@@ -1,71 +1,106 @@
 ﻿@using Severity = MudBlazor.Severity
 @implements IDisposable
 
-<MudCard Class="mx-auto rounded-xl"
-         MaxWidth="500px"
-         Style="padding: 14px;">
-    <MudCardContent>
-        <MudText Typo="Typo.h5" Class="mb-4">Регистрация</MudText>
+<MudCard Elevation="3" Class="rounded-xl overflow-hidden"
+         Style="border-top: 4px solid var(--mud-palette-primary); max-width: 520px; margin: auto;">
 
-        <MudForm Model="@_model" @ref="@_form"
-                 Validation="@_validator.ValidateValue" ValidationDelay="300">
+    <MudCardContent Class="pb-2">
+        <!-- Заголовок с иконкой -->
+        <div class="d-flex flex-column align-center text-center mb-5">
+            <MudAvatar Color="Color.Primary" Variant="Variant.Filled" Class="mb-3" Style="width: 56px; height: 56px;">
+                <MudIcon Icon="@Icons.Material.Rounded.PersonAdd" Size="Size.Large"/>
+            </MudAvatar>
+            <MudText Typo="Typo.h5" Style="font-weight: 700; letter-spacing: -0.5px;">
+                Создание аккаунта
+            </MudText>
+        </div>
 
-            <MudTextField @bind-Value="_model.Surname"
-                          For="@(() => _model.Surname)"
-                          Immediate="true"
-                          Label="Фамилия"
-                          Variant="Variant.Outlined"
-                          Margin="Margin.Dense"
-                          @onkeydown="HandleEnter"/>
+        <MudForm Model="@_model" @ref="@_form" Validation="@_validator.ValidateValue" ValidationDelay="300">
+            <MudGrid Spacing="3">
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="_model.Surname"
+                                  For="@(() => _model.Surname)"
+                                  Immediate="true"
+                                  Label="Фамилия"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                  @onkeydown="HandleEnter"/>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="_model.Name"
+                                  For="@(() => _model.Name)"
+                                  Immediate="true"
+                                  Label="Имя"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                  @onkeydown="HandleEnter"/>
+                </MudItem>
 
-            <MudTextField @bind-Value="_model.Name"
-                          For="@(() => _model.Name)"
-                          Immediate="true"
-                          Label="Имя"
-                          Variant="Variant.Outlined"
-                          Margin="Margin.Dense"
-                          @onkeydown="HandleEnter"/>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_model.NickName"
+                                  For="@(() => _model.NickName)"
+                                  Immediate="true"
+                                  Label="Никнейм"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                  @onkeydown="HandleEnter"/>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_model.Email"
+                                  For="@(() => _model.Email)"
+                                  Immediate="true"
+                                  Label="Электронная почта"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                  @onkeydown="HandleEnter"/>
+                </MudItem>
 
-            <MudTextField @bind-Value="_model.NickName"
-                          For="@(() => _model.NickName)"
-                          Immediate="true"
-                          Label="Никнейм"
-                          Variant="Variant.Outlined"
-                          Margin="Margin.Dense"
-                          @onkeydown="HandleEnter"/>
-
-            <MudTextField @bind-Value="_model.Email"
-                          For="@(() => _model.Email)"
-                          Immediate="true"
-                          Label="Почта"
-                          Variant="Variant.Outlined"
-                          Margin="Margin.Dense"
-                          @onkeydown="HandleEnter"/>
-
-            <MudTextField @bind-Value="_model.Password"
-                          For="@(() => _model.Password)"
-                          Immediate="true"
-                          Label="Пароль"
-                          Variant="Variant.Outlined"
-                          Margin="Margin.Dense"
-                          InputType="InputType.Password"
-                          @onkeydown="HandleEnter"/>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_model.Password"
+                                  For="@(() => _model.Password)"
+                                  Immediate="true"
+                                  Label="Пароль"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                  InputType="@_passwordInputType"
+                                  Adornment="Adornment.End"
+                                  AdornmentIcon="@_passwordIcon"
+                                  IconSize="Size.Medium"
+                                  OnAdornmentClick="TogglePasswordVisibility"
+                                  @onkeydown="HandleEnter"/>
+                </MudItem>
+            </MudGrid>
 
             @if (!string.IsNullOrEmpty(_errorMessage))
             {
-                <MudAlert Severity="Severity.Error" Class="mt-4" @bind-Visible="_showError">
+                <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mt-4 rounded-lg"
+                          @bind-Visible="_showError">
+                    <MudIcon Icon="@Icons.Material.Rounded.ErrorOutline" Class="mr-2"/>
                     @_errorMessage
                 </MudAlert>
             }
         </MudForm>
     </MudCardContent>
 
-    <MudCardActions Class="justify-space-between">
-        <MudButton Variant="Variant.Text" OnClick="@OnBackClick">
-            Назад ко входу
-        </MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="HandleRegister" Disabled="_isLoading">
+    <MudCardActions Class="flex-column pa-4 pt-0" Style="gap: 12px;">
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Large"
+                   OnClick="HandleRegister"
+                   Disabled="_isLoading"
+                   Loading="_isLoading"
+                   Class="rounded-lg"
+                   Style="font-weight: 600; letter-spacing: 0.5px;">
             Зарегистрироваться
+        </MudButton>
+
+        <MudButton Variant="Variant.Text"
+                   Color="Color.Default"
+                   OnClick="@OnBackClick"
+                   Class="rounded-lg"
+                   Style="text-transform: none; font-size: 0.95rem;">
+            <MudIcon Icon="@Icons.Material.Rounded.ArrowBack" Size="Size.Small" Class="mr-1"/>
+            Уже есть аккаунт? <span style="color: var(--mud-palette-primary); font-weight: 600; margin-left: 4px;">Войти</span>
         </MudButton>
     </MudCardActions>
 </MudCard>

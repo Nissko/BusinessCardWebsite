@@ -1,45 +1,124 @@
 ﻿<MudMenu Dense
          Variant="Variant.Text"
-         Size="Size.Medium"
-         Color="Color.Inherit"
-         Icon="@Icons.Material.Rounded.MoreVert">
+         AnchorOrigin="Origin.BottomRight"
+         TransformOrigin="Origin.TopRight"
+         Class="user-menu">
 
-    <MudMenuItem Icon="@Icons.Material.Rounded.Settings"
-                 IconColor="Color.Info"
-                 Label="Настройки"
-                 Href="/user-setting"
-                 ForceLoad="false" />
+    <ActivatorContent>
+        @if (IsAuthenticated)
+        {
+            <MudIconButton Icon="@Icons.Material.Rounded.AccountCircle"
+                           Size="Size.Medium"
+                           Color="Color.Inherit"
+                           Class="user-menu-trigger"
+                           Style="border-radius: 50%;">
+            </MudIconButton>
+        }
+        else
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Settings"
+                           Color="Color.Inherit"
+                           Size="Size.Medium"/>
+        }
+    </ActivatorContent>
 
-    <MudDivider/>
+    <ChildContent>
+        @if (IsAuthenticated)
+        {
+            <div class="user-info">
+                <div class="d-flex align-center">
+                    <MudAvatar Color="Color.Primary" Size="Size.Small" Class="mr-2">
+                        <MudIcon Icon="@Icons.Material.Rounded.Person" Size="Size.Small"/>
+                    </MudAvatar>
+                    <div style="min-width: 0;">
+                        <MudText Typo="Typo.subtitle2"
+                                 Style="font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            UserName
+                        </MudText>
+                        <MudText Typo="Typo.caption"
+                                 Style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            UserEmail
+                        </MudText>
+                    </div>
+                </div>
+            </div>
+            <MudDivider/>
+        }
 
-    <MudMenuItem Icon="@Icons.Material.Rounded.Group"
-                 IconColor="Color.Error"
-                 Label="Пользовательское соглашение"
-                 Href="/user-agreement"
-                 ForceLoad="false"/>
+        <MudMenuItem Header="true">
+            <MudText Typo="Typo.caption">Кастомизация</MudText>
+        </MudMenuItem>
 
-    <MudMenuItem Icon="@Icons.Material.Rounded.SafetyDivider"
-                 IconColor="Color.Error"
-                 Label="Политика конфиденциальности"
-                 Href="/privacy-policy"
-                 ForceLoad="false"/>
+        <MudMenuItem Icon="@Icons.Material.Filled.DashboardCustomize"
+                     Label="Настройки"
+                     Href="/user-setting"
+                     ForceLoad="false"/>
 
-    <MudDivider/>
+        <MudDivider Class="my-1"/>
 
-    @if (!IsAuthenticated)
-    {
-        <MudMenuItem OnClick="@OnLoginClick"
-                     ForceLoad
-                     Icon="@Icons.Material.Rounded.Login"
-                     IconColor="Color.Info"
-                     Label="Вход"/>
-    }
-    else
-    {
-        <MudMenuItem OnClick="@OnLogoutClick"
-                     ForceLoad
-                     Icon="@Icons.Material.Rounded.Logout"
-                     IconColor="Color.Info"
-                     Label="Выход"/>
-    }
+        <MudMenuItem Header="true">
+            <MudText Typo="Typo.caption">Информация</MudText>
+        </MudMenuItem>
+
+        <MudMenuItem Icon="@Icons.Material.Rounded.Description"
+                     Label="Пользовательское соглашение"
+                     Href="/user-agreement"
+                     ForceLoad="false"/>
+
+        <MudMenuItem Icon="@Icons.Material.Rounded.Policy"
+                     Label="Политика конфиденциальности"
+                     Href="/privacy-policy"
+                     ForceLoad="false"/>
+
+        <MudDivider Class="my-1"/>
+
+        @if (!IsAuthenticated)
+        {
+            <MudMenuItem OnClick="@OnLoginClick"
+                         ForceLoad
+                         Icon="@Icons.Material.Rounded.Login"
+                         Label="Войти в аккаунт"/>
+        }
+        else
+        {
+            <MudMenuItem OnClick="@OnLogoutClick"
+                         ForceLoad
+                         Icon="@Icons.Material.Rounded.Logout"
+                         Label="Выйти"
+                         Class="logout-item"/>
+        }
+    </ChildContent>
 </MudMenu>
+
+<style>
+    .user-menu-trigger {
+        transition: all 0.2s ease;
+    }
+
+    .user-menu-trigger:hover {
+        transform: scale(1.05);
+    }
+
+    .user-info {
+        padding: 12px 16px;
+    }
+
+    .user-menu {
+        font-size: 1.25rem !important;
+        margin-right: 12px !important;
+    }
+
+    .user-menu {
+        border-radius: 8px;
+        margin: 2px 8px;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .logout-item:hover {
+        background-color: rgba(var(--mud-palette-error-rgb), 0.08) !important;
+    }
+
+    .logout-item:hover {
+        color: var(--mud-palette-error) !important;
+    }
+</style>

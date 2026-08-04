@@ -20,6 +20,9 @@ namespace BusinessCardProject.Client.Features.auth.register_form
         private bool _showError;
         private bool _isLoading;
 
+        private InputType _passwordInputType = InputType.Password;
+        private string _passwordIcon = Icons.Material.Rounded.VisibilityOff;
+
         private void OnBackClick()
         {
             NavManager.NavigateTo("/login");
@@ -86,6 +89,20 @@ namespace BusinessCardProject.Client.Features.auth.register_form
             if (e.Key == "Enter" && !_isLoading)
             {
                 await HandleRegister();
+            }
+        }
+
+        private void TogglePasswordVisibility()
+        {
+            if (_passwordInputType == InputType.Password)
+            {
+                _passwordInputType = InputType.Text;
+                _passwordIcon = Icons.Material.Rounded.Visibility;
+            }
+            else
+            {
+                _passwordInputType = InputType.Password;
+                _passwordIcon = Icons.Material.Rounded.VisibilityOff;
             }
         }
 

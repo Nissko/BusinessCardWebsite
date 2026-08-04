@@ -24,7 +24,6 @@ namespace BusinessCardProject.Client.Features.auth_menu
         {
             _ = ClientAuthentication.Logout();
             IsAuthenticated = false;
-            //OnLoginClick();
         }
     }
 }

@@ -27,11 +27,11 @@ namespace BusinessCardProject.Client.Pages.auth
                 if (result)
                     _success = true;
                 else
-                    _errorMessage = "Не удалось отправить письмо. Проверьте email.";
+                    _errorMessage = "Не удалось отправить письмо. Проверьте правильность email.";
             }
             catch (Exception ex)
             {
-                _errorMessage = ex.Message;
+                _errorMessage = $"Ошибка: {ex.Message}";
             }
             finally
             {

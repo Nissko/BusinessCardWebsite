@@ -23,9 +23,12 @@ namespace BusinessCardProject.Client.Features.auth.login_form
         private string _errorMessage = "";
         private bool _showError;
         private bool _isLoading;
-#pragma warning disable CS0414 // Field is assigned but its value is never used
+#pragma warning disable CS0414
         private bool _isSettingsLoaded;
-#pragma warning restore CS0414 // Field is assigned but its value is never used
+#pragma warning restore CS0414
+
+        private InputType _passwordInputType = InputType.Password;
+        private string _passwordIcon = Icons.Material.Rounded.VisibilityOff;
 
         protected override async Task OnInitializedAsync()
         {
@@ -40,6 +43,11 @@ namespace BusinessCardProject.Client.Features.auth.login_form
             }
 
             _isSettingsLoaded = true;
+        }
+
+        private void OnHomeClick()
+        {
+            NavManager.NavigateTo("/");
         }
 
         private async Task HandleLogin()
@@ -104,6 +112,20 @@ namespace BusinessCardProject.Client.Features.auth.login_form
         private void OnForgotPasswordClick()
         {
             NavManager.NavigateTo("/forgot-password");
+        }
+
+        private void TogglePasswordVisibility()
+        {
+            if (_passwordInputType == InputType.Password)
+            {
+                _passwordInputType = InputType.Text;
+                _passwordIcon = Icons.Material.Rounded.Visibility;
+            }
+            else
+            {
+                _passwordInputType = InputType.Password;
+                _passwordIcon = Icons.Material.Rounded.VisibilityOff;
+            }
         }
 
         public void Dispose()
