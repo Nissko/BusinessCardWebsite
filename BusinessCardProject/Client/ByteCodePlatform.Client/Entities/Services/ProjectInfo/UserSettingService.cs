@@ -1,22 +1,14 @@
 ﻿using System.Text.Json;
 using AuthorizationService.Proto;
 using BusinessCardProject.Client.Entities.Services.ProjectInfo.Entity;
-using BusinessCardProject.Client.Entities.Services.UserAuthentication;
 using Microsoft.JSInterop;
 
 namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
 {
-    /// <summary>
-    /// Сервис пользовательских настроек в LocalStorage
-    /// </summary>
     internal class UserSettingService
     {
         private readonly IJSRuntime _jsRuntime;
-
-        private readonly AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient
-            _authGrpcServiceClient;
-
-        private readonly ClientAuthenticationService _authService;
+        private AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient? _authGrpcServiceClient;
         private const string StorageKey = "userSettings";
 
         public UserSettingsEntity Settings { get; private set; } = new();
@@ -24,47 +16,18 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
         public event Action? OnChange;
         public void NotifyStateChanged() => OnChange?.Invoke();
 
-        public UserSettingService(
-            IJSRuntime js,
-            AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient authGrpcServiceClient,
-            ClientAuthenticationService authService)
+        public UserSettingService(IJSRuntime js)
         {
             _jsRuntime = js ?? throw new ArgumentNullException(nameof(js));
-            _authGrpcServiceClient =
-                authGrpcServiceClient ?? throw new ArgumentNullException(nameof(authGrpcServiceClient));
-            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
         }
+
+        public void SetAuthorizationGrpcClient(
+            AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient client) =>
+            _authGrpcServiceClient = client;
 
         public async Task LoadAsync()
         {
-            var isAuthenticated = !string.IsNullOrEmpty(_authService.GetToken());
-
-            if (isAuthenticated)
-            {
-                await LoadFromBackendAsync();
-            }
-
             await LoadFromLocalStorageAsync();
-        }
-
-        private async Task LoadFromBackendAsync()
-        {
-            try
-            {
-                var response = await _authGrpcServiceClient.GetUserSettingsAsync(new GetUserSettingsRequest
-                {
-                    AccessToken = _authService.GetAccessToken()
-                });
-
-                if (!string.IsNullOrEmpty(response.JsonSettings))
-                {
-                    Settings = JsonSerializer.Deserialize<UserSettingsEntity>(response.JsonSettings) ?? new();
-                }
-            }
-            catch
-            {
-                // ignored
-            }
         }
 
         private async Task LoadFromLocalStorageAsync()
@@ -74,52 +37,16 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
                 var json = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", StorageKey);
                 if (!string.IsNullOrEmpty(json))
                 {
-                    var localSettings = JsonSerializer.Deserialize<UserSettingsEntity>(json);
-                    if (localSettings != null)
-                    {
-                        Settings.IsDark = localSettings.IsDark;
-                        Settings.IsDrawerOpen = localSettings.IsDrawerOpen;
-                        Settings.VideoPlatform = localSettings.VideoPlatform;
-                        Settings.ProgrammingLanguage = localSettings.ProgrammingLanguage;
-                        Settings.UpdateTime ??= localSettings.UpdateTime;
-                    }
+                    Settings = JsonSerializer.Deserialize<UserSettingsEntity>(json) ?? new();
                 }
             }
             catch
             {
-                // ignored
+                Settings = new();
             }
         }
 
         public async Task SaveAsync()
-        {
-            await SaveToLocalStorageAsync();
-
-            var isAuthenticated = !string.IsNullOrEmpty(_authService.GetToken());
-            if (isAuthenticated)
-            {
-                await SaveToBackendAsync();
-            }
-        }
-
-        private async Task SaveToBackendAsync()
-        {
-            try
-            {
-                var json = JsonSerializer.Serialize(Settings);
-                await _authGrpcServiceClient.SaveUserSettingsAsync(new UserSettingsRequest
-                {
-                    AccessToken = _authService.GetAccessToken(),
-                    JsonSettings = json
-                });
-            }
-            catch
-            {
-                // If backend save fails, localStorage still has the settings
-            }
-        }
-
-        private async Task SaveToLocalStorageAsync()
         {
             try
             {
@@ -128,10 +55,40 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
                 Settings.UpdateTime = DateTime.UtcNow;
                 OnChange?.Invoke();
             }
-            catch
+            catch { /* ignored */ }
+
+            if (_authGrpcServiceClient != null)
             {
-                Console.WriteLine("Failed to save preferences");
+                await SaveToBackendAsync();
             }
+        }
+
+        public async Task SyncWithBackendAsync()
+        {
+            if (_authGrpcServiceClient == null) return;
+    
+            try
+            {
+                var response = await _authGrpcServiceClient.GetUserSettingsAsync(new GetUserSettingsRequest { });
+                if (!string.IsNullOrEmpty(response.JsonSettings))
+                {
+                    Settings = JsonSerializer.Deserialize<UserSettingsEntity>(response.JsonSettings) ?? new();
+                    OnChange?.Invoke();
+                }
+            }
+            catch { /* ignored */ }
+        }
+
+        private async Task SaveToBackendAsync()
+        {
+            if (_authGrpcServiceClient == null) return;
+    
+            try
+            {
+                var json = JsonSerializer.Serialize(Settings);
+                await _authGrpcServiceClient.SaveUserSettingsAsync(new UserSettingsRequest { JsonSettings = json });
+            }
+            catch { /* ignored */ }
         }
     }
 }

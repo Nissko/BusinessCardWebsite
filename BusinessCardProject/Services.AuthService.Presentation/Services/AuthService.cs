@@ -419,7 +419,14 @@ namespace Services.AuthService.Presentation.Services
         {
             try
             {
-                var userId = await _refreshToken.GetUserIdFromAccessToken(request.AccessToken);
+                var userIdString = context.GetUserIdFromToken();
+                if (string.IsNullOrEmpty(userIdString))
+                    throw new RpcException(new Status(StatusCode.Unauthenticated, "Пользователь не авторизован"));
+
+                if (!Guid.TryParse(userIdString, out var userId))
+                    throw new RpcException(new Status(StatusCode.InvalidArgument,
+                        "Неправильный формат UserId из токена"));
+
                 var user = await _users.GetUser(userId)
                            ?? throw new RpcException(new Status(StatusCode.NotFound, "Пользователь не найден"));
 
@@ -454,7 +461,14 @@ namespace Services.AuthService.Presentation.Services
         {
             try
             {
-                var userId = await _refreshToken.GetUserIdFromAccessToken(request.AccessToken);
+                var userIdString = context.GetUserIdFromToken();
+                if (string.IsNullOrEmpty(userIdString))
+                    throw new RpcException(new Status(StatusCode.Unauthenticated, "Пользователь не авторизован"));
+
+                if (!Guid.TryParse(userIdString, out var userId))
+                    throw new RpcException(new Status(StatusCode.InvalidArgument,
+                        "Неправильный формат UserId из токена"));
+
                 var settings = await _userSettings.GetByUserId(userId);
 
                 return new UserSettingsResponse
@@ -480,7 +494,14 @@ namespace Services.AuthService.Presentation.Services
         {
             try
             {
-                var userId = await _refreshToken.GetUserIdFromAccessToken(request.AccessToken);
+                var userIdString = context.GetUserIdFromToken();
+                if (string.IsNullOrEmpty(userIdString))
+                    throw new RpcException(new Status(StatusCode.Unauthenticated, "Пользователь не авторизован"));
+
+                if (!Guid.TryParse(userIdString, out var userId))
+                    throw new RpcException(new Status(StatusCode.InvalidArgument,
+                        "Неправильный формат UserId из токена"));
+
                 await _userSettings.Save(userId, request.JsonSettings);
                 var settings = await _userSettings.GetByUserId(userId);
 

@@ -1,37 +1,37 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Services.AuthService.Application.Common.Interfaces;
+﻿using Services.AuthService.Application.Common.Interfaces;
 using Services.AuthService.Domain.Entities;
 
-namespace Services.AuthService.Infrastructure.Repositories;
-
-public class UserSettingsRepository : IUserSettingsRepository
+namespace Services.AuthService.Infrastructure.Repositories
 {
-    private readonly IAuthDbContext _context;
-
-    public UserSettingsRepository(IAuthDbContext context)
+    public class UserSettingsRepository : IUserSettingsRepository
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-    }
+        private readonly IAuthDbContext _context;
 
-    public async Task<UserSettingEntity?> GetByUserId(Guid userId)
-    {
-        return await _context.UserSettings
-            .FindAsync([userId]);
-    }
-
-    public async Task Save(Guid userId, string jsonSettings)
-    {
-        var settings = await _context.UserSettings
-            .FindAsync([userId]);
-
-        if (settings == null)
+        public UserSettingsRepository(IAuthDbContext context)
         {
-            settings = new UserSettingEntity(userId);
-            _context.UserSettings.Add(settings);
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        settings.UpdateJsonSettings(jsonSettings);
+        public async Task<UserSettingEntity?> GetByUserId(Guid userId)
+        {
+            return await _context.UserSettings
+                .FindAsync([userId]);
+        }
 
-        await _context.SaveChangesAsync(CancellationToken.None);
+        public async Task Save(Guid userId, string jsonSettings)
+        {
+            var settings = await _context.UserSettings
+                .FindAsync([userId]);
+
+            if (settings == null)
+            {
+                settings = new UserSettingEntity(userId);
+                _context.UserSettings.Add(settings);
+            }
+
+            settings.UpdateJsonSettings(jsonSettings);
+
+            await _context.SaveChangesAsync(CancellationToken.None);
+        }
     }
 }

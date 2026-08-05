@@ -18,11 +18,6 @@ namespace BusinessCardProject.Client.Widgets.setting.video_platform_selector
         {
             await base.OnInitializedAsync();
             await LoadSettingsAsync();
-
-            if (!_isYouTubeSelected && !_isRuTubeSelected && !_isVkVideoSelected)
-            {
-                await LoadSettingsAsync();
-            }
         }
 
         private async Task LoadSettingsAsync()
@@ -40,8 +35,6 @@ namespace BusinessCardProject.Client.Widgets.setting.video_platform_selector
 
         private async Task InitializeVideoPlatformAsync()
         {
-            await UserSettingService.LoadAsync();
-        
             if (UserSettingService.Settings.VideoPlatform is null)
             {
                 UserSettingService.Settings.VideoPlatform = new();

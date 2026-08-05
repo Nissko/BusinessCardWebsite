@@ -10,12 +10,6 @@ namespace BusinessCardProject.Client.Pages.donation
         protected override async Task OnInitializedAsync()
         {
             UserSettingService.OnChange += StateHasChanged;
-            if (UserSettingService.Settings.UpdateTime == null)
-            {
-                await UserSettingService.LoadAsync();
-                UserSettingService.Settings.UpdateTime = DateTime.Now;
-                await UserSettingService.SaveAsync();
-            }
         }
     
         public void Dispose()

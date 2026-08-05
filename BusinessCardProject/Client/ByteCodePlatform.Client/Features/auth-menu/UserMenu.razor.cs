@@ -1,5 +1,4 @@
 ﻿using AuthorizationService.Proto;
-using BusinessCardProject.Client.Entities.Services.ProjectInfo;
 using BusinessCardProject.Client.Entities.Services.UserAuthentication;
 using Microsoft.AspNetCore.Components;
 
@@ -9,7 +8,6 @@ namespace BusinessCardProject.Client.Features.auth_menu
     {
         [Inject] private ClientAuthenticationService ClientAuthentication { get; set; } = null!;
         [Inject] private NavigationManager NavManager { get; set; } = null!;
-        [Inject] private UserSettingService UserSettings { get; set; } = null!;
         [Inject] private AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient GrpcClient { get; set; } = null!;
 
         private bool IsAuthenticated { get; set; }
@@ -35,10 +33,7 @@ namespace BusinessCardProject.Client.Features.auth_menu
         {
             try
             {
-                var response = await GrpcClient.GetCurrentUserAsync(new GetCurrentUserRequest
-                {
-                    AccessToken = ClientAuthentication.GetAccessToken()
-                });
+                var response = await GrpcClient.GetCurrentUserAsync(new GetCurrentUserRequest { });
 
                 UserName = !string.IsNullOrEmpty(response.Name)
                     ? response.Name

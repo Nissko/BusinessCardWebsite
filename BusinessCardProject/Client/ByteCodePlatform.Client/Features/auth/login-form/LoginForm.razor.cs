@@ -35,13 +35,6 @@ namespace BusinessCardProject.Client.Features.auth.login_form
             await base.OnInitializedAsync();
             UserSettingService.OnChange += StateHasChanged;
 
-            if (UserSettingService.Settings.UpdateTime == null)
-            {
-                await UserSettingService.LoadAsync();
-                UserSettingService.Settings.UpdateTime = DateTime.Now;
-                await UserSettingService.SaveAsync();
-            }
-
             _isSettingsLoaded = true;
         }
 
@@ -73,7 +66,8 @@ namespace BusinessCardProject.Client.Features.auth.login_form
                 if (successAuth)
                 {
                     Snackbar.Add("Успешный вход!", Severity.Success);
-                    NavManager.NavigateTo("/", forceLoad: true);
+                    await UserSettingService.SyncWithBackendAsync();
+                    NavManager.NavigateTo("/");
                 }
                 else
                 {

@@ -1,16 +1,17 @@
 ﻿using Services.AuthService.Domain.Entities;
 
-namespace Services.AuthService.Application.Common.Interfaces;
-
-public interface IUserSettingsRepository
+namespace Services.AuthService.Application.Common.Interfaces
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    Task<UserSettingEntity?> GetByUserId(Guid userId);
+    public interface IUserSettingsRepository
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        Task<UserSettingEntity?> GetByUserId(Guid userId);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    Task Save(Guid userId, string jsonSettings);
+        /// <summary>
+        /// 
+        /// </summary>
+        Task Save(Guid userId, string jsonSettings);
+    }
 }

@@ -32,13 +32,6 @@ namespace ByteCodePlatform.Admin.Features.auth.login_form
             await base.OnInitializedAsync();
             UserSettingService.OnChange += StateHasChanged;
 
-            if (UserSettingService.Settings.UpdateTime == null)
-            {
-                await UserSettingService.LoadAsync();
-                UserSettingService.Settings.UpdateTime = DateTime.Now;
-                await UserSettingService.SaveAsync();
-            }
-
             _isSettingsLoaded = true;
         }
 

@@ -15,12 +15,6 @@ namespace BusinessCardProject.Client.Widgets.header
         protected override async Task OnInitializedAsync()
         {
             UserSettingService.OnChange += StateHasChanged;
-            if (UserSettingService.Settings.UpdateTime == null)
-            {
-                await UserSettingService.LoadAsync();
-                UserSettingService.Settings.UpdateTime = DateTime.Now;
-                await UserSettingService.SaveAsync();
-            }
             
             _viewportSubscriptionId = Guid.NewGuid();
             await BrowserViewportService.SubscribeAsync(

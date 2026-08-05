@@ -64,6 +64,10 @@ builder.Logging.SetMinimumLevel(LogLevel.Warning);
 var host = builder.Build();
 
 await host.Services.GetRequiredService<TokenStore>().InitializeAsync();
+var userSettings = host.Services.GetRequiredService<UserSettingService>();
+await userSettings.LoadAsync();
+userSettings.SetAuthorizationGrpcClient(host.Services
+    .GetRequiredService<AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient>());
 
 var auth = host.Services.GetRequiredService<ClientAuthenticationService>();
 if (!await auth.ValidateAndClearAsync())

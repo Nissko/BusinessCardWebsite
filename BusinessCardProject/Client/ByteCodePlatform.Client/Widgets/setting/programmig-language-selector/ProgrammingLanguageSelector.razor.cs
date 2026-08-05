@@ -18,11 +18,6 @@ namespace BusinessCardProject.Client.Widgets.setting.programmig_language_selecto
         {
             await base.OnInitializedAsync();
             await LoadSettingsAsync();
-            
-            if (!_isCSharpSelected && !_isPhpSelected && !_isLaravelSelected)
-            {
-                await LoadSettingsAsync();
-            }
         }
 
         private async Task LoadSettingsAsync()
@@ -40,8 +35,6 @@ namespace BusinessCardProject.Client.Widgets.setting.programmig_language_selecto
 
         private async Task InitializeProgramLanguageAsync()
         {
-            await UserSettingService.LoadAsync();
-
             if (UserSettingService.Settings.ProgrammingLanguage is null)
             {
                 UserSettingService.Settings.ProgrammingLanguage = new();

@@ -41,17 +41,11 @@ service AuthorizationService {
   rpc SaveUserSettings(UserSettingsRequest) returns (UserSettingsResponse);
 }
 
-message GetCurrentUserRequest{
-  string access_token = 1;
-}
-
-message GetUserSettingsRequest{
-  string access_token = 1;
-}
+message GetCurrentUserRequest{}
+message GetUserSettingsRequest{}
 
 message UserSettingsRequest {
-  string access_token = 1;
-  string json_settings = 2;
+  string json_settings = 1;
 }
 
 message UserSettingsResponse {
