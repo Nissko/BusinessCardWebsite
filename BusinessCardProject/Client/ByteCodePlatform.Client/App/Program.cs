@@ -68,6 +68,7 @@ var userSettings = host.Services.GetRequiredService<UserSettingService>();
 await userSettings.LoadAsync();
 userSettings.SetAuthorizationGrpcClient(host.Services
     .GetRequiredService<AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient>());
+userSettings.SetTokenStorage(host.Services.GetRequiredService<TokenStore>());
 
 var auth = host.Services.GetRequiredService<ClientAuthenticationService>();
 if (!await auth.ValidateAndClearAsync())

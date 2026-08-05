@@ -65,9 +65,8 @@ namespace BusinessCardProject.Client.Features.auth.login_form
 
                 if (successAuth)
                 {
-                    Snackbar.Add("Успешный вход!", Severity.Success);
                     await UserSettingService.SyncWithBackendAsync();
-                    NavManager.NavigateTo("/");
+                    NavManager.NavigateTo("/", true);
                 }
                 else
                 {

@@ -12,12 +12,12 @@ namespace BusinessCardProject.Client.Widgets.courses.theme.course_video_item
         [Parameter, EditorRequired]
         public int Index { get; set; }
 
-        private void OnWatchClick()
+        private static void OnWatchClick()
         {
             // TODO: Реализовать переход к просмотру видео
         }
 
-        private void OnFavoriteClick()
+        private static void OnFavoriteClick()
         {
             // TODO: Реализовать добавление в избранное
         }

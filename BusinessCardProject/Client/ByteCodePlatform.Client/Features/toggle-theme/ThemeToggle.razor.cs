@@ -26,7 +26,7 @@ namespace BusinessCardProject.Client.Features.toggle_theme
             await UserSettingService.SaveAsync();
         }
 
-        private void UpdateThemeProperties()
+        private static void UpdateThemeProperties()
         {
             new MudTheme
             {
