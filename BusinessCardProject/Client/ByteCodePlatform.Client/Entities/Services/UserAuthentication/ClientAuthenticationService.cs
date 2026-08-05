@@ -237,5 +237,6 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
         }
 
         public string? GetToken() => _tokenStore.GetAccessToken();
+        public string? GetAccessToken() => _tokenStore.GetAccessToken();
     }
 }

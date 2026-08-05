@@ -15,6 +15,7 @@ namespace Services.AuthService.Application.Common.Interfaces
         public DbSet<FailedLoginAttemptEntity> FailedLoginAttempts { get; set; }
         public DbSet<PasswordResetEntity> PasswordResets { get; set; }
         public DbSet<AuditLogEntity> AuditLogs { get; set; }
+        public DbSet<UserSettingEntity> UserSettings { get; set; }
 
         void Migrate();
 

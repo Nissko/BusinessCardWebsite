@@ -5,6 +5,7 @@ option csharp_namespace = "SmtpMailService.Proto";
 package email;
 
 service SmtpMailGrpcService {
+  //
   rpc SendEmail (SendEmailRequest) returns (SendEmailResponse);
 }
 

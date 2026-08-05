@@ -37,5 +37,10 @@ namespace Services.AuthService.Application.Common.Interfaces
         /// </summary>
         Task<IReadOnlyList<SessionInfo>> GetActiveSessions(string accessToken, int limit,
             CancellationToken ct = default);
+
+        /// <summary>
+        /// Получение идентификатора пользователя по его токену
+        /// </summary>
+        Task<Guid> GetUserIdFromAccessToken(string accessToken, CancellationToken ct = default);
     }
 }

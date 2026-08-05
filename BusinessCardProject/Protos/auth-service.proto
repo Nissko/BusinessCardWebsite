@@ -33,6 +33,30 @@ service AuthorizationService {
   rpc ResetPassword(ResetPasswordRequest) returns (UserBooleanResponse);
   // 
   rpc ValidateRefreshToken(RefreshTokenRequest) returns (ValidateRefreshTokenResponse);
+  // 
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (UserInfoResponse);
+  // 
+  rpc GetUserSettings(GetUserSettingsRequest) returns (UserSettingsResponse);
+  // 
+  rpc SaveUserSettings(UserSettingsRequest) returns (UserSettingsResponse);
+}
+
+message GetCurrentUserRequest{
+  string access_token = 1;
+}
+
+message GetUserSettingsRequest{
+  string access_token = 1;
+}
+
+message UserSettingsRequest {
+  string access_token = 1;
+  string json_settings = 2;
+}
+
+message UserSettingsResponse {
+  string json_settings = 1;
+  bool success = 2;
 }
 
 message SendPasswordResetRequest {

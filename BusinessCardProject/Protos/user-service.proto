@@ -11,6 +11,7 @@ service UserGrpcService {
   rpc CreateUser(CreateUserRequest) returns (UserBooleanResponse);
   // Выдача авторских прав
   rpc CreateAuthorUser(CreateAuthorRequest) returns (UserAuthorInfoResponse);
+  // 
   rpc GetUsersFromSearch(GetUsersFromSearchRequest) returns (GetUsersFromSearchResponse);
 }
 

@@ -27,17 +27,25 @@
         {
             <div class="user-info">
                 <div class="d-flex align-center">
-                    <MudAvatar Color="Color.Primary" Size="Size.Small" Class="mr-2">
-                        <MudIcon Icon="@Icons.Material.Rounded.Person" Size="Size.Small"/>
-                    </MudAvatar>
+                    @if (!string.IsNullOrEmpty(UserAvatar))
+                    {
+                        <img src="@UserAvatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;"
+                             alt="Аватар пользователя"/>
+                    }
+                    else
+                    {
+                        <MudAvatar Color="Color.Primary" Size="Size.Small" Class="mr-2">
+                            <MudIcon Icon="@Icons.Material.Rounded.Person" Size="Size.Small"/>
+                        </MudAvatar>
+                    }
                     <div style="min-width: 0;">
                         <MudText Typo="Typo.subtitle2"
                                  Style="font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            UserName
+                            @UserName
                         </MudText>
                         <MudText Typo="Typo.caption"
                                  Style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            UserEmail
+                            @UserEmail
                         </MudText>
                     </div>
                 </div>

@@ -24,6 +24,7 @@ namespace Services.AuthService.Presentation.Services
         private readonly IAccountVerificationRepository _accountVerifications;
         private readonly IFailedLoginAttemptRepository _failedLoginAttempts;
         private readonly IAuditLogRepository _auditLog;
+        private readonly IUserSettingsRepository _userSettings;
 
         private readonly ILogger<AuthService> _logger;
 
@@ -31,7 +32,8 @@ namespace Services.AuthService.Presentation.Services
 
         public AuthService(IMediator mediator, IRefreshToken refreshToken, IUserRepository users,
             IAccountVerificationRepository accountVerifications, ILogger<AuthService> logger,
-            IFailedLoginAttemptRepository failedLoginAttempts, IAuditLogRepository auditLog)
+            IFailedLoginAttemptRepository failedLoginAttempts, IAuditLogRepository auditLog,
+            IUserSettingsRepository userSettings)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _refreshToken = refreshToken ?? throw new ArgumentNullException(nameof(refreshToken));
@@ -41,6 +43,7 @@ namespace Services.AuthService.Presentation.Services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _failedLoginAttempts = failedLoginAttempts ?? throw new ArgumentNullException(nameof(failedLoginAttempts));
             _auditLog = auditLog ?? throw new ArgumentNullException(nameof(auditLog));
+            _userSettings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
         }
 
         [AllowAnonymous]
@@ -399,12 +402,101 @@ namespace Services.AuthService.Presentation.Services
         {
             try
             {
-                var tokenInfo = await _refreshToken.CheckOfExpireRefreshToken(request.RefreshToken, context.CancellationToken);
+                var tokenInfo =
+                    await _refreshToken.CheckOfExpireRefreshToken(request.RefreshToken, context.CancellationToken);
                 return new ValidateRefreshTokenResponse { IsValid = tokenInfo != null };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ошибка при валидации refresh токена");
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
+            }
+        }
+
+        [Authorize]
+        public override async Task<UserInfoResponse> GetCurrentUser(GetCurrentUserRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                var userId = await _refreshToken.GetUserIdFromAccessToken(request.AccessToken);
+                var user = await _users.GetUser(userId)
+                           ?? throw new RpcException(new Status(StatusCode.NotFound, "Пользователь не найден"));
+
+                return new UserInfoResponse
+                {
+                    UserId = user.Id.ToString(),
+                    Surname = user.Surname,
+                    Name = user.Name,
+                    Nickname = user.NickName,
+                    Email = user.Email,
+                    IsAuthor = user.IsAuthor,
+                    CreatedAt = user.CreatedAt.ToTimestamp(),
+                    UpdatedAt = user.UpdatedAt?.ToTimestamp() ?? null,
+                    DeletedAt = user.DeletedAt?.ToTimestamp() ?? null,
+                    IsVerified = user.IsVerified
+                };
+            }
+            catch (RpcException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(GetCurrentUser));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
+            }
+        }
+
+        [Authorize]
+        public override async Task<UserSettingsResponse> GetUserSettings(GetUserSettingsRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                var userId = await _refreshToken.GetUserIdFromAccessToken(request.AccessToken);
+                var settings = await _userSettings.GetByUserId(userId);
+
+                return new UserSettingsResponse
+                {
+                    JsonSettings = settings?.JsonSettings ?? "{}",
+                    Success = true
+                };
+            }
+            catch (RpcException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(GetUserSettings));
+                throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
+            }
+        }
+
+        [Authorize]
+        public override async Task<UserSettingsResponse> SaveUserSettings(UserSettingsRequest request,
+            ServerCallContext context)
+        {
+            try
+            {
+                var userId = await _refreshToken.GetUserIdFromAccessToken(request.AccessToken);
+                await _userSettings.Save(userId, request.JsonSettings);
+                var settings = await _userSettings.GetByUserId(userId);
+
+                return new UserSettingsResponse
+                {
+                    JsonSettings = settings?.JsonSettings ?? "{}",
+                    Success = true
+                };
+            }
+            catch (RpcException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(SaveUserSettings));
                 throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }

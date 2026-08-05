@@ -126,18 +126,35 @@ namespace Services.AuthService.Infrastructure.Repositories
 
         public async Task<IReadOnlyList<SessionInfo>> GetActiveSessions(string accessToken, int limit, CancellationToken ct = default)
         {
-            var userName = GetNameFromJwtToken(accessToken);
-            var user = await _context.User.FirstOrDefaultAsync(x => x.NickName == userName, ct)
+            var userId = await GetUserIdFromAccessToken(accessToken, ct);
+            var user = await _context.User.FindAsync([userId], ct)
                        ?? throw new Exception("Пользователь не найден");
-            var now = SystemClock.Instance.GetCurrentInstant();
+            var dateTimeNow = SystemClock.Instance.GetCurrentInstant();
             
             return await _context.RefreshToken
                 .AsNoTracking()
-                .Where(t => t.UserId == user.Id && !t.IsRevoked && t.ExpiresAtUtc > now)
+                .Where(t => t.UserId == user.Id && !t.IsRevoked && t.ExpiresAtUtc > dateTimeNow)
                 .OrderByDescending(t => t.CreatedAtUtc)
                 .Take(limit)
                 .Select(t => new SessionInfo(t.TokenHash, t.CreatedAtUtc, t.ExpiresAtUtc))
                 .ToListAsync(ct);
+        }
+
+        public async Task<Guid> GetUserIdFromAccessToken(string accessToken, CancellationToken ct = default)
+        {
+            var handler = new JwtSecurityTokenHandler();
+
+            if (!handler.CanReadToken(accessToken))
+            {
+                throw new Exception("Не удалось считать токен");
+            }
+
+            var jwt = handler.ReadJwtToken(accessToken);
+            var userName = jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value;
+            var user = await _context.User.FirstOrDefaultAsync(x => x.NickName == userName, ct)
+                       ?? throw new Exception("Пользователь не найден");
+            
+            return user.Id;
         }
 
         /// <summary>
@@ -148,17 +165,6 @@ namespace Services.AuthService.Infrastructure.Repositories
             if (string.IsNullOrWhiteSpace(token)) throw new ArgumentException("Token cannot be empty", nameof(token));
             var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(token));
             return Convert.ToBase64String(hashBytes);
-        }
-        
-        public static string? GetNameFromJwtToken(string accessToken)
-        {
-            var handler = new JwtSecurityTokenHandler();
-
-            if (!handler.CanReadToken(accessToken))
-                return null;
-
-            var jwt = handler.ReadJwtToken(accessToken);
-            return jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value;
         }
     }
 }

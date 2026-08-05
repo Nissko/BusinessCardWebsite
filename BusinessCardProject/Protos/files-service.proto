@@ -3,7 +3,6 @@ package FilesServiceGrpcService;
 
 option csharp_namespace = "FilesService.Proto";
 
-
 service FilesService {
   // Загрузка файла
   rpc UploadImage (stream UploadImageRequest) returns (UploadImageResponse);

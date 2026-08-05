@@ -29,12 +29,14 @@ namespace Services.AuthService.Infrastructure.Extensions
             
             //Репозитории
             services.AddScoped<IAuthDbContext, AuthDbContext>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IRefreshToken, RefreshToken>();
+
             services.AddScoped<IAccountVerificationRepository, AccountVerificationRepository>();
+            services.AddScoped<IAuditLogRepository, AuditLogRepository>();
             services.AddScoped<IFailedLoginAttemptRepository, FailedLoginAttemptRepository>();
             services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
-            services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+            services.AddScoped<IRefreshToken, RefreshToken>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserSettingsRepository, UserSettingsRepository>();
             
             //Клиенты
             services.AddScoped<ICoreGrpcServiceClient, CoreGrpcServiceClient>();

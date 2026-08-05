@@ -21,6 +21,7 @@ namespace Services.AuthService.Infrastructure
         public DbSet<FailedLoginAttemptEntity> FailedLoginAttempts { get; set; }
         public DbSet<PasswordResetEntity> PasswordResets { get; set; }
         public DbSet<AuditLogEntity> AuditLogs { get; set; }
+        public DbSet<UserSettingEntity> UserSettings { get; set; }
 
         public void Migrate()
         {
@@ -40,6 +41,7 @@ namespace Services.AuthService.Infrastructure
             modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new UserSettingsConfiguration());
 
             #endregion
 
