@@ -1,6 +1,11 @@
 self.importScripts('./service-worker-assets.js');
+
+// Read version from the SW's own URL (e.g. service-worker.published.js?v=1.0.0.1)
+const swLocation = new URL(self.location.href);
+const swVersion = swLocation.searchParams.get('v') || '0';
+
 self.addEventListener('install', event => event.waitUntil(onInstall(event)));
-self.addEventListener('activate', event => event.waitUntil(onActivate(event)));
+self.addEventListener('activate', event => event.waitUntil(onActivate(event, swVersion)));
 self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
 
 const cacheNamePrefix = 'offline-cache-';
@@ -20,7 +25,17 @@ async function onInstall(event) {
     await caches.open(cacheName).then(cache => cache.addAll(assetsRequests));
 }
 
-async function onActivate(event) {
+async function onActivate(event, swVersion) {
+    const metaCache = await caches.open('sw-metadata');
+    const previousVersion = await metaCache.match('version').then(r => r ? r.text() : null);
+
+    if (previousVersion && previousVersion !== swVersion) {
+        const allKeys = await caches.keys();
+        await Promise.all(allKeys.map(key => caches.delete(key)));
+    }
+
+    await metaCache.put('version', new Response(swVersion));
+
     const cacheKeys = await caches.keys();
     await Promise.all(cacheKeys
         .filter(key => key.startsWith(cacheNamePrefix) && key !== cacheName)

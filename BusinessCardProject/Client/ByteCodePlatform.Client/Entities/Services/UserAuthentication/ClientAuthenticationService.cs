@@ -5,12 +5,13 @@ using Microsoft.AspNetCore.Components;
 
 namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
 {
-    public class ClientAuthenticationService
+    public class ClientAuthenticationService : IDisposable
     {
         private readonly TokenStore _tokenStore;
         private readonly AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient _client;
         private readonly NavigationManager _navManager;
         private readonly IServiceProvider _serviceProvider;
+        private bool _disposed;
 
         public ClientAuthenticationService(
             TokenStore tokenStore,
@@ -238,5 +239,10 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
 
         public string? GetToken() => _tokenStore.GetAccessToken();
         public string? GetAccessToken() => _tokenStore.GetAccessToken();
+
+        public void Dispose()
+        {
+            _disposed = true;
+        }
     }
 }

@@ -16,23 +16,33 @@ namespace BusinessCardProject.Client.Widgets.courses.course_list
         private readonly List<CourseThemePropertiesResponse>? _courseThemeProperties = new();
         private int _skeletonCount = 9;
         private Guid _viewportSubscriptionId;
+        private bool _disposed;
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 
+            if (_disposed) return;
+
             _viewportSubscriptionId = Guid.NewGuid();
-            await BrowserViewportService.SubscribeAsync(
-                _viewportSubscriptionId,
-                OnViewportChanged,
-                fireImmediately: true);
+        
+            try
+            {
+                await BrowserViewportService.SubscribeAsync(
+                    _viewportSubscriptionId,
+                    OnViewportChanged,
+                    fireImmediately: true);
 
-            _courses = await LoadCoursesAsync();
+                _courses = await LoadCoursesAsync();
 
-            if (_courses.Any())
-            { 
-                await LoadCourseThemesAsync();
-                await BrowserViewportService.UnsubscribeAsync(_viewportSubscriptionId);
+                if (_courses != null && _courses.Any())
+                { 
+                    await LoadCourseThemesAsync();
+                }
+            }
+            finally
+            {
+                await BrowserViewportService.UnsubscribeAsync(_viewportSubscriptionId).ConfigureAwait(false);
             }
         }
 
@@ -85,7 +95,19 @@ namespace BusinessCardProject.Client.Widgets.courses.course_list
 
         public void Dispose()
         {
-            BrowserViewportService.UnsubscribeAsync(_viewportSubscriptionId).ConfigureAwait(false);
+            if (_disposed) return;
+            _disposed = true;
+        
+            try
+            {
+                BrowserViewportService.UnsubscribeAsync(_viewportSubscriptionId).ConfigureAwait(false);
+            }
+            catch
+            {
+                // ignored
+            }
+        
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -6,12 +6,13 @@ using Microsoft.JSInterop;
 
 namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
 {
-    internal class UserSettingService
+    internal class UserSettingService : IDisposable
     {
         private readonly IJSRuntime _jsRuntime;
         private AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient? _authGrpcServiceClient;
-        private TokenStore _tokenStore;
+        private TokenStore? _tokenStore;
         private const string StorageKey = "userSettings";
+        private bool _disposed;
 
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
@@ -31,12 +32,15 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
         public void SetAuthorizationGrpcClient(
             AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient client) =>
             _authGrpcServiceClient = client;
+
         public void SetTokenStorage(TokenStore tokenStore) => _tokenStore = tokenStore;
 
         public Task Load() => LoadFromLocalStorage();
 
         private async Task LoadFromLocalStorage()
         {
+            if (_disposed) return;
+
             try
             {
                 var jsonSetting = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", StorageKey);
@@ -66,6 +70,8 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
 
         public async Task Save()
         {
+            if (_disposed) return;
+
             Settings.UpdateTime = DateTime.UtcNow;
             var json = JsonSerializer.Serialize(Settings, JsonOptions);
 
@@ -79,7 +85,7 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
                 // ignored
             }
 
-            if (_authGrpcServiceClient != null && !string.IsNullOrEmpty(_tokenStore.GetAccessToken()))
+            if (_authGrpcServiceClient != null && _tokenStore != null && !string.IsNullOrEmpty(_tokenStore.GetAccessToken()))
             {
                 await SaveToBackend(json);
             }
@@ -93,12 +99,13 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
 
         private async Task SaveToLocalStorage(string json)
         {
+            if (_disposed) return;
             await _jsRuntime.InvokeVoidAsync("localStorage.setItem", StorageKey, json);
         }
 
         public async Task SyncWithBackend()
         {
-            if (_authGrpcServiceClient == null) return;
+            if (_authGrpcServiceClient == null || _disposed) return;
     
             try
             {
@@ -118,7 +125,7 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
 
         private async Task SaveToBackend(string json)
         {
-            if (_authGrpcServiceClient == null) return;
+            if (_authGrpcServiceClient == null || _disposed) return;
     
             try
             {
@@ -128,6 +135,12 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
             {
                 // ignored
             }
+        }
+
+        public void Dispose()
+        {
+            _disposed = true;
+            GC.SuppressFinalize(this);
         }
     }
 }

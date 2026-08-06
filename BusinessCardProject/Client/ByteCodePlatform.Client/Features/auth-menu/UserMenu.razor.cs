@@ -78,7 +78,11 @@ namespace BusinessCardProject.Client.Features.auth_menu
 
         public async ValueTask DisposeAsync()
         {
-            // ignored 
+            UserName = string.Empty;
+            UserEmail = string.Empty;
+            UserAvatar = string.Empty;
+            IsAuthenticated = false;
+            GC.SuppressFinalize(this);
         }
     }
 }

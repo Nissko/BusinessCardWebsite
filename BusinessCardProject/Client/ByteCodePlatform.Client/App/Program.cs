@@ -14,7 +14,7 @@ builder.Services.AddMudServices();
 builder.Services.AddMudBlazorResizeListener();
 
 /* Инициализация кэша и сервисов */
-builder.Services.AddSingleton<UserSettingService>();
+builder.Services.AddScoped<UserSettingService>();
 builder.Services.AddSingleton<TokenStore>();
 builder.Services.AddScoped<AuthenticationInterceptor>();
 builder.Services.AddScoped<ClientAuthenticationService>();
