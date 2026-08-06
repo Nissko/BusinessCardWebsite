@@ -23,7 +23,7 @@ namespace BusinessCardProject.Client.Features.toggle_theme
             UpdateThemeProperties();
 
             await Js.InvokeVoidAsync("themeHelper.setTheme", UserSettingService.Settings.IsDark);
-            await UserSettingService.SaveAsync();
+            await UserSettingService.Save();
         }
 
         private static void UpdateThemeProperties()

@@ -39,7 +39,7 @@ namespace BusinessCardProject.Client.Widgets.setting.video_platform_selector
             {
                 UserSettingService.Settings.VideoPlatform = new();
                 UserSettingService.Settings.VideoPlatform.SetPlatform(0);
-                await UserSettingService.SaveAsync();
+                await UserSettingService.Save();
             }
         }
 
@@ -66,7 +66,7 @@ namespace BusinessCardProject.Client.Widgets.setting.video_platform_selector
             }
 
             UserSettingService.Settings.VideoPlatform?.SetPlatform(platformIndex);
-            await UserSettingService.SaveAsync();
+            await UserSettingService.Save();
         
             // TODO: Отправить запрос на изменение настроек в БД
         }

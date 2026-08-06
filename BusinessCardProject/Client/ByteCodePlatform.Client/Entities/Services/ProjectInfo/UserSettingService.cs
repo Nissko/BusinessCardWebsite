@@ -33,9 +33,9 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
             _authGrpcServiceClient = client;
         public void SetTokenStorage(TokenStore tokenStore) => _tokenStore = tokenStore;
 
-        public Task LoadAsync() => LoadFromLocalStorageAsync();
+        public Task Load() => LoadFromLocalStorage();
 
-        private async Task LoadFromLocalStorageAsync()
+        private async Task LoadFromLocalStorage()
         {
             try
             {
@@ -48,14 +48,14 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
                 else
                 {
                     Settings.UpdateTime = DateTime.UtcNow;
-                    await SaveToLocalStorageAsync();
+                    await SaveToLocalStorage();
                     NotifyStateChanged();
                 }
             }
             catch (JsonException)
             {
                 Settings = new() { UpdateTime = DateTime.UtcNow };
-                await SaveToLocalStorageAsync();
+                await SaveToLocalStorage();
                 NotifyStateChanged();
             }
             catch
@@ -64,14 +64,14 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
             }
         }
 
-        public async Task SaveAsync()
+        public async Task Save()
         {
             Settings.UpdateTime = DateTime.UtcNow;
             var json = JsonSerializer.Serialize(Settings, JsonOptions);
 
             try
             {
-                await SaveToLocalStorageAsync(json);
+                await SaveToLocalStorage(json);
                 NotifyStateChanged();
             }
             catch
@@ -81,22 +81,22 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
 
             if (_authGrpcServiceClient != null && !string.IsNullOrEmpty(_tokenStore.GetAccessToken()))
             {
-                await SaveToBackendAsync(json);
+                await SaveToBackend(json);
             }
         }
 
-        private Task SaveToLocalStorageAsync()
+        private Task SaveToLocalStorage()
         {
             var json = JsonSerializer.Serialize(Settings, JsonOptions);
-            return SaveToLocalStorageAsync(json);
+            return SaveToLocalStorage(json);
         }
 
-        private async Task SaveToLocalStorageAsync(string json)
+        private async Task SaveToLocalStorage(string json)
         {
             await _jsRuntime.InvokeVoidAsync("localStorage.setItem", StorageKey, json);
         }
 
-        public async Task SyncWithBackendAsync()
+        public async Task SyncWithBackend()
         {
             if (_authGrpcServiceClient == null) return;
     
@@ -106,7 +106,7 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
                 if (!string.IsNullOrEmpty(response.JsonSettings))
                 {
                     Settings = JsonSerializer.Deserialize<UserSettingsEntity>(response.JsonSettings, JsonOptions) ?? new();
-                    await SaveToLocalStorageAsync();
+                    await SaveToLocalStorage();
                     NotifyStateChanged();
                 }
             }
@@ -116,7 +116,7 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
             }
         }
 
-        private async Task SaveToBackendAsync(string json)
+        private async Task SaveToBackend(string json)
         {
             if (_authGrpcServiceClient == null) return;
     

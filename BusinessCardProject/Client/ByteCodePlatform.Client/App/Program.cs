@@ -65,7 +65,7 @@ var host = builder.Build();
 
 await host.Services.GetRequiredService<TokenStore>().InitializeAsync();
 var userSettings = host.Services.GetRequiredService<UserSettingService>();
-await userSettings.LoadAsync();
+await userSettings.Load();
 userSettings.SetAuthorizationGrpcClient(host.Services
     .GetRequiredService<AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient>());
 userSettings.SetTokenStorage(host.Services.GetRequiredService<TokenStore>());

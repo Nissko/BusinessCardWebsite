@@ -65,7 +65,7 @@ namespace BusinessCardProject.Client.Features.auth.login_form
 
                 if (successAuth)
                 {
-                    await UserSettingService.SyncWithBackendAsync();
+                    await UserSettingService.SyncWithBackend();
                     NavManager.NavigateTo("/", true);
                 }
                 else

@@ -39,7 +39,7 @@ namespace BusinessCardProject.Client.Widgets.setting.programmig_language_selecto
             {
                 UserSettingService.Settings.ProgrammingLanguage = new();
                 UserSettingService.Settings.ProgrammingLanguage.SetProgrammingLanguage(0);
-                await UserSettingService.SaveAsync();
+                await UserSettingService.Save();
             }
         }
 
@@ -66,9 +66,7 @@ namespace BusinessCardProject.Client.Widgets.setting.programmig_language_selecto
             }
 
             UserSettingService.Settings.ProgrammingLanguage?.SetProgrammingLanguage(languageIndex);
-            await UserSettingService.SaveAsync();
-
-            // TODO: Отправить запрос на изменение настроек в БД
+            await UserSettingService.Save();
         }
 
         private void UpdateSwitchesFromCache(int platformFromCache)
