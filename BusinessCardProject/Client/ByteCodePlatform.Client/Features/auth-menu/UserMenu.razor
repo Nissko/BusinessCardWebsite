@@ -25,11 +25,15 @@
     <ChildContent>
         @if (IsAuthenticated)
         {
-            <div class="user-info">
+            <div class="user-info user-info-clickable"
+                 @onclick="GoToProfile"
+                 role="button"
+                 tabindex="0">
                 <div class="d-flex align-center">
                     @if (!string.IsNullOrEmpty(UserAvatar))
                     {
-                        <img src="@UserAvatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;"
+                        <img src="@UserAvatar" style="width: 24px; height: 24px; border-radius: 50%; 
+                           object-fit: cover; margin-inline-end: 12px;"
                              alt="Аватар пользователя"/>
                     }
                     else
@@ -128,5 +132,14 @@
 
     .logout-item:hover {
         color: var(--mud-palette-error) !important;
+    }
+
+    .user-info-clickable {
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .user-info-clickable:hover {
+        background-color: var(--mud-palette-action-default-hover);
     }
 </style>
