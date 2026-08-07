@@ -189,7 +189,7 @@ if (File.Exists(publicKeyPath))
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero,
                 IssuerSigningKey = new RsaSecurityKey(rsa),
-                ValidAlgorithms = new[] { "RS256" },
+                ValidAlgorithms = ["RS256"],
                 RoleClaimType = "role"
             };
         });

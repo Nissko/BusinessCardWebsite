@@ -1,5 +1,7 @@
 using ByteCodePlatform.Admin.App;
 using ByteCodePlatform.Admin.Entities.Services.ProjectInfo;
+using ByteCodePlatform.Admin.Entities.Services.ProjectInfo.Entity;
+using ByteCodePlatform.Admin.Entities.Services.ProjectInfo.Interfaces;
 using ByteCodePlatform.Admin.Entities.Services.UserAuthentication;
 using Grpc.Net.Client.Web;
 using Microsoft.AspNetCore.Components;
@@ -18,6 +20,9 @@ builder.Services.AddSingleton<UserSettingService>();
 builder.Services.AddSingleton<TokenStore>();
 builder.Services.AddScoped<AuthenticationInterceptor>();
 builder.Services.AddScoped<ClientAuthenticationService>();
+/* Для работы админки */
+builder.Services.AddScoped<FileUploadService>();
+builder.Services.AddScoped<IEntityUpdateService, EntityUpdateService>();
 
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");

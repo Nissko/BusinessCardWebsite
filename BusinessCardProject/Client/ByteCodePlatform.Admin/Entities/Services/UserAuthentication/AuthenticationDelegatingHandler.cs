@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Components;
 
 namespace ByteCodePlatform.Admin.Entities.Services.UserAuthentication
 {
-    public class AuthenticationDelegatingHandler : DelegatingHandler
+    public class AuthenticationDelegatingHandler : DelegatingHandler, IDisposable
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<AuthenticationDelegatingHandler> _logger;
-        private readonly SemaphoreSlim _refreshLock = new(1, 1);
+        private bool _disposed;
 
         public AuthenticationDelegatingHandler(
             IServiceProvider serviceProvider,
@@ -22,121 +22,80 @@ namespace ByteCodePlatform.Admin.Entities.Services.UserAuthentication
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
+            if (_disposed)
+            {
+                return await base.SendAsync(request, cancellationToken);
+            }
+
             var tokenStore = _serviceProvider.GetRequiredService<TokenStore>();
             var navManager = _serviceProvider.GetRequiredService<NavigationManager>();
 
             var token = tokenStore.GetAccessToken();
             if (!string.IsNullOrEmpty(token))
             {
-                var refreshToken = tokenStore.GetRefreshToken();
-                
-                if (!string.IsNullOrEmpty(refreshToken))
-                {
-                    var isValid = await ValidateRefreshTokenAsync(refreshToken, cancellationToken);
-                    if (!isValid)
-                    {
-                        await tokenStore.ClearAsync();
-                        navManager.NavigateTo("/login", forceLoad: true);
-                        return new HttpResponseMessage(HttpStatusCode.Unauthorized);
-                    }
-                }
-                
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
 
             var response = await base.SendAsync(request, cancellationToken);
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            if (response.StatusCode != HttpStatusCode.Unauthorized)
             {
-                response.Dispose();
+                return response;
+            }
 
-                var refreshToken = tokenStore.GetRefreshToken();
-                if (!string.IsNullOrEmpty(refreshToken))
-                {
-                    var isValid = await ValidateRefreshTokenAsync(refreshToken, cancellationToken);
-                    if (!isValid)
-                    {
-                        await tokenStore.ClearAsync();
-                        navManager.NavigateTo("/login", forceLoad: true);
-                        return new HttpResponseMessage(HttpStatusCode.Unauthorized);
-                    }
-                }
+            response.Dispose();
 
-                var refreshSuccess = await TryRefreshTokenAsync(cancellationToken);
-
-                if (refreshSuccess)
-                {
-                    token = tokenStore.GetAccessToken();
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                    return await base.SendAsync(request, cancellationToken);
-                }
-
+            var refreshToken = tokenStore.GetRefreshToken();
+            if (string.IsNullOrEmpty(refreshToken))
+            {
                 await tokenStore.ClearAsync();
                 navManager.NavigateTo("/login", forceLoad: true);
-
                 return new HttpResponseMessage(HttpStatusCode.Unauthorized);
             }
 
-            return response;
+            var refreshSuccess = await TryRefreshTokenAsync(refreshToken, cancellationToken);
+
+            if (refreshSuccess)
+            {
+                token = tokenStore.GetAccessToken();
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                return await base.SendAsync(request, cancellationToken);
+            }
+
+            await tokenStore.ClearAsync();
+            navManager.NavigateTo("/login", forceLoad: true);
+
+            return new HttpResponseMessage(HttpStatusCode.Unauthorized);
         }
 
-        private async Task<bool> ValidateRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
+        private async Task<bool> TryRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
         {
+            var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient("AuthRefreshClient");
+
+            var channel = Grpc.Net.Client.GrpcChannel.ForAddress(httpClient.BaseAddress!,
+                new Grpc.Net.Client.GrpcChannelOptions
+                {
+                    HttpClient = httpClient,
+                    DisposeHttpClient = false
+                });
+
             try
             {
-                var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
-                var httpClient = httpClientFactory.CreateClient("AuthRefreshClient");
-
-                var channel = Grpc.Net.Client.GrpcChannel.ForAddress(httpClient.BaseAddress!,
-                    new Grpc.Net.Client.GrpcChannelOptions
-                    {
-                        HttpClient = httpClient
-                    });
-
-                var validateClient =
-                    new AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient(channel);
-
-                var response = await validateClient.ValidateRefreshTokenAsync(
-                    new RefreshTokenRequest { RefreshToken = refreshToken },
-                    cancellationToken: cancellationToken);
-
-                return response.IsValid;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Ошибка при валидации refresh токена");
-                return false;
-            }
-        }
-
-        private async Task<bool> TryRefreshTokenAsync(CancellationToken cancellationToken)
-        {
-            await _refreshLock.WaitAsync(cancellationToken);
-            try
-            {
-                var tokenStore = _serviceProvider.GetRequiredService<TokenStore>();
-                var refreshToken = tokenStore.GetRefreshToken();
-                if (string.IsNullOrEmpty(refreshToken)) return false;
-
-                var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
-                var httpClient = httpClientFactory.CreateClient("AuthRefreshClient");
-
-                var channel = Grpc.Net.Client.GrpcChannel.ForAddress(httpClient.BaseAddress!,
-                    new Grpc.Net.Client.GrpcChannelOptions
-                    {
-                        HttpClient = httpClient
-                    });
-
                 var refreshClient =
                     new AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient(channel);
 
                 var response = await refreshClient.RefreshTokenAsync(
-                    new RefreshTokenRequest { RefreshToken = refreshToken },
+                    new AuthorizationService.Proto.RefreshTokenRequest { RefreshToken = refreshToken },
                     cancellationToken: cancellationToken);
 
                 if (!string.IsNullOrEmpty(response.AccessToken))
                 {
-                    await tokenStore.SetTokensAsync(response.AccessToken, response.RefreshToken, response.ExpiresIn);
+                    var tokenStore = _serviceProvider.GetRequiredService<TokenStore>();
+                    await tokenStore.SetTokensAsync(
+                        response.AccessToken,
+                        response.RefreshToken,
+                        response.ExpiresIn);
                     return true;
                 }
 
@@ -149,8 +108,13 @@ namespace ByteCodePlatform.Admin.Entities.Services.UserAuthentication
             }
             finally
             {
-                _refreshLock.Release();
+                channel?.Dispose();
             }
+        }
+
+        public void Dispose()
+        {
+            _disposed = true;
         }
     }
 }
