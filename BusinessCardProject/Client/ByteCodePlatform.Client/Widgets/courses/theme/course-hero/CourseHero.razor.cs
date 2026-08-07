@@ -9,5 +9,6 @@ namespace BusinessCardProject.Client.Widgets.courses.theme.course_hero
         public CourseThemeInfoResponse Course { get; set; } = null!;
 
         private string PreviewUrl => $"https://localhost:7146/{Course.AvatarUrl}";
+        //private string PreviewUrl => $"https://it-bytecode.splinterkeenetic.netcraze.club/FileGrpcService/{Course.AvatarUrl}";
     }
 }

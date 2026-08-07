@@ -1,7 +1,21 @@
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Services.MailService.Infrastructure.Extensions;
 using Services.MailService.Presentation.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var port = int.Parse(builder.Configuration["GrpcServices:ListenPort"] ?? throw new Exception("Port is missing"));
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(port, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+        if (builder.Environment.IsDevelopment())
+        { 
+            listenOptions.UseHttps();
+        }
+    });
+});
 
 builder.Services.AddGrpc();
 builder.Services.AddCollectionInfrastructure(builder.Configuration);

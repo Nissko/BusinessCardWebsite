@@ -56,7 +56,7 @@ namespace BusinessCardProject.Client.Features.auth.register_form
                 if (success)
                 {
                     Snackbar.Add("Подтвердите аккаунт через свою почту", Severity.Success);
-                    NavManager.NavigateTo("/login", forceLoad: true);
+                    NavManager.NavigateTo("/login");
                 }
                 else
                 {

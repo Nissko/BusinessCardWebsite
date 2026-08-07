@@ -24,8 +24,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddHttpClient("AuthRefreshClient", client =>
     {
-        client.BaseAddress = new Uri("https://localhost:7241");
-        // client.BaseAddress = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService");
+        //client.BaseAddress = new Uri("https://localhost:7241");
+        client.BaseAddress = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService");
     })
     .ConfigurePrimaryHttpMessageHandler(() =>
         new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler())
@@ -47,14 +47,14 @@ HttpMessageHandler CreateAuthHandler(IServiceProvider sp)
 builder.Services.AddGrpcClient<AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient>(options =>
     {
         options.Address = new Uri("https://localhost:7241");
-        // options.Address = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService";
+        //options.Address = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService");
     })
     .ConfigurePrimaryHttpMessageHandler(CreateAuthHandler);
 
 builder.Services.AddGrpcClient<CourseService.Proto.CourseService.CourseServiceClient>(options =>
     {
         options.Address = new Uri("https://localhost:7117");
-        // options.Address = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/CourseGrpcService");
+        //options.Address = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/CourseGrpcService");
     })
     .ConfigurePrimaryHttpMessageHandler(CreateAuthHandler)
     .AddInterceptor(sp => sp.GetRequiredService<AuthenticationInterceptor>());
