@@ -24,8 +24,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddHttpClient("AuthRefreshClient", client =>
     {
-        //client.BaseAddress = new Uri("https://localhost:7241");
-        client.BaseAddress = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService");
+        client.BaseAddress = new Uri("https://localhost:7241");
+        //client.BaseAddress = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/AuthGrpcService");
     })
     .ConfigurePrimaryHttpMessageHandler(() =>
         new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler())

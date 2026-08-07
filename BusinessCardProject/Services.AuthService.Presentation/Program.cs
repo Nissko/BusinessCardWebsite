@@ -25,8 +25,12 @@ if (!string.IsNullOrEmpty(certPath) && !string.IsNullOrEmpty(keyPath))
 {
     var certFile = Path.Combine(AppContext.BaseDirectory, certPath);
     var keyFile = Path.Combine(AppContext.BaseDirectory, keyPath);
-    var combinedPem = File.ReadAllText(certFile) + File.ReadAllText(keyFile);
-    var certificate = X509Certificate2.CreateFromPem(combinedPem, combinedPem);
+    
+    var certPem = File.ReadAllText(certFile);
+    var keyPem = File.ReadAllText(keyFile);
+    
+    var certificate = X509Certificate2.CreateFromPem(certPem, keyPem);
+    certificate = new X509Certificate2(certificate.Export(X509ContentType.Pfx));
 
     builder.WebHost.ConfigureKestrel(options =>
     {
@@ -84,11 +88,14 @@ var rootCaPath = builder.Configuration["RootCaCertificate:Path"];
 var clientCertPath = builder.Configuration["GrpcClientCertificate:Path"];
 var clientCertKeyPath = builder.Configuration["GrpcClientCertificate:KeyPath"];
 
-HttpMessageHandler ConfigureGrpcClientHandler(IServiceProvider sp)
+HttpMessageHandler ConfigureGrpcClientHandler(IServiceProvider sp, string serviceUrl)
 {
     var tokenHandler = sp.GetRequiredService<AuthTokenPropagationHandler>();
     
-    var sslOptions = new SslClientAuthenticationOptions();
+    var sslOptions = new SslClientAuthenticationOptions
+    {
+        TargetHost = new Uri(serviceUrl).Host 
+    };
 
     if (!string.IsNullOrEmpty(clientCertPath) && !string.IsNullOrEmpty(clientCertKeyPath))
     {
@@ -110,23 +117,25 @@ HttpMessageHandler ConfigureGrpcClientHandler(IServiceProvider sp)
     return tokenHandler;
 }
 
+var coreServiceUrl = builder.Configuration["GrpcServices:CoreServiceUrl"] ?? throw new Exception("Grpc CoreService url is missing");
 builder.Services.AddGrpcClient<UserGrpcService.UserGrpcServiceClient>(options =>
 {
-    options.Address = new Uri(builder.Configuration["GrpcServices:CoreServiceUrl"] ?? throw new Exception("Grpc services url is missing"));
+    options.Address = new Uri(coreServiceUrl);
 })
-.ConfigurePrimaryHttpMessageHandler(ConfigureGrpcClientHandler);
+.ConfigurePrimaryHttpMessageHandler(sp => ConfigureGrpcClientHandler(sp, coreServiceUrl));
 
+var smtpServiceUrl = builder.Configuration["GrpcServices:SmtpServiceUrl"] ?? throw new Exception("Grpc SmtpService url is missing");
 builder.Services.AddGrpcClient<SmtpMailService.Proto.SmtpMailGrpcService.SmtpMailGrpcServiceClient>(options =>
 {
-    options.Address = new Uri(builder.Configuration["GrpcServices:SmtpServiceUrl"] ?? throw new Exception("Grpc services url is missing"));
+    options.Address = new Uri(smtpServiceUrl);
 })
-.ConfigurePrimaryHttpMessageHandler(ConfigureGrpcClientHandler);
+.ConfigurePrimaryHttpMessageHandler(sp => ConfigureGrpcClientHandler(sp, smtpServiceUrl));
 
 builder.Services.AddGrpc();
 builder.Services.AddCollectionInfrastructure(builder.Configuration)
     .AddApplication();
 
-var privateKeyPath = Path.Combine("certs", "private_key.pem");
+var privateKeyPath = Path.Combine(AppContext.BaseDirectory, "certs", "private_key.pem");
 var rsa = RSA.Create();
 
 if (!File.Exists(privateKeyPath))
@@ -139,7 +148,7 @@ if (!File.Exists(privateKeyPath))
     else
     {
         throw new FileNotFoundException(
-            "Private key not found at. " +
+            "Private key not found at " + privateKeyPath + ". " +
             "Generate it with: openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:4096");
     }
 }
@@ -187,7 +196,7 @@ if (builder.Environment.IsDevelopment())
 app.MapGrpcService<AuthService>().EnableGrpcWeb();
 
 app.Run();
-return;
+
 
 bool ValidateRemoteCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
 {
@@ -203,7 +212,19 @@ bool ValidateRemoteCertificate(object sender, X509Certificate certificate, X509C
     var chain2 = new X509Chain();
     chain2.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
     chain2.ChainPolicy.CustomTrustStore.Add(rootCert);
-    chain2.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
+    
+    chain2.ChainPolicy.VerificationFlags = 
+        X509VerificationFlags.IgnoreEndRevocationUnknown |
+        X509VerificationFlags.IgnoreCertificateAuthorityRevocationUnknown |
+        X509VerificationFlags.IgnoreRootRevocationUnknown;
+    
+    if (chain != null)
+    {
+        foreach (var element in chain.ChainElements)
+        {
+            chain2.ChainPolicy.ExtraStore.Add(element.Certificate);
+        }
+    }
     
     return chain2.Build((X509Certificate2)certificate);
 }
@@ -215,8 +236,12 @@ X509Certificate2Collection LoadCertificates(string certPath, string keyPath)
 
     var certFile = Path.Combine(AppContext.BaseDirectory, certPath);
     var keyFile = Path.Combine(AppContext.BaseDirectory, keyPath);
-    var combinedPem = File.ReadAllText(certFile) + File.ReadAllText(keyFile);
     
-    var cert = X509Certificate2.CreateFromPem(combinedPem, combinedPem);
-    return new X509Certificate2Collection(cert);
+    var certPem = File.ReadAllText(certFile);
+    var keyPem = File.ReadAllText(keyFile);
+    
+    var cert = X509Certificate2.CreateFromPem(certPem, keyPem);
+    var certWithKey = new X509Certificate2(cert.Export(X509ContentType.Pfx));
+    
+    return new X509Certificate2Collection(certWithKey);
 }

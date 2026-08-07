@@ -18,8 +18,5 @@ COPY --from=build /out/wwwroot /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-RUN mkdir -p /app/certs/ca
-COPY certs/ca/ /app/certs/ca/
-
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
