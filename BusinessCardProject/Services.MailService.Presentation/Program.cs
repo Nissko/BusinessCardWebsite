@@ -1,28 +1,11 @@
-<<<<<<< HEAD
-=======
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
->>>>>>> 8e0e6393239ad47daf343a379672b88115adbe20
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Services.MailService.Infrastructure.Extensions;
 using Services.MailService.Presentation.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-<<<<<<< HEAD
-var port = int.Parse(builder.Configuration["GrpcServices:ListenPort"] ?? throw new Exception("Port is missing"));
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(port, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-        if (builder.Environment.IsDevelopment())
-        { 
-            listenOptions.UseHttps();
-        }
-    });
-});
-=======
 var certPath = builder.Configuration["GrpcClientCertificate:Path"];
 var keyPath = builder.Configuration["GrpcClientCertificate:KeyPath"];
 var rootCaPath = builder.Configuration["RootCaCertificate:Path"];
@@ -65,28 +48,27 @@ else
         });
     });
 }
->>>>>>> 8e0e6393239ad47daf343a379672b88115adbe20
 
 builder.Services.AddGrpc();
 builder.Services.AddCollectionInfrastructure(builder.Configuration);
 
+var grpcClientBuilder = builder.Services.AddGrpcClient<AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient>(options =>
+{
+    options.Address = new Uri(builder.Configuration["GrpcServices:AuthServiceUrl"] ??
+                              throw new Exception("Grpc services url is missing"));
+});
+
 if (!string.IsNullOrEmpty(rootCaPath))
 {
-    builder.Services.AddGrpcClient<AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient>(options =>
+    grpcClientBuilder.ConfigurePrimaryHttpMessageHandler(sp =>
     {
-        options.Address = new Uri(builder.Configuration["GrpcServices:AuthServiceUrl"] ??
-                                  throw new Exception("Grpc services url is missing"));
-    })
-    .ConfigurePrimaryHttpMessageHandler(sp =>
-    {
-        var rootCaFile = Path.Combine(AppContext.BaseDirectory, rootCaPath);
-        var rootCaBytes = File.ReadAllBytes(rootCaFile);
-        var rootCert = new X509Certificate2(rootCaBytes);
+        var sslOptions = new SslClientAuthenticationOptions();
 
-        var sslOptions = new SslClientAuthenticationOptions
+        if (!string.IsNullOrEmpty(certPath) && !string.IsNullOrEmpty(keyPath))
         {
-            ClientCertificates = LoadCertificates(certPath, keyPath)
-        };
+            sslOptions.ClientCertificates = LoadCertificates(certPath, keyPath);
+        }
+        
         sslOptions.RemoteCertificateValidationCallback = ValidateRemoteCertificate;
 
         var handler = new SocketsHttpHandler

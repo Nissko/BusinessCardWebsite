@@ -98,7 +98,7 @@ namespace ByteCodePlatform.Admin.Features.admin.course_tree_preview
 
         private bool GetModuleExpandedState(Guid moduleId) => _expandedModuleId == moduleId;
         private bool GetVideoCourseExpandedState(Guid videoId) => _expandedVideoCourseId == videoId;
-        private static string GetVideoCoursePreview(string imgUrl) => $"https://localhost:7146/{imgUrl}"; 
+        private static string GetVideoCoursePreview(string imgUrl) => $"https://localhost:5036/{imgUrl}"; 
 
         private async Task OnModuleExpandedChanged(Guid moduleId, bool isExpanded)
         {

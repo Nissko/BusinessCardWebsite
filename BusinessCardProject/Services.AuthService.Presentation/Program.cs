@@ -21,7 +21,6 @@ var port = int.Parse(builder.Configuration["GrpcServices:ListenPort"] ?? throw n
 var certPath = builder.Configuration["GrpcClientCertificate:Path"];
 var keyPath = builder.Configuration["GrpcClientCertificate:KeyPath"];
 
-// 2. Настройка Kestrel с поддержкой кастомного сертификата для Production
 if (!string.IsNullOrEmpty(certPath) && !string.IsNullOrEmpty(keyPath))
 {
     var certFile = Path.Combine(AppContext.BaseDirectory, certPath);
@@ -89,11 +88,13 @@ HttpMessageHandler ConfigureGrpcClientHandler(IServiceProvider sp)
 {
     var tokenHandler = sp.GetRequiredService<AuthTokenPropagationHandler>();
     
-    var sslOptions = new SslClientAuthenticationOptions
+    var sslOptions = new SslClientAuthenticationOptions();
+
+    if (!string.IsNullOrEmpty(clientCertPath) && !string.IsNullOrEmpty(clientCertKeyPath))
     {
-        ClientCertificates = LoadCertificates(clientCertPath, clientCertKeyPath)
-    };
-    
+        sslOptions.ClientCertificates = LoadCertificates(clientCertPath, clientCertKeyPath);
+    }
+
     if (!string.IsNullOrEmpty(rootCaPath))
     {
         sslOptions.RemoteCertificateValidationCallback = ValidateRemoteCertificate;
@@ -219,7 +220,3 @@ X509Certificate2Collection LoadCertificates(string certPath, string keyPath)
     var cert = X509Certificate2.CreateFromPem(combinedPem, combinedPem);
     return new X509Certificate2Collection(cert);
 }
-
-/*
- * TODO: сделать MiddleWare проверку на существование токенов
- */

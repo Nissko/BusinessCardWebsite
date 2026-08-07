@@ -77,23 +77,23 @@ builder.Services.AddCors(options =>
     });
 });
 
+var grpcClientBuilder = builder.Services.AddGrpcClient<AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient>(options =>
+{
+    options.Address = new Uri(builder.Configuration["GrpcServices:AuthServiceUrl"] ??
+                              throw new Exception("Grpc services url is missing"));
+});
+
 if (!string.IsNullOrEmpty(rootCaPath))
 {
-    builder.Services.AddGrpcClient<AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient>(options =>
+    grpcClientBuilder.ConfigurePrimaryHttpMessageHandler(sp =>
     {
-        options.Address = new Uri(builder.Configuration["GrpcServices:AuthServiceUrl"] ??
-                                  throw new Exception("Grpc services url is missing"));
-    })
-    .ConfigurePrimaryHttpMessageHandler(sp =>
-    {
-        var rootCaFile = Path.Combine(AppContext.BaseDirectory, rootCaPath);
-        var rootCaBytes = File.ReadAllBytes(rootCaFile);
-        var rootCert = new X509Certificate2(rootCaBytes);
+        var sslOptions = new SslClientAuthenticationOptions();
 
-        var sslOptions = new SslClientAuthenticationOptions
+        if (!string.IsNullOrEmpty(certPath) && !string.IsNullOrEmpty(keyPath))
         {
-            ClientCertificates = LoadCertificates(certPath, keyPath)
-        };
+            sslOptions.ClientCertificates = LoadCertificates(certPath, keyPath);
+        }
+        
         sslOptions.RemoteCertificateValidationCallback = ValidateRemoteCertificate;
 
         var handler = new SocketsHttpHandler

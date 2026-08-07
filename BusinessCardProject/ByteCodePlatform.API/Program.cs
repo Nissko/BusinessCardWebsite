@@ -93,16 +93,17 @@ builder.Services.AddGrpcClient<AuthorizationService.Proto.AuthorizationService.A
     {
         var tokenHandler = sp.GetRequiredService<AuthTokenPropagationHandler>();
         
-        var rootCaFile = Path.Combine(AppContext.BaseDirectory, rootCaPath);
-        var rootCaBytes = File.ReadAllBytes(rootCaFile);
-        var rootCert = new X509Certificate2(rootCaBytes);
-        
-        var sslOptions = new SslClientAuthenticationOptions
-        {
-            ClientCertificates = LoadCertificates(clientCertPath, clientCertKeyPath)
-        };
+        var sslOptions = new SslClientAuthenticationOptions();
 
-        sslOptions.RemoteCertificateValidationCallback = ValidateRemoteCertificate;
+        if (!string.IsNullOrEmpty(clientCertPath) && !string.IsNullOrEmpty(clientCertKeyPath))
+        {
+            sslOptions.ClientCertificates = LoadCertificates(clientCertPath, clientCertKeyPath);
+        }
+
+        if (!string.IsNullOrEmpty(rootCaPath))
+        {
+            sslOptions.RemoteCertificateValidationCallback = ValidateRemoteCertificate;
+        }
 
         var handler = new SocketsHttpHandler
         {
@@ -113,6 +114,35 @@ builder.Services.AddGrpcClient<AuthorizationService.Proto.AuthorizationService.A
         tokenHandler.InnerHandler = handler;
         return tokenHandler;
     });
+
+bool ValidateRemoteCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
+{
+    if (errors == SslPolicyErrors.None)
+        return true;
+    
+    if (string.IsNullOrEmpty(rootCaPath)) return false;
+
+    var rootCaFile = Path.Combine(AppContext.BaseDirectory, rootCaPath);
+    var rootCaBytes = File.ReadAllBytes(rootCaFile);
+    var rootCert = new X509Certificate2(rootCaBytes);
+    
+    var chain2 = new X509Chain();
+    chain2.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
+    chain2.ChainPolicy.CustomTrustStore.Add(rootCert);
+    chain2.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
+    
+    return chain2.Build((X509Certificate2)certificate);
+}
+
+static X509Certificate2Collection LoadCertificates(string certPath, string keyPath)
+{
+    var certFile = Path.Combine(AppContext.BaseDirectory, certPath);
+    var keyFile = Path.Combine(AppContext.BaseDirectory, keyPath);
+    var combinedPem = File.ReadAllText(certFile) + File.ReadAllText(keyFile);
+    
+    var cert = X509Certificate2.CreateFromPem(combinedPem, combinedPem);
+    return new X509Certificate2Collection(cert);
+}
 
 builder.Services.AddGrpc();
 builder.Services.AddCollectionInfrastructure(builder.Configuration)
@@ -161,31 +191,3 @@ app.MapGrpcService<UserGrpcService>().EnableGrpcWeb();
 app.MapGrpcService<CourseGrpcService>().EnableGrpcWeb();
 
 app.Run();
-return;
-
-static X509Certificate2Collection LoadCertificates(string certPath, string keyPath)
-{
-    var certFile = Path.Combine(AppContext.BaseDirectory, certPath);
-    var keyFile = Path.Combine(AppContext.BaseDirectory, keyPath);
-    var combinedPem = File.ReadAllText(certFile) + File.ReadAllText(keyFile);
-    
-    var cert = X509Certificate2.CreateFromPem(combinedPem, combinedPem);
-    return new X509Certificate2Collection(cert);
-}
-
-bool ValidateRemoteCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
-{
-    if (errors == SslPolicyErrors.None)
-        return true;
-    
-    var rootCaFile = Path.Combine(AppContext.BaseDirectory, rootCaPath);
-    var rootCaBytes = File.ReadAllBytes(rootCaFile);
-    var rootCert = new X509Certificate2(rootCaBytes);
-    
-    var chain2 = new X509Chain();
-    chain2.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
-    chain2.ChainPolicy.CustomTrustStore.Add(rootCert);
-    chain2.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
-    
-    return chain2.Build((X509Certificate2)certificate);
-}

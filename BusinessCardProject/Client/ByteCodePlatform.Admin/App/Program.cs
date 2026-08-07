@@ -61,7 +61,7 @@ builder.Services.AddGrpcClient<CourseService.Proto.CourseService.CourseServiceCl
 
 builder.Services.AddGrpcClient<FilesService.Proto.FilesService.FilesServiceClient>(options =>
     {
-        options.Address = new Uri("https://localhost:7146");
+        options.Address = new Uri("https://localhost:5036");
         // options.Address = new Uri("https://it-bytecode.splinterkeenetic.netcraze.club/FileGrpcService");
     })
     .ConfigurePrimaryHttpMessageHandler(CreateAuthHandler)
