@@ -4,6 +4,8 @@ using Services.FileService.Application.Application.Command;
 
 namespace Services.FileService.Presentation.Controllers
 {
+    [ApiController]
+    [Route("FilesServiceGrpcService")]
     public class ImagesController(IMediator mediator) : ControllerBase
     {
         [HttpGet("{fileId}")]
