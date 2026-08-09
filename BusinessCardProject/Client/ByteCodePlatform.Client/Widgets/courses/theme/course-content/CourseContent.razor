@@ -2,27 +2,37 @@
 @using BusinessCardProject.Client.Widgets.courses.theme.course_module_item
 
 <MudPaper Elevation="2" Class="content-card pa-4 pa-sm-5 pa-md-6">
-    <div class="content-header mb-4">
-        <div class="d-flex align-center">
-            <MudIcon Icon="@Icons.Material.Rounded.MenuBook" Color="Color.Primary" Class="mr-2"/>
-            <div>
-                <MudText Typo="Typo.h6" Style="font-weight: 700;">Содержание курса</MudText>
-                <MudText Typo="Typo.caption" Style="color: #95a5a6;">
-                    @(CourseModules?.CourseModules?.Count ?? 0) модулей
-                </MudText>
+    @if (_showWarning)
+    {
+        <MudAlert Variant="Variant.Outlined" Severity="Severity.Error" Icon="@Icons.Material.Rounded.Warning">
+            Доступ к курсу временно ограничен. Возможно, выполняется обновление его содержимого или структуры.
+            Пожалуйста, попробуйте зайти позже.
+        </MudAlert>
+    }
+    else
+    {
+        <div class="content-header mb-4">
+            <div class="d-flex align-center">
+                <MudIcon Icon="@Icons.Material.Rounded.MenuBook" Color="Color.Primary" Class="mr-2"/>
+                <div>
+                    <MudText Typo="Typo.h6" Style="font-weight: 700;">Содержание курса</MudText>
+                    <MudText Typo="Typo.caption" Style="color: #95a5a6;">
+                        @(CourseModules?.CourseModules?.Count ?? 0) модулей
+                    </MudText>
+                </div>
             </div>
         </div>
-    </div>
 
-    <MudTreeView T="string" Hover="true" ExpandOnClick="true" Dense="true">
-        @if (CourseModules != null)
-        {
-            foreach (var (module, _) in CourseModules.CourseModules.Select((m, i) => (m, i)))
+        <MudTreeView T="string" Hover="true" ExpandOnClick="true" Dense="true">
+            @if (CourseModules != null)
             {
-                <CourseModuleItem Module="module" CourseGrpc="CourseGrpc"/>
+                foreach (var (module, _) in CourseModules.CourseModules.Select((m, i) => (m, i)))
+                {
+                    <CourseModuleItem Module="module" CourseGrpc="CourseGrpc"/>
+                }
             }
-        }
-    </MudTreeView>
+        </MudTreeView>
+    }
 </MudPaper>
 
 <style>

@@ -196,6 +196,7 @@ if (builder.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
+/*TODO: нужна доработка т.к сейчас неправильный IP передается. Стоит глубже почитать про NPM*/
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
@@ -216,6 +217,7 @@ app.Use(async (context, next) =>
 app.MapGrpcService<AuthService>().EnableGrpcWeb();
 
 app.Run();
+return;
 
 
 bool ValidateRemoteCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)

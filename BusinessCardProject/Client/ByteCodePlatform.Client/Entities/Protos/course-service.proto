@@ -9,27 +9,43 @@ service CourseService {
   rpc CheckGrpcCourseTiming (CheckGrpcCourseTimingRequest) returns (CheckGrpcCourseTimingResponse);
 
   // Языки программирования
+  //
   rpc GetProgrammingLanguages (GetProgrammingLanguagesRequest) returns (ProgrammingLanguagesInfoResponse);
 
   // Темы курсов
+  //
   rpc AddCourseTheme (AddCourseThemeRequest) returns (CourseThemeInfoResponse);
+  //
   rpc GetCourseThemes (GetCourseThemesRequest) returns (CourseThemesInfoResponse);
+  //
   rpc GetCourseThemeById (GetCourseThemeByIdRequest) returns (CourseThemeInfoResponse);
+  //
   rpc UpdateCourseTheme (UpdateCourseThemeRequest) returns (CourseThemeInfoResponse);
+  //
   rpc GetCourseThemeProperties (GetCourseThemePropertiesRequest) returns (CourseThemePropertiesResponse);
 
   // Модули курсов
+  //
   rpc AddCourseModule (AddCourseModuleRequest) returns (CourseModuleInfoResponse);
+  //
   rpc GetCourseModules (GetCourseModulesRequest) returns (CourseModulesInfoResponse);
+  //
   rpc GetCourseModulesByCourseId (GetCourseModulesByCourseIdRequest) returns (CourseModulesInfoResponse);
+  //
   rpc UpdateCourseModule (UpdateCourseModuleRequest) returns (CourseModuleInfoResponse);
+  //
   rpc GetCourseModuleProperties (GetCourseModulePropertiesRequest) returns (CourseModulePropertiesResponse);
 
   // Контент курсов
+  //
   rpc AddCourseContent (AddCourseContentRequest) returns (CourseContentInfoResponse);
+  //
   rpc GetCourseContents (GetCourseContentsRequest) returns (CourseContentsInfoResponse);
+  //
   rpc GetCourseContentsByModuleId (GetCourseContentsByModuleIdRequest) returns (CourseContentsInfoResponse);
+  //
   rpc UpdateCourseContent (UpdateCourseContentRequest) returns (CourseContentInfoResponse);
+  //
   rpc GetCourseContentProperties (GetCourseContentPropertiesRequest) returns (CourseContentPropertiesResponse);
 }
 
@@ -162,6 +178,7 @@ message CourseThemeInfoResponse {
   LightProgrammingLanguageInfo programming_language = 10;
   bool is_free = 11;
   optional bool success = 12;
+  int32 count_lessons = 13;
 }
 
 message CourseThemesInfoResponse {

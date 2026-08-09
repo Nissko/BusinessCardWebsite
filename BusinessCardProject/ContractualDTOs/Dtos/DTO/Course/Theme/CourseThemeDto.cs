@@ -9,6 +9,7 @@ namespace Dtos.DTO.Course.Theme
         string Description,
         string AvatarUrl,
         bool IsFree,
+        int CountLessons,
         double Price,
         double? OldPrice,
         Instant CreatedAt,

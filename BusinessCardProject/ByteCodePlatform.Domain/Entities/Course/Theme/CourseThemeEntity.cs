@@ -85,11 +85,27 @@ namespace ByteCodePlatform.Domain.Entities.Course.Theme
             UpdatedAt = SystemClock.Instance.GetCurrentInstant();
         }
 
+        /// <summary>
+        /// Получения признака - бесплатный или платный курс
+        /// </summary>
         public bool GetIsFreeProperty()
         {
             return bool.Parse(ThemeFieldProperties
                 .FirstOrDefault(x => x.FieldPropertyTypeId == FieldPropertyTypesEnum.IsFree)?
                 .Value ?? string.Empty);
+        }
+
+        /// <summary>
+        /// Получение общего кол-ва уроков, которые имею св-во IsShow == true
+        /// </summary>
+        public int GetCountLessons()
+        {
+            return CourseModules
+                .SelectMany(md => md.Contents)
+                .Count(ct => ct.ContentFieldProperties
+                    .Any(pr =>
+                        pr.FieldPropertyTypeId == FieldPropertyTypesEnum.IsShow &&
+                        pr.Value.Equals("true", StringComparison.CurrentCultureIgnoreCase)));
         }
     }
 }

@@ -18,6 +18,7 @@ namespace ByteCodePlatform.API.ProtoMappers.Course.Themes
                 Price = dto.Price,
                 OldPrice = dto.OldPrice ?? 0,
                 IsFree = dto.IsFree,
+                CountLessons = dto.CountLessons,
                 CreatedAt = dto.CreatedAt.ToTimestamp(),
                 UpdatedAt = dto.UpdatedAt?.ToTimestamp() ?? null,
                 Author = new()

@@ -178,6 +178,7 @@ message CourseThemeInfoResponse {
   LightProgrammingLanguageInfo programming_language = 10;
   bool is_free = 11;
   optional bool success = 12;
+  int32 count_lessons = 13;
 }
 
 message CourseThemesInfoResponse {
