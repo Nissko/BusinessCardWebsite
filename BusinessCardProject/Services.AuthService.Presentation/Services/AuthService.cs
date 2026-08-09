@@ -23,16 +23,14 @@ namespace Services.AuthService.Presentation.Services
         private readonly IUserRepository _users;
         private readonly IAccountVerificationRepository _accountVerifications;
         private readonly IFailedLoginAttemptRepository _failedLoginAttempts;
-        private readonly IAuditLogRepository _auditLog;
         private readonly IUserSettingsRepository _userSettings;
-
         private readonly ILogger<AuthService> _logger;
 
-        private TimeSpan AccessTokenLifetime => TimeSpan.FromMinutes(15);
+        private static TimeSpan AccessTokenLifetime => TimeSpan.FromMinutes(15);
 
         public AuthService(IMediator mediator, IRefreshToken refreshToken, IUserRepository users,
             IAccountVerificationRepository accountVerifications, ILogger<AuthService> logger,
-            IFailedLoginAttemptRepository failedLoginAttempts, IAuditLogRepository auditLog,
+            IFailedLoginAttemptRepository failedLoginAttempts,
             IUserSettingsRepository userSettings)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
@@ -42,7 +40,6 @@ namespace Services.AuthService.Presentation.Services
                                     throw new ArgumentNullException(nameof(accountVerifications));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _failedLoginAttempts = failedLoginAttempts ?? throw new ArgumentNullException(nameof(failedLoginAttempts));
-            _auditLog = auditLog ?? throw new ArgumentNullException(nameof(auditLog));
             _userSettings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
         }
 
@@ -51,7 +48,7 @@ namespace Services.AuthService.Presentation.Services
         {
             try
             {
-                var user = await _users.GetUserByEmail(request.Email)
+                var user = await _users.GetUserByEmail(request.Email.ToLower())
                            ?? throw new RpcException(new Status(StatusCode.Unauthenticated,
                                "Invalid or expired email"));
 
@@ -91,12 +88,8 @@ namespace Services.AuthService.Presentation.Services
                 await _refreshToken.Save(refreshToken, user.Id.ToString(),
                     SystemClock.Instance.GetCurrentInstant() + Duration.FromDays(1));
 
-                /*TODO: Сделать потом везде, чтобы можно было проводить аудит действий пользователя*/
-                var ipAddress = context.Peer;
-                var userAgent = context.RequestHeaders
-                    .FirstOrDefault(x => x.Key.Equals("user-agent", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
-
-                await _auditLog.Log(user.Id, nameof(Login), $"Успещный вход с IP - {ipAddress}", ipAddress, userAgent);
+                // Логирование действий пользователя
+                await _mediator.Send(new CreateAuditLogCommand(user.Id, nameof(Login), context));
 
                 return new LoginResponse
                 {
@@ -173,6 +166,10 @@ namespace Services.AuthService.Presentation.Services
                 var result = await _accountVerifications
                     .VerificationRecord(request.UserId.ToGuid(), request.VerificationCode);
 
+                // Логирование действий пользователя
+                await _mediator.Send(new CreateAuditLogCommand(request.UserId.ToGuid(),
+                    nameof(VerificationAccount), context));
+
                 return new VerificationAccountResponse
                 {
                     Success = result
@@ -181,6 +178,9 @@ namespace Services.AuthService.Presentation.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(VerificationAccount));
+                // Логирование действий пользователя
+                await _mediator.Send(new CreateAuditLogCommand(request.UserId.ToGuid(),
+                    nameof(VerificationAccount), context, ex));
                 throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
             }
         }
@@ -195,7 +195,7 @@ namespace Services.AuthService.Presentation.Services
                     Surname = request.Surname,
                     Name = request.Name,
                     NickName = request.NickName,
-                    Email = request.Email,
+                    Email = request.Email.ToLower(),
                     Password = request.Password
                 });
 
