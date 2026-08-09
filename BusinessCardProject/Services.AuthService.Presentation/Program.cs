@@ -204,9 +204,12 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 app.Use(async (context, next) =>
 {
-    var xff = context.Request.Headers["X-Forwarded-For"].ToString();
-    var remoteIp = context.Connection.RemoteIpAddress?.ToString();
-    Console.WriteLine($"[IP Debug] X-Forwarded-For: {xff}, Remote: {remoteIp}");
+    var forwardedFor = context.Request.Headers["X-Forwarded-For"].ToString();
+    if (!string.IsNullOrEmpty(forwardedFor))
+    {
+        var realIp = forwardedFor.Split(',')[0].Trim();
+        context.Items["RealIpAddress"] = realIp;
+    }
     await next(context);
 });
 
