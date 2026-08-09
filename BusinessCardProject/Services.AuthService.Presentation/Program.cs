@@ -199,7 +199,15 @@ if (builder.Environment.IsDevelopment())
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
-    KnownNetworks = { new IPNetwork(IPAddress.Parse("127.0.0.1"), 32), new IPNetwork(IPAddress.Parse("::1"), 128) }
+    KnownNetworks = 
+    { 
+        new IPNetwork(IPAddress.Parse("127.0.0.1"), 32),
+        new IPNetwork(IPAddress.Parse("::1"), 128)
+    },
+    KnownProxies = 
+    { 
+        IPAddress.Parse("192.168.1.1")
+    }
 });
 
 app.Use(async (context, next) =>
