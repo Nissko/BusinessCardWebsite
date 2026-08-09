@@ -1,7 +1,9 @@
+using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
 using Services.AuthService.Application.Application.Extensions;
@@ -9,6 +11,7 @@ using Services.AuthService.Infrastructure.Extensions;
 using Services.AuthService.Infrastructure.Extensions.Interfaces;
 using Services.AuthService.Presentation.Services;
 using UserService.Proto;
+using IPNetwork = Microsoft.AspNetCore.HttpOverrides.IPNetwork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -192,6 +195,23 @@ if (builder.Environment.IsDevelopment())
 { 
     app.UseHttpsRedirection();
 }
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+    KnownNetworks = { new IPNetwork(IPAddress.Parse("127.0.0.1"), 32), new IPNetwork(IPAddress.Parse("::1"), 128) }
+});
+
+app.Use(async (context, next) =>
+{
+    var forwardedFor = context.Request.Headers["X-Forwarded-For"].ToString();
+    if (!string.IsNullOrEmpty(forwardedFor))
+    {
+        var realIp = forwardedFor.Split(',')[0].Trim();
+        context.Items["RealIpAddress"] = realIp;
+    }
+    await next(context);
+});
 
 app.MapGrpcService<AuthService>().EnableGrpcWeb();
 

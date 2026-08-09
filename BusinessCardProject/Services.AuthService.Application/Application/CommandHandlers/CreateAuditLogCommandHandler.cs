@@ -1,6 +1,6 @@
-﻿using Grpc.Core;
-using MediatR;
+﻿using MediatR;
 using Services.AuthService.Application.Application.Command;
+using Services.AuthService.Application.Application.Extensions;
 using Services.AuthService.Application.Common.Interfaces;
 
 namespace Services.AuthService.Application.Application.CommandHandlers
@@ -16,7 +16,7 @@ namespace Services.AuthService.Application.Application.CommandHandlers
 
         public async Task<Unit> Handle(CreateAuditLogCommand request, CancellationToken cancellationToken)
         {
-            var userIpAddress = GetRealIpAddress(request.Context);
+            var userIpAddress = request.Context.GetClientIpAddress();
             var userAgent = request.Context.RequestHeaders
                 .FirstOrDefault(x => x.Key.Equals("user-agent", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
             var exceptionMessage = request.Exception?.Message;
@@ -26,23 +26,6 @@ namespace Services.AuthService.Application.Application.CommandHandlers
                 cancellationToken);
 
             return Unit.Value;
-        }
-
-        private static string GetRealIpAddress(ServerCallContext context)
-        {
-            var xRealIp = context.RequestHeaders
-                .FirstOrDefault(x => x.Key.Equals("x-real-ip", StringComparison.OrdinalIgnoreCase))?.Value;
-
-            if (!string.IsNullOrEmpty(xRealIp))
-                return xRealIp.Split(',')[0].Trim();
-
-            var xForwardedFor = context.RequestHeaders
-                .FirstOrDefault(x => x.Key.Equals("x-forwarded-for", StringComparison.OrdinalIgnoreCase))?.Value;
-
-            if (!string.IsNullOrEmpty(xForwardedFor))
-                return xForwardedFor.Split(',')[0].Trim();
-
-            return context.Peer ?? "unknown";
         }
 
         private static string GetDetailLog(string action, string ip, string? exMessage = "")
