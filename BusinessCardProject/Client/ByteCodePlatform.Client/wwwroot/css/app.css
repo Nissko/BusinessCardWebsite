@@ -341,3 +341,19 @@ html[data-theme='true'] .btn-dismiss:hover svg {
 .mud-toolbar-gutters{
     height: 64px !important;
 }
+
+.mud-drawer.mud-drawer-responsive.mud-drawer-pos-left.mud-drawer--open {
+    top: var(--mud-appbar-height) !important;
+    left: 0 !important;
+}
+
+.mud-drawer.mud-drawer-responsive.mud-drawer-pos-left.mud-drawer--closed {
+    top: var(--mud-appbar-height) !important;
+    box-shadow: none;
+    left: calc(-1 * var(--mud-drawer-width, var(--mud-drawer-width-left)));
+}
+
+.mud-overlay .mud-overlay-scrim.mud-overlay-dark {
+    border-color: transparent;
+    background-color: transparent;
+}

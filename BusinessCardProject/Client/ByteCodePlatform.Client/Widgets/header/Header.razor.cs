@@ -44,7 +44,7 @@ namespace BusinessCardProject.Client.Widgets.header
         private void ToggleDrawer()
         {
             UserSettingService.Settings.IsDrawerOpen = !UserSettingService.Settings.IsDrawerOpen;
-            UserSettingService.NotifyStateChanged(); 
+            UserSettingService.NotifyStateChanged();
         }
     
         public void Dispose()

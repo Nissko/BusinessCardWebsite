@@ -1,6 +1,7 @@
 ﻿using AuthorizationService.Proto;
 using BusinessCardProject.Client.Entities.Services.UserAuthentication;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
 namespace BusinessCardProject.Client.Features.auth_menu
 {
@@ -14,6 +15,8 @@ namespace BusinessCardProject.Client.Features.auth_menu
         private string UserName { get; set; } = string.Empty;
         private string UserEmail { get; set; } = string.Empty;
         private string UserAvatar { get; set; } = string.Empty;
+        
+        private MudMenu? _menu;
 
         protected override void OnInitialized()
         {
@@ -56,8 +59,13 @@ namespace BusinessCardProject.Client.Features.auth_menu
             }
         }
 
-        private void GoToProfile()
+        private async Task GoToProfile()
         {
+            if (_menu is not null)
+            {
+                await _menu.CloseMenuAsync();
+            }
+            
             NavManager.NavigateTo("/user-profile");
         }
         
