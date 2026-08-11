@@ -1,11 +1,10 @@
-using ByteCodePlatform.Domain.Common;
-
-namespace ByteCodePlatform.Domain.Enums
+﻿namespace BusinessCardProject.Client.Entities.Enums
 {
-    public class ProgrammingLanguageCategoryEnum : Enumeration
+    internal class ProgrammingLanguageCategoryEnum : Enumeration
     {
-        public ProgrammingLanguageCategoryEnum(Guid id, string name) : base(id, name)
-        { }
+        public ProgrammingLanguageCategoryEnum(Guid id, string name, int sequenceNum) : base(id, name, sequenceNum)
+        {
+        }
 
         public static IEnumerable<ProgrammingLanguageCategoryEnum> List()
         {
@@ -28,7 +27,7 @@ namespace ByteCodePlatform.Domain.Enums
                 throw new ArgumentNullException(typeOfCourseIsExists);
             }
         }
-    
+
         public static ProgrammingLanguageCategoryEnum FromId(Guid fieldTypeId)
         {
             var request = List().SingleOrDefault(s => s.Id == fieldTypeId);
@@ -41,12 +40,26 @@ namespace ByteCodePlatform.Domain.Enums
             }
         }
 
+        /// <summary>
+        /// Для получения выбранного ЯП из настроек
+        /// </summary>
+        public static string FromSequenceNumber(int sequenceNumber)
+        {
+            var request = List().SingleOrDefault(sn => sn.SequenceNumber == sequenceNumber);
+            if (request != null) return request.Name;
+            {
+                return Csharp.Name;
+            }
+        }
+
         private static readonly ProgrammingLanguageCategoryEnum Csharp = new(
             Guid.Parse("3df167d0-eb51-4b1f-a242-94f6638868fc"),
-            "C#".ToUpperInvariant());
+            "C#".ToUpperInvariant(),
+            0);
 
         private static readonly ProgrammingLanguageCategoryEnum Php = new(
             Guid.Parse("39ccde21-dfbf-4203-a448-3fa132183445"),
-            "PHP".ToUpperInvariant());
+            "PHP".ToUpperInvariant(),
+            1);
     }
 }

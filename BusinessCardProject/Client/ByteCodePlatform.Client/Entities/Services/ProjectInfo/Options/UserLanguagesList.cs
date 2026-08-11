@@ -4,14 +4,12 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo.Options
 {
     internal class UserLanguagesList
     {
-        private int _selectedProgrammingLanguage;
-
-        [JsonInclude] public int ProgrammingLanguage => _selectedProgrammingLanguage;
+        [JsonInclude] public int SelectedProgrammingLanguage { get; private set; }
 
         [JsonConstructor]
         public UserLanguagesList(int programmingLanguage = 0)
         {
-            _selectedProgrammingLanguage = programmingLanguage;
+            SelectedProgrammingLanguage = programmingLanguage;
         }
 
         public UserLanguagesList()
@@ -20,7 +18,7 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo.Options
 
         public void SetProgrammingLanguage(int programmingLanguage)
         {
-            _selectedProgrammingLanguage = programmingLanguage;
+            SelectedProgrammingLanguage = programmingLanguage;
         }
     }
 }

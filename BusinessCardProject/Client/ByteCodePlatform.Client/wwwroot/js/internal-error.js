@@ -29,8 +29,6 @@ function updateCountdownDisplay() {
 }
 
 function cancelAutoReload() {
-    console.log('cancelAutoReload вызвана');
-
     if (countdownInterval) {
         clearInterval(countdownInterval);
         countdownInterval = null;

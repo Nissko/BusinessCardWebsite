@@ -3,6 +3,19 @@
 
 <PageTitle>Темы</PageTitle>
 
-<MudContainer Class="mt-16">
-    <CourseList />
+<MudContainer MaxWidth="MaxWidth.Large" Class="my-6">
+    <MudStack Row="true" Align="Items.Center" Spacing="3" Class="mb-6"
+              Style="border-left: 4px solid var(--mud-palette-primary); padding-left: 16px;">
+        <div>
+            <MudText T="string" Typo="Typo.caption" Color="Color.Secondary"
+                     Style="letter-spacing: 1px; text-transform: uppercase;">
+                Язык изучения
+            </MudText>
+            <MudText T="string" Typo="Typo.h4" Style="letter-spacing: -0.5px; font-weight: bold;">
+                @_currentProgramLanguage
+            </MudText>
+        </div>
+    </MudStack>
+
+    <CourseList/>
 </MudContainer>

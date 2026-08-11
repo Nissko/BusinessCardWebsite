@@ -29,7 +29,7 @@ namespace BusinessCardProject.Client.Widgets.setting.programmig_language_selecto
 
             if (UserSettingService.Settings.ProgrammingLanguage != null)
             {
-                UpdateSwitchesFromCache(UserSettingService.Settings.ProgrammingLanguage.ProgrammingLanguage);
+                UpdateSwitchesFromCache(UserSettingService.Settings.ProgrammingLanguage.SelectedProgrammingLanguage);
             }
         }
 

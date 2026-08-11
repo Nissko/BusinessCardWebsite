@@ -76,7 +76,23 @@
     <script src="js/theme.js"></script>
     <script src="js/internal-error.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
+    <!--TODO: Менять между Dev и Prod средами-->
     <script>navigator.serviceWorker.register('service-worker.js', {updateViaCache: 'none'});</script>
+<!--    <script>-->
+<!--        // при каждом деплое менять эту версию! -->
+<!--        const SW_VERSION = '1.0.0.1';-->
+<!--        const swUrl = `service-worker.js?v=${SW_VERSION}`;-->
+
+<!--        if ('serviceWorker' in navigator) {-->
+<!--            window.addEventListener('load', () => {-->
+<!--                navigator.serviceWorker.register(swUrl, { updateViaCache: 'none' });-->
+<!--            });-->
+<!--        }-->
+
+<!--        navigator.serviceWorker?.addEventListener('controllerchange', () => {-->
+<!--            window.location.reload();-->
+<!--        });-->
+<!--    </script>-->
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 </body>
 
