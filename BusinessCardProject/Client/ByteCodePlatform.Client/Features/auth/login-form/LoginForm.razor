@@ -1,25 +1,25 @@
 ﻿@using Severity = MudBlazor.Severity
 @implements IDisposable
 
-<MudCard Elevation="3" Class="rounded-xl overflow-hidden" 
+<MudCard Elevation="3" Class="rounded-xl overflow-hidden"
          Style="border-top: 4px solid var(--mud-palette-primary); max-width: 520px; margin: auto;">
-    
+
     <MudCardContent Class="pb-2">
         <div class="d-flex justify-start mb-2">
-            <MudButton Variant="Variant.Text" 
-                       Color="Color.Default" 
-                       Size="Size.Small" 
-                       OnClick="@OnHomeClick" 
+            <MudButton Variant="Variant.Text"
+                       Color="Color.Default"
+                       Size="Size.Small"
+                       OnClick="@OnHomeClick"
                        Class="px-2"
                        Style="text-transform: none;">
-                <MudIcon Icon="@Icons.Material.Rounded.Home" Size="Size.Small" Class="mr-1" />
+                <MudIcon Icon="@Icons.Material.Rounded.Home" Size="Size.Small" Class="mr-1"/>
                 На главную
             </MudButton>
         </div>
 
         <div class="d-flex flex-column align-center text-center mb-5">
             <MudAvatar Color="Color.Primary" Variant="Variant.Filled" Class="mb-3" Style="width: 56px; height: 56px;">
-                <MudIcon Icon="@Icons.Material.Rounded.Login" Size="Size.Large" />
+                <MudIcon Icon="@Icons.Material.Rounded.Login" Size="Size.Large"/>
             </MudAvatar>
             <MudText Typo="Typo.h5" Style="font-weight: 700; letter-spacing: -0.5px;">
                 Вход в систему
@@ -35,7 +35,7 @@
                                   Label="Электронная почта"
                                   Variant="Variant.Outlined"
                                   Margin="Margin.Dense"
-                                  @onkeydown="HandleEnter" />
+                                  @onkeydown="HandleEnter"/>
                 </MudItem>
 
                 <MudItem xs="12">
@@ -50,15 +50,15 @@
                                   AdornmentIcon="@_passwordIcon"
                                   IconSize="Size.Medium"
                                   OnAdornmentClick="TogglePasswordVisibility"
-                                  @onkeydown="HandleEnter" />
+                                  @onkeydown="HandleEnter"/>
                 </MudItem>
             </MudGrid>
 
             <div class="d-flex justify-end mt-2">
-                <MudButton Variant="Variant.Text" 
-                           Color="Color.Primary" 
-                           Size="Size.Small" 
-                           Class="px-2" 
+                <MudButton Variant="Variant.Text"
+                           Color="Color.Primary"
+                           Size="Size.Small"
+                           Class="px-2"
                            OnClick="@OnForgotPasswordClick"
                            Style="text-transform: none;">
                     Забыли пароль?
@@ -67,7 +67,7 @@
 
             @if (!string.IsNullOrEmpty(_errorMessage))
             {
-                <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mt-4 rounded-lg" @bind-Visible="_showError">
+                <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mt-4 rounded-lg">
                     @_errorMessage
                 </MudAlert>
             }
@@ -75,23 +75,22 @@
     </MudCardContent>
 
     <MudCardActions Class="flex-column pa-4 pt-0" Style="gap: 12px;">
-        <MudButton Variant="Variant.Filled" 
-                   Color="Color.Primary" 
-                   Size="Size.Large" 
-                   OnClick="HandleLogin" 
-                   Disabled="_isLoading" 
-                   Loading="_isLoading"
-                   Class="rounded-lg" 
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Large"
+                   OnClick="HandleLogin"
+                   Disabled="_isLoading"
+                   Class="rounded-lg"
                    Style="font-weight: 600; letter-spacing: 0.5px;">
             Войти
         </MudButton>
 
-        <MudButton Variant="Variant.Text" 
-                   Color="Color.Default" 
-                   OnClick="@OnRegisterClick" 
+        <MudButton Variant="Variant.Text"
+                   Color="Color.Default"
+                   OnClick="@OnRegisterClick"
                    Class="rounded-lg mt-2"
                    Style="text-transform: none; font-size: 0.95rem; line-height: 1.5;">
-            <MudIcon Icon="@Icons.Material.Rounded.PersonAdd" Size="Size.Small" Class="mr-1" />
+            <MudIcon Icon="@Icons.Material.Rounded.PersonAdd" Size="Size.Small" Class="mr-1"/>
             Нет аккаунта? <span style="color: var(--mud-palette-primary); font-weight: 600; margin-left: 4px;">Зарегистрироваться</span>
         </MudButton>
     </MudCardActions>

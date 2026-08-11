@@ -17,7 +17,6 @@ namespace BusinessCardProject.Client.Features.auth.register_form
         private readonly RegisterModelValidator _validator = new();
 
         private string _errorMessage = "";
-        private bool _showError;
         private bool _isLoading;
 
         private InputType _passwordInputType = InputType.Password;
@@ -30,7 +29,6 @@ namespace BusinessCardProject.Client.Features.auth.register_form
 
         private async Task HandleRegister()
         {
-            _showError = false;
             _errorMessage = "";
 
             await _form.Validate();
@@ -61,20 +59,17 @@ namespace BusinessCardProject.Client.Features.auth.register_form
                 else
                 {
                     _errorMessage = "Ошибка регистрации. Возможно, пользователь с такой почтой или никнеймом уже существует";
-                    _showError = true;
                     Snackbar.Add(_errorMessage, Severity.Error);
                 }
             }
             catch (Exception ex) when (ex.Message.Contains("временно заблокирован"))
             {
                 _errorMessage = ex.Message;
-                _showError = true;
                 Snackbar.Add(_errorMessage, Severity.Error);
             }
             catch (Exception ex)
             {
                 _errorMessage = $"Ошибка подключения: {ex.Message}";
-                _showError = true;
                 Snackbar.Add(_errorMessage, Severity.Error);
             }
             finally

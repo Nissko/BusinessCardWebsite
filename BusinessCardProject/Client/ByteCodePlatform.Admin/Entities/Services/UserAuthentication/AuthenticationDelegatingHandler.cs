@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Headers;
-using AuthorizationService.Proto;
 using Microsoft.AspNetCore.Components;
 
 namespace ByteCodePlatform.Admin.Entities.Services.UserAuthentication
@@ -112,7 +111,7 @@ namespace ByteCodePlatform.Admin.Entities.Services.UserAuthentication
             }
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
             _disposed = true;
         }

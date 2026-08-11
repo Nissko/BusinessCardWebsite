@@ -2,5 +2,5 @@
 
 namespace Dtos.DTO.Auth
 {
-    public record SessionInfo(string TokenHash, Instant CreatedAtUtc, Instant ExpiresAtUtc);
+    public record SessionInfo(string? TokenHash, Instant CreatedAtUtc, Instant ExpiresAtUtc);
 }

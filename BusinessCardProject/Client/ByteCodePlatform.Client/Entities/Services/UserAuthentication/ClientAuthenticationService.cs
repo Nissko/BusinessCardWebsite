@@ -1,5 +1,4 @@
 using AuthorizationService.Proto;
-using BusinessCardProject.Client.Pages;
 using Grpc.Core;
 using Microsoft.AspNetCore.Components;
 
@@ -11,7 +10,6 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
         private readonly AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient _client;
         private readonly NavigationManager _navManager;
         private readonly IServiceProvider _serviceProvider;
-        private bool _disposed;
 
         public ClientAuthenticationService(
             TokenStore tokenStore,
@@ -60,7 +58,7 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
             }
         }
 
-        public async Task<bool> Logout()
+        public async Task Logout()
         {
             var refreshToken = _tokenStore.GetRefreshToken();
             try
@@ -75,8 +73,6 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
                 await _tokenStore.ClearAsync();
                 _navManager.NavigateTo("/login", forceLoad: true);
             }
-
-            return true;
         }
 
         /*TODO: доработать*/
@@ -240,9 +236,6 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
         public string? GetToken() => _tokenStore.GetAccessToken();
         public string? GetAccessToken() => _tokenStore.GetAccessToken();
 
-        public void Dispose()
-        {
-            _disposed = true;
-        }
+        public void Dispose() { }
     }
 }

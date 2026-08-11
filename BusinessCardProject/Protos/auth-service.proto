@@ -2,7 +2,6 @@ syntax = "proto3";
 package AuthGrpcService;
 
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/empty.proto";
 
 option csharp_namespace = "AuthorizationService.Proto";
 

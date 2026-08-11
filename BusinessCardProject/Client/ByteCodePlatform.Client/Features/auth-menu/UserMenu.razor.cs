@@ -58,7 +58,7 @@ namespace BusinessCardProject.Client.Features.auth_menu
 
         private void GoToProfile()
         {
-            NavManager.NavigateTo("/profile");
+            NavManager.NavigateTo("/user-profile");
         }
         
         private void OnLoginClick()

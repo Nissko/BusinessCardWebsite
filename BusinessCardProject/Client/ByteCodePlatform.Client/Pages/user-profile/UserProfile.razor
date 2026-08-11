@@ -1,0 +1,21 @@
+﻿@page "/user-profile"
+@using BusinessCardProject.Client.Widgets.user_profile.active_sessions
+@using BusinessCardProject.Client.Widgets.user_profile.profile_header
+@using BusinessCardProject.Client.Widgets.user_profile.purchase_history
+@using BusinessCardProject.Client.Widgets.user_profile.purchased_courses
+
+<PageTitle>Профиль</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="my-6">
+    @*Информация о пользователе*@
+    <ProfileHeader/>
+
+    @*Информация о активных сессиях*@
+    <ActiveSessions/>
+
+    @*Информация о купленных курсах*@
+    <PurchasedCourses/>
+
+    @*Информация об истории покупок*@
+    <PurchaseHistory/>
+</MudContainer>

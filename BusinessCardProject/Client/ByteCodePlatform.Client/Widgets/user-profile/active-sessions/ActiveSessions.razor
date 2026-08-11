@@ -1,0 +1,68 @@
+﻿<MudPaper Elevation="1" Class="rounded-xl pa-5 mb-6">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-4">
+        <MudIcon Icon="@Icons.Material.Rounded.Devices" Color="Color.Warning"/>
+        <MudText Typo="Typo.h6" Class="font-weight-bold">Активные сессии</MudText>
+    </MudStack>
+
+    @if (_isLoadingSessions)
+    {
+        <div class="d-flex justify-center pa-4">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+        </div>
+    }
+    else if (_sessions.Any())
+    {
+        <MudList T="string" Class="pa-0">
+            @foreach (var session in _sessions)
+            {
+                <MudListItem T="string" Class="rounded-lg mb-2" Style="background-color: var(--mud-palette-background-gray);">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="w-100">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+                            <MudIcon Icon="@Icons.Material.Rounded.Laptop" Color="Color.Info" Size="Size.Medium"/>
+                            <div>
+                                @*TODO: Доработать и сделать информацию об устройстве из User-Agent*@
+                                @*<MudText Typo="Typo.body1" Class="font-weight-medium">
+                                    @session.Device
+                                </MudText>*@
+                                <MudText Typo="Typo.caption">
+                                    Создана: @session.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                                </MudText>
+                            </div>
+                        </MudStack>
+                        
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                            <MudChip T="string" Size="Size.Small" Color="Color.Success" Variant="Variant.Outlined"
+                                     Class="font-weight-medium">
+                                До: @session.ExpiresAt.ToString("dd.MM HH:mm")
+                            </MudChip>
+
+                            <MudTooltip Text="Завершить эту сессию">
+                                <MudIconButton Icon="@Icons.Material.Rounded.Close"
+                                               Color="Color.Error"
+                                               Size="Size.Small"
+                                               OnClick="@(() => RevokeSession(session.TokenId))"/>
+                            </MudTooltip>
+                        </MudStack>
+
+                    </MudStack>
+                </MudListItem>
+            }
+        </MudList>
+
+        <MudDivider Class="my-4"/>
+
+        <MudButton Variant="Variant.Outlined"
+                   Color="Color.Error"
+                   StartIcon="@Icons.Material.Rounded.Logout"
+                   OnClick="@LogoutAll"
+                   Style="border-radius: 8px; text-transform: none; font-weight: 600; width: 100%;">
+            Выйти на всех устройствах
+        </MudButton>
+    }
+    else
+    {
+        <MudAlert Severity="Severity.Info" Class="rounded-lg">
+            Нет активных сессий.
+        </MudAlert>
+    }
+</MudPaper>

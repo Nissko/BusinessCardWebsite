@@ -10,9 +10,8 @@ namespace Services.AuthService.Domain.Entities
             RoleId = roleId;
         }
 
-        public Guid UserId { get; set; }
-        public virtual UserEntity User { get; set; }
-    
-        public Guid RoleId { get; set; }
+        public Guid UserId { get; private set; }
+        public virtual UserEntity User { get; private set; }
+        public Guid RoleId { get; private set; }
     }
 }

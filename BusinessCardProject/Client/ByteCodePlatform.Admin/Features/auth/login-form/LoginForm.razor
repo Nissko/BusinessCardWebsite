@@ -2,7 +2,6 @@
 @implements IDisposable
 
 <MudCard Class="mx-auto rounded-xl" 
-         MaxWidth="500px" 
          Style="padding: 14px;">
     <MudCardContent>
         <MudText Typo="Typo.h5" Class="mb-4">Вход в систему</MudText>
@@ -15,7 +14,6 @@
                           Label="Email"
                           Variant="Variant.Outlined"
                           Margin="Margin.Dense"
-                          Icon="@Icons.Material.Rounded.Email"
                           @onkeydown="HandleEnter"/>
 
             <MudTextField @bind-Value="_model.Password"
@@ -24,15 +22,12 @@
                           Label="Пароль"
                           Variant="Variant.Outlined"
                           Margin="Margin.Dense"
-                          Icon="@Icons.Material.Rounded.Lock"
                           InputType="InputType.Password"
-                          PasswordRevealIcon="@Icons.Material.Rounded.Visibility"
-                          PasswordRevealIconActive="@Icons.Material.Rounded.VisibilityOff"
                           @onkeydown="HandleEnter"/>
 
             @if (!string.IsNullOrEmpty(_errorMessage))
             {
-                <MudAlert Severity="Severity.Error" Class="mt-4" @bind-Visible="_showError">
+                <MudAlert Severity="Severity.Error" Class="mt-4">
                     @_errorMessage
                 </MudAlert>
             }

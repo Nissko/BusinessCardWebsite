@@ -111,7 +111,7 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
             }
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
             _disposed = true;
         }

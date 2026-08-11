@@ -44,7 +44,8 @@ namespace Services.AuthService.Infrastructure.Repositories
                 expiresAtUtc: expiresAt,
                 isRevoked: false
             );
-
+            
+            _context.RefreshToken.RemoveRange(oldTokens.Where(t => t.IsRevoked));
             await _context.RefreshToken.AddAsync(newRefreshToken, ct);
             await _context.SaveChangesAsync(ct);
         }

@@ -21,7 +21,6 @@ namespace BusinessCardProject.Client.Features.auth.login_form
         private readonly LoginModelValidator _validator = new();
 
         private string _errorMessage = "";
-        private bool _showError;
         private bool _isLoading;
 #pragma warning disable CS0414
         private bool _isSettingsLoaded;
@@ -45,7 +44,6 @@ namespace BusinessCardProject.Client.Features.auth.login_form
 
         private async Task HandleLogin()
         {
-            _showError = false;
             _errorMessage = "";
 
             await _form.Validate();
@@ -71,20 +69,17 @@ namespace BusinessCardProject.Client.Features.auth.login_form
                 else
                 {
                     _errorMessage = "Неверный логин или пароль";
-                    _showError = true;
                     Snackbar.Add(_errorMessage, Severity.Error);
                 }
             }
             catch (Exception ex) when (ex.Message.Contains("временно заблокирован"))
             {
                 _errorMessage = ex.Message;
-                _showError = true;
                 Snackbar.Add(_errorMessage, Severity.Error);
             }
             catch (Exception ex)
             {
                 _errorMessage = $"Ошибка подключения: {ex.Message}";
-                _showError = true;
                 Snackbar.Add(_errorMessage, Severity.Error);
             }
             finally

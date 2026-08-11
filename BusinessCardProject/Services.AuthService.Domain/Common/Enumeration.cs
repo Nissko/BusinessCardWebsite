@@ -7,9 +7,9 @@ namespace Services.AuthService.Domain.Common
         : IComparable
     {
         [Required]
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public Guid Id { get; private set; }
+        public Guid Id { get; }
 
         protected Enumeration(Guid id, string name) => (Id, Name) = (id, name);
 
@@ -22,17 +22,27 @@ namespace Services.AuthService.Domain.Common
                 .Select(f => f.GetValue(null))
                 .Cast<T>();
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is not Enumeration otherValue)
             {
                 return false;
             }
 
-            var typeMatches = GetType().Equals(obj.GetType());
+            var typeMatches = GetType() == obj.GetType();
             var valueMatches = Id.Equals(otherValue.Id);
 
             return typeMatches && valueMatches;
+        }
+
+        protected bool Equals(Enumeration other)
+        {
+            return Name == other.Name && Id.Equals(other.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, Id);
         }
 
         public static T FromValue<T>(Guid value) where T : Enumeration
@@ -45,12 +55,9 @@ namespace Services.AuthService.Domain.Common
         {
             var matchingItem = GetAll<T>().FirstOrDefault(predicate);
 
-            if (matchingItem == null)
-                throw new InvalidOperationException($"'{value}' is not a valid {description} in {typeof(T)}");
-
-            return matchingItem;
+            return matchingItem ?? throw new InvalidOperationException($"'{value}' is not a valid {description} in {typeof(T)}");
         }
 
-        public int CompareTo(object other) => Id.CompareTo(((Enumeration)other).Id);
+        public int CompareTo(object? other) => Id.CompareTo(((Enumeration)other!).Id);
     }
 }

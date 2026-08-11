@@ -73,8 +73,7 @@
 
             @if (!string.IsNullOrEmpty(_errorMessage))
             {
-                <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mt-4 rounded-lg"
-                          @bind-Visible="_showError">
+                <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="mt-4 rounded-lg">
                     @_errorMessage
                 </MudAlert>
             }
@@ -87,7 +86,6 @@
                    Size="Size.Large"
                    OnClick="HandleRegister"
                    Disabled="_isLoading"
-                   Loading="_isLoading"
                    Class="rounded-lg"
                    Style="font-weight: 600; letter-spacing: 0.5px;">
             Зарегистрироваться
