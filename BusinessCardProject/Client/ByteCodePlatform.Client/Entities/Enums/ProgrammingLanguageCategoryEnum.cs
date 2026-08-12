@@ -15,25 +15,16 @@
             ];
         }
 
-        /// <summary>
-        /// Для получения выбранного ЯП из настроек
-        /// </summary>
-        public static string GetNameFromSequenceNumber(int sequenceNumber)
-        {
-            var request = List().SingleOrDefault(sn => sn.SequenceNumber == sequenceNumber);
-            if (request != null) return request.Name;
-            {
-                return Csharp.Name;
-            }
-        }
+        // Добавили публичный метод для получения всех тем в UI
+        public static IEnumerable<ProgrammingLanguageCategoryEnum> GetAll() => List();
 
         private static readonly ProgrammingLanguageCategoryEnum Csharp = new(
-            Guid.Parse("3df167d0-eb51-4b1f-a242-94f6638868fc"),
+            Guid.Parse("40e6391f-6e0b-4743-9893-38dbd30cfab2"),
             "C#".ToUpperInvariant(),
             0);
 
         private static readonly ProgrammingLanguageCategoryEnum Php = new(
-            Guid.Parse("39ccde21-dfbf-4203-a448-3fa132183445"),
+            Guid.Parse("ef7a649a-0bc6-4b53-b9f5-f603587f540a"),
             "PHP".ToUpperInvariant(),
             1);
     }

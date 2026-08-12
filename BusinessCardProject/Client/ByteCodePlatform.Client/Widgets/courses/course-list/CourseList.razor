@@ -1,23 +1,175 @@
-﻿@using BusinessCardProject.Client.Widgets.courses.course_card_skeleton
+﻿@using BusinessCardProject.Client.Entities.Enums
+@using BusinessCardProject.Client.Widgets.courses.course_card_skeleton
 @using BusinessCardProject.Client.Widgets.courses.course_card
 
-<MudGrid>
-    @if (_courses != null)
-    {
-        @foreach (var course in _courses)
-        {
-            <MudItem xs="12" sm="6" md="4">
-                <CourseCard Course="course" CourseThemeProperties="_courseThemeProperties" OnCourseSelected="@OnCourseSelected" />
-            </MudItem>
-        }
+<style>
+    .cost-filter .mud-input-control.mud-input-control-boolean-input .mud-radio-group,
+    .cost-filter .mud-radio-group {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        flex-wrap: nowrap !important;
+        gap: 8px;
     }
-    else
+</style>
+
+<MudHidden Breakpoint="Breakpoint.SmAndDown">
+    <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Start">
+        <MudItem Style="flex: 0 0 280px; position: sticky; top: 80px;">
+            @RenderFilters()
+        </MudItem>
+
+        <MudItem Style="flex: 1; min-width: 0;">
+            @RenderCourses()
+        </MudItem>
+    </MudStack>
+</MudHidden>
+
+<MudHidden Breakpoint="Breakpoint.MdAndUp">
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               StartIcon="@Icons.Material.Filled.FilterAlt"
+               OnClick="@(() => _filtersOpen = true)"
+               Class="mb-4"
+               FullWidth="true">
+        Фильтры и сортировка
+    </MudButton>
+
+    <MudDrawer @bind-Open="_filtersOpen" Anchor="Anchor.Left" Elevation="4">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h6">Фильтры</MudText>
+        </MudDrawerHeader>
+
+        @RenderFilters()
+    </MudDrawer>
+
+    @RenderCourses()
+</MudHidden>
+
+@code {
+
+    private RenderFragment RenderFilters() => __builder =>
     {
-        @for (var i = 0; i < _skeletonCount; i++)
-        {
-            <MudItem xs="12" sm="6" md="4">
-                <CourseCardSkeleton />
-            </MudItem>
-        }
-    }
-</MudGrid>
+        <MudPaper Class="pa-4" Elevation="1" Outlined="true" Style="border-radius: 12px;">
+            <MudStack Spacing="4">
+
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mb-2" Style="font-weight: 600;">
+                        Тематика
+                    </MudText>
+
+                    <MudStack Spacing="0">
+                        @foreach (var lang in ProgrammingLanguageCategoryEnum.GetAll())
+                        {
+                            <MudCheckBox T="bool"
+                                         Value="@_selectedLanguageIds.Contains(lang.Id)"
+                                         ValueChanged="@(val => ToggleLanguage(lang.Id, val))"
+                                         Label="@lang.Name"
+                                         Color="Color.Primary"
+                                         Dense="true"/>
+                        }
+                    </MudStack>
+                </div>
+
+                <MudDivider/>
+
+                <div class="cost-filter">
+                    <MudText Typo="Typo.subtitle1" Class="mb-2" Style="font-weight: 600;">
+                        Стоимость
+                    </MudText>
+
+                    <MudRadioGroup T="CostFilter"
+                                   Value="_selectedCostFilter"
+                                   ValueChanged="@(val =>
+                                                 {
+                                                     _selectedCostFilter = val;
+                                                     _loadedCount = PageSize;
+                                                 })">
+                        <MudRadio T="CostFilter" Value="@(CostFilter.Free)" Color="Color.Primary" Dense="true">
+                            Бесплатно
+                        </MudRadio>
+                        <MudRadio T="CostFilter" Value="@(CostFilter.Paid)" Color="Color.Primary" Dense="true">
+                            Платно
+                        </MudRadio>
+                        <MudRadio T="CostFilter" Value="@(CostFilter.All)" Color="Color.Primary" Dense="true">
+                            Все курсы
+                        </MudRadio>
+                    </MudRadioGroup>
+                </div>
+
+                @if (HasActiveFilters)
+                {
+                    <MudButton Variant="Variant.Text"
+                               Color="Color.Error"
+                               OnClick="ClearFilters"
+                               Size="Size.Small">
+                        Сбросить фильтры
+                    </MudButton>
+                }
+
+            </MudStack>
+        </MudPaper>
+    };
+
+    private RenderFragment RenderCourses() => __builder =>
+    {
+        <MudGrid>
+            @if (FilteredCourses is not null && FilteredCourses.Any())
+            {
+                @foreach (var course in FilteredCourses)
+                {
+                    <MudItem xs="12" sm="6" md="6" lg="4">
+                        <CourseCard Course="course"
+                                    CourseThemeProperties="_courseThemeProperties"
+                                    OnCourseSelected="@OnCourseSelected"/>
+                    </MudItem>
+                }
+                
+                @if (HasMoreCourses)
+                {
+                    <MudItem xs="12" Class="mt-6 mb-4" Style="display: flex !important; justify-content: center !important;">
+                        <MudButton Variant="Variant.Outlined"
+                                   Color="Color.Primary"
+                                   OnClick="LoadMoreCourses"
+                                   Size="Size.Large"
+                                   StartIcon="@Icons.Material.Filled.ExpandMore"
+                                   Style="border-radius: 12px; text-transform: none; font-weight: 600; min-width: 220px; height: 48px;">
+                            Загрузить ещё
+                        </MudButton>
+                    </MudItem>
+                }
+            }
+            else if (FilteredCourses is not null)
+            {
+                <MudItem xs="12">
+                    <MudPaper Class="pa-8 d-flex flex-column align-center"
+                              Elevation="0"
+                              Style="background-color: var(--mud-palette-surface); border-radius: 12px;">
+                        <MudIcon Icon="@Icons.Material.Filled.SearchOff"
+                                 Size="Size.Large"
+                                 Color="Color.Secondary"
+                                 Class="mb-2"/>
+
+                        <MudText Typo="Typo.h6" Color="Color.Secondary">
+                            Курсы не найдены
+                        </MudText>
+
+                        <MudText Typo="Typo.body2" Color="Color.Secondary" Align="Align.Center">
+                            Попробуйте изменить параметры фильтрации
+                        </MudText>
+                    </MudPaper>
+                </MudItem>
+            }
+            else
+            {
+                @for (var i = 0; i < _skeletonCount; i++)
+                {
+                    <MudItem xs="12" sm="6" md="6" lg="4">
+                        <CourseCardSkeleton/>
+                    </MudItem>
+                }
+            }
+        </MudGrid>
+    };
+
+}

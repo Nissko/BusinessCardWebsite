@@ -5,14 +5,14 @@ namespace BusinessCardProject.Client.Entities.Enums
 {
     internal abstract class Enumeration(Guid id, string name, int sequenceNum) : IComparable
     {
-        [Required] protected string Name { get; } = name;
+        [Required] public string Name { get; } = name;
 
-        protected Guid Id { get; } = id;
+        public Guid Id { get; } = id;
 
         /// <summary>
         /// Порядковый номер
         /// </summary>
-        protected int SequenceNumber { get; } = sequenceNum;
+        public int SequenceNumber { get; } = sequenceNum;
 
         public override string ToString() => Name;
 
@@ -36,7 +36,7 @@ namespace BusinessCardProject.Client.Entities.Enums
             return typeMatches && valueMatches;
         }
 
-        protected bool Equals(Enumeration other)
+        public bool Equals(Enumeration other)
         {
             return Name == other.Name && Id.Equals(other.Id) && SequenceNumber == other.SequenceNumber;
         }

@@ -17,12 +17,5 @@ namespace BusinessCardProject.Client.Widgets.courses.course_card
                 await OnCourseSelected.InvokeAsync(themeId);
             }
         }
-
-        /*private string GetFooterNote()
-        {
-            return Course.IsFree
-                ? "* курс может включать в себя платный доп. контент"
-                : "* доступ предоставляется навсегда";
-        }*/
     }
 }

@@ -23,7 +23,5 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo.Entity
         public DateTime? UpdateTime { get; set; } = null;
 
         public UserSettingsList? VideoPlatform { get; set; } = null;
-        
-        public UserLanguagesList? ProgrammingLanguage { get; set; } = null;
     }
 }

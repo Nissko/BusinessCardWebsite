@@ -1,5 +1,4 @@
 ﻿@page "/user-setting"
-@using BusinessCardProject.Client.Widgets.setting.programmig_language_selector
 @using BusinessCardProject.Client.Widgets.setting.video_platform_selector
 
 <PageTitle>Настройки</PageTitle>
@@ -23,24 +22,4 @@
             </MudItem>
         </MudGrid>
     </MudPaper>
-
-    <MudPaper Elevation="2" Class="rounded-xl pa-5 mb-6">
-        <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-4">
-            <MudIcon Icon="@Icons.Material.Rounded.Code" Color="Color.Secondary" />
-            <MudText Typo="Typo.h6" Class="font-weight-bold">
-                Язык изучения
-            </MudText>
-        </MudStack>
-        
-        <MudText Typo="Typo.body2" Class="mb-4">
-            Выберите язык программирования или предмет, который вы хотите изучать
-        </MudText>
-
-        <MudGrid Spacing="3">
-            <MudItem xs="12" sm="4">
-                <ProgrammingLanguageSelector />
-            </MudItem>
-        </MudGrid>
-    </MudPaper>
-
 </MudContainer>

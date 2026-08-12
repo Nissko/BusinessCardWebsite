@@ -1,20 +1,11 @@
 ﻿@page "/courses"
 @using BusinessCardProject.Client.Widgets.courses.course_list
 
-<PageTitle>Темы</PageTitle>
+<PageTitle>Каталог курсов</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="my-6">
-    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3" Class="mb-6"
-              Style="border-left: 4px solid var(--mud-palette-primary); padding-left: 16px;">
-        <div>
-            <MudText Typo="Typo.caption" Color="Color.Secondary"
-                     Style="letter-spacing: 1px; text-transform: uppercase;">
-                Язык изучения
-            </MudText>
-            <MudText Typo="Typo.h4" Style="letter-spacing: -0.5px; font-weight: bold;">
-                @_currentProgramLanguage
-            </MudText>
-        </div>
+    <MudStack Spacing="1" Class="mb-6">
+        <MudText Typo="Typo.h3" Style="font-weight: 800; letter-spacing: -1px;">Каталог курсов</MudText>
     </MudStack>
 
     <CourseList/>

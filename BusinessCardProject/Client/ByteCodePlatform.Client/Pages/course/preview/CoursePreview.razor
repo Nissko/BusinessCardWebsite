@@ -6,7 +6,7 @@
 @inject CourseService.CourseServiceClient CourseGrpc
 
 <PageTitle>
-    @(CourseThemeInfo != null ? $"Курс - {CourseThemeInfo.Name}" : "Курс")
+    @(CourseThemeInfo != null ? $"{CourseThemeInfo.Name}" : "Курс")
 </PageTitle>
 
 @if (CourseThemeInfo != null)
