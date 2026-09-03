@@ -19,7 +19,8 @@ namespace Services.AuthService.Domain.Extensions
                 e.CreatedAt,
                 e.UpdatedAt ?? null,
                 e.DeletedAt ?? null,
-                e.VerifyMail
+                e.VerifyMail,
+                e.AvatarId
             );
         }
 
@@ -35,7 +36,8 @@ namespace Services.AuthService.Domain.Extensions
                 e.CreatedAt,
                 e.UpdatedAt ?? null,
                 e.DeletedAt ?? null,
-                e.VerifyMail
+                e.VerifyMail,
+                e.AvatarId
             )).ToList();
         }
         

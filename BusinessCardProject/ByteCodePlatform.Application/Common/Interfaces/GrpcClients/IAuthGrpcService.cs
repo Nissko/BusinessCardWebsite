@@ -15,5 +15,10 @@ namespace ByteCodePlatform.Application.Common.Interfaces.GrpcClients
         /// Получить информацию о пользователе из сервиса аутентификации
         /// </summary>
         Task<PaginationDto<UserDto>> GetUsersInfoFromSearch(GetUsersSearchRequest request);
+        
+        /// <summary>
+        /// Получение основных данных о пользователе для заполнения записи об авторе
+        /// </summary>
+        Task<AuthorUserInfo> GetAuthorUserInfo(Guid userId);
     }
 }

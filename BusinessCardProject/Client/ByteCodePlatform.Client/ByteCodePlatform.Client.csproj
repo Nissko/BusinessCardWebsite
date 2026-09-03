@@ -41,6 +41,14 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+    <Content Update="wwwroot\appsettings.Development.json" Condition="'$(Configuration)' == 'Debug'">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <!--Нужно чтобы в прод среде не было настроек Dev среды-->
+    <Content Remove="wwwroot\appsettings.Development.json" Condition="'$(Configuration)' == 'Release'" />
+    <Content Update="wwwroot\appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   
   <ItemGroup>
@@ -48,6 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
     <Protobuf Include="Entities\Protos\course-service.proto">
+      <Generator>MSBuild:Compile</Generator>
+    </Protobuf>
+    <Protobuf Include="Entities\Protos\files-service.proto">
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
     <Protobuf Include="Entities\Protos\user-service.proto">

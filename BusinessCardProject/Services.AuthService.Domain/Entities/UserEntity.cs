@@ -12,7 +12,8 @@ namespace Services.AuthService.Domain.Entities
         }
         
         public UserEntity(string surname, string name, string nickName, string email, string passwordHash,
-            Instant createdAt, bool isAuthor = false, Instant? updatedAt = null, Instant? deletedAt = null)
+            Instant createdAt, bool isAuthor = false, Instant? updatedAt = null, Instant? deletedAt = null, 
+            string avatarId = "")
             : this()
         {
             Surname = surname;
@@ -25,6 +26,7 @@ namespace Services.AuthService.Domain.Entities
             UpdatedAt = updatedAt;
             DeletedAt = deletedAt;
             VerifyMail = false;
+            AvatarId = avatarId;
         }
 
         /// <summary>
@@ -41,6 +43,11 @@ namespace Services.AuthService.Domain.Entities
         /// Никнейм
         /// </summary>
         public string NickName { get; private set; }
+        
+        /// <summary>
+        /// Идентификатор аватара
+        /// </summary>
+        public string AvatarId { get; private set; }
 
         /// <summary>
         /// Почта
@@ -124,6 +131,11 @@ namespace Services.AuthService.Domain.Entities
         {
             PasswordHash = passwordHash;
             UpdatedAt = SetUpdatedAt();
+        }
+        
+        public void UpdateAvatar(string avatarId)
+        {
+            AvatarId = avatarId;
         }
     }
 }

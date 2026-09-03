@@ -1,4 +1,5 @@
-﻿using CourseService.Proto;
+﻿using BusinessCardProject.Client.Entities.Services.Mains;
+using CourseService.Proto;
 using Microsoft.AspNetCore.Components;
 
 namespace BusinessCardProject.Client.Widgets.courses.theme.course_hero
@@ -7,8 +8,6 @@ namespace BusinessCardProject.Client.Widgets.courses.theme.course_hero
     {
         [Parameter, EditorRequired]
         public CourseThemeInfoResponse Course { get; set; } = null!;
-
-        private string PreviewUrl => $"https://localhost:5036/FilesServiceGrpcService/{Course.AvatarUrl}";
-        //private string PreviewUrl => $"https://it-bytecode.splinterkeenetic.netcraze.club/FilesServiceGrpcService/{Course.AvatarUrl}";
+        [Inject] private GetLinksService GetLinksService { get; set; } = null!;
     }
 }

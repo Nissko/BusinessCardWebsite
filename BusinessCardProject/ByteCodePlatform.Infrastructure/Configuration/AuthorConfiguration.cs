@@ -10,6 +10,26 @@ namespace ByteCodePlatform.Infrastructure.Configuration
         {
             builder.ToTable("Authors");
             builder.HasKey(x => x.Id);
+            
+            builder.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasComment("Имя");
+
+            builder.Property(x => x.Surname)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasComment("Фамилия");
+
+            builder.Property(x => x.AboutUs)
+                .IsRequired()
+                .HasMaxLength(2000)
+                .HasComment("Об авторе");
+
+            builder.Property(x => x.AvatarId)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasComment("Аватар");
 
             builder.Property(x => x.CreatedAt)
                 .IsRequired()

@@ -12,5 +12,6 @@ namespace Dtos.DTO.User
         Instant CreatedAt,
         Instant? UpdatedAt,
         Instant? DeletedAt,
-        bool IsVerified);
+        bool IsVerified,
+        string UserAvatar);
 }

@@ -79,5 +79,19 @@ namespace ByteCodePlatform.API.Services
                 throw new RpcException(new(StatusCode.Aborted, ex.Message));
             }
         }
+
+        [Authorize]
+        public override async Task<ChangeAuthorAvatarResponse> ChangeAuthorAvatar(ChangeAuthorAvatarRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var isUpdateAuthorAvatar = await _userService.UpdateAuthorAvatar(request.UserId.ToGuid(), request.AvatarId);
+                return new ChangeAuthorAvatarResponse { Result = isUpdateAuthorAvatar };
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
     }
 }

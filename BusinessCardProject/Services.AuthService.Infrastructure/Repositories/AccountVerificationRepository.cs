@@ -25,8 +25,7 @@ namespace Services.AuthService.Infrastructure.Repositories
             _clientUrl = configurationSetting.GetValue<string>("FrontendLink:Url") ??
                          "https://it-bytecode.splinterkeenetic.netcraze.club";
         }
-        
-        /*TODO: Сделать интеграцию с рассылкой уведомлений*/
+
         public async Task<bool> CreateRecord(Guid userId)
         {
             var user = await _context.User.FindAsync([userId]) ?? throw new Exception("Пользователь не найден");
@@ -98,7 +97,6 @@ namespace Services.AuthService.Infrastructure.Repositories
         /// </summary>
         private Task<bool> SendMailNotification(List<string> emailRecipients, string message, string templateName)
         {
-            /*TODO: Переделать название шаблона*/
             return _mediator.Send(new SendMailNotificationCommand(subject: EmailSubject,
                 body: message,
                 to: emailRecipients,

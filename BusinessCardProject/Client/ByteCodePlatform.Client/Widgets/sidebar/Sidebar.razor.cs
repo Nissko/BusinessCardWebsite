@@ -1,4 +1,4 @@
-﻿using BusinessCardProject.Client.Entities.Services.ProjectInfo;
+﻿using BusinessCardProject.Client.Entities.Services.Mains;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 

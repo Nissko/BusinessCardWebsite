@@ -7,6 +7,7 @@ using Requests.User;
 using Services.AuthService.Application.Application.Command;
 using Services.AuthService.Application.Application.Extensions;
 using Services.AuthService.Application.Common.Interfaces;
+using Services.AuthService.Application.Common.Interfaces.GrpcClients;
 using Services.AuthService.Domain.Enums;
 using Services.AuthService.Presentation.ProtoMappers.Users;
 using CreateUserRequest = AuthorizationService.Proto.CreateUserRequest;
@@ -21,6 +22,7 @@ namespace Services.AuthService.Presentation.Services
         private readonly IMediator _mediator;
         private readonly IRefreshToken _refreshToken;
         private readonly IUserRepository _users;
+        private readonly ICoreGrpcServiceClient _coreGrpcService;
         private readonly IAccountVerificationRepository _accountVerifications;
         private readonly IFailedLoginAttemptRepository _failedLoginAttempts;
         private readonly IUserSettingsRepository _userSettings;
@@ -31,7 +33,7 @@ namespace Services.AuthService.Presentation.Services
         public AuthService(IMediator mediator, IRefreshToken refreshToken, IUserRepository users,
             IAccountVerificationRepository accountVerifications, ILogger<AuthService> logger,
             IFailedLoginAttemptRepository failedLoginAttempts,
-            IUserSettingsRepository userSettings)
+            IUserSettingsRepository userSettings, ICoreGrpcServiceClient coreGrpcService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _refreshToken = refreshToken ?? throw new ArgumentNullException(nameof(refreshToken));
@@ -41,8 +43,9 @@ namespace Services.AuthService.Presentation.Services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _failedLoginAttempts = failedLoginAttempts ?? throw new ArgumentNullException(nameof(failedLoginAttempts));
             _userSettings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
+            _coreGrpcService = coreGrpcService ?? throw new ArgumentNullException(nameof(coreGrpcService));
         }
-
+        
         [AllowAnonymous]
         public override async Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
         {
@@ -84,9 +87,10 @@ namespace Services.AuthService.Presentation.Services
 
                 var accessToken = await _mediator.Send(new TokenGenerateAccessTokenCommand(user));
                 var refreshToken = await _mediator.Send(new TokenGenerateRefreshTokenCommand());
+                var userAgent = await _mediator.Send(new GetUserAgentCommand(context));
 
                 await _refreshToken.Save(refreshToken, user.Id.ToString(),
-                    SystemClock.Instance.GetCurrentInstant() + Duration.FromDays(1));
+                    SystemClock.Instance.GetCurrentInstant() + Duration.FromDays(1), userAgent);
 
                 // Логирование действий пользователя
                 await _mediator.Send(new CreateAuditLogCommand(user.Id, nameof(Login), context));
@@ -124,9 +128,10 @@ namespace Services.AuthService.Presentation.Services
 
                 var newAccessToken = await _mediator.Send(new TokenGenerateAccessTokenCommand(user));
                 var newRefreshToken = await _mediator.Send(new TokenGenerateRefreshTokenCommand());
+                var userAgent = await _mediator.Send(new GetUserAgentCommand(context));
 
                 await _refreshToken.Save(newRefreshToken, user.Id.ToString(),
-                    SystemClock.Instance.GetCurrentInstant() + Duration.FromDays(1));
+                    SystemClock.Instance.GetCurrentInstant() + Duration.FromDays(1), userAgent);
 
                 return new RefreshTokenResponse
                 {
@@ -327,7 +332,7 @@ namespace Services.AuthService.Presentation.Services
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, "Ошибка при отправке письма сброса пароля для {Email}", request.Email);
-                return new UserBooleanResponse { Success = true };
+                return new UserBooleanResponse { Success = false };
             }
         }
 
@@ -383,7 +388,8 @@ namespace Services.AuthService.Presentation.Services
                     {
                         TokenId = s.TokenHash,
                         CreatedAt = s.CreatedAtUtc.ToTimestamp(),
-                        ExpiresAt = s.ExpiresAtUtc.ToTimestamp()
+                        ExpiresAt = s.ExpiresAtUtc.ToTimestamp(),
+                        UserAgent = s.UserAgent
                     });
                 }
 
@@ -404,7 +410,11 @@ namespace Services.AuthService.Presentation.Services
             {
                 var tokenInfo =
                     await _refreshToken.CheckOfExpireRefreshToken(request.RefreshToken, context.CancellationToken);
-                return new ValidateRefreshTokenResponse { IsValid = tokenInfo != null };
+                return new ValidateRefreshTokenResponse
+                {
+                    IsValid = tokenInfo != null,
+                    IsRevoked = tokenInfo != null && tokenInfo.IsRevoked
+                };
             }
             catch (Exception ex)
             {
@@ -441,7 +451,8 @@ namespace Services.AuthService.Presentation.Services
                     CreatedAt = user.CreatedAt.ToTimestamp(),
                     UpdatedAt = user.UpdatedAt?.ToTimestamp() ?? null,
                     DeletedAt = user.DeletedAt?.ToTimestamp() ?? null,
-                    IsVerified = user.IsVerified
+                    IsVerified = user.IsVerified,
+                    UserAvatar = user.UserAvatar
                 };
             }
             catch (RpcException)
@@ -519,6 +530,39 @@ namespace Services.AuthService.Presentation.Services
             {
                 _logger.LogError(ex, "Ошибка в методе {MethodName}", nameof(SaveUserSettings));
                 throw new RpcException(new Status(StatusCode.Internal, "Произошла внутренняя ошибка"));
+            }
+        }
+
+        [Authorize]
+        public override async Task<UpdateUserAvatarResponse> UpdateUserAvatar(UpdateUserAvatarRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var userIdString = context.GetUserIdFromToken();
+                if (string.IsNullOrEmpty(userIdString))
+                    throw new RpcException(new Status(StatusCode.Unauthenticated, "Пользователь не авторизован"));
+
+                if (!Guid.TryParse(userIdString, out var userId))
+                    throw new RpcException(new Status(StatusCode.InvalidArgument,
+                        "Неправильный формат UserId из токена"));
+
+                var user = await _users.GetUser(userId);
+
+                /*обновляем аватар в auth-service*/
+                var updateUserAvatar = await _users.UpdateUserAvatar(user.Id, request.AvatarId);
+
+                if (user.IsAuthor)
+                {
+                    var updateUserAvatarCore = await _coreGrpcService.UpdateUserAuthorAvatar(userId, request.AvatarId);
+                    return new UpdateUserAvatarResponse { Result = updateUserAvatarCore && updateUserAvatar };
+                }
+                
+                return new UpdateUserAvatarResponse { Result = updateUserAvatar};
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Ошибка при изменении аватара пользователя: {AvatarId}", request.AvatarId);
+                return new UpdateUserAvatarResponse { Result = false };
             }
         }
     }

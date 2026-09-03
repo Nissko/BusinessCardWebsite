@@ -201,19 +201,22 @@ namespace Services.AuthService.Infrastructure.Persistence.Migrations.postgre
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
+                    b.Property<string>("UserAgent")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("TokenHash");
 
-                    b.HasIndex("ExpiresAtUtc")
-                        .HasDatabaseName("IX_RefreshTokens_ExpiresAtUtc");
+                    b.HasIndex("ExpiresAtUtc");
 
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("IX_RefreshTokens_UserId");
+                    b.HasIndex("UserId");
 
-                    b.HasIndex("UserId", "IsRevoked")
-                        .HasDatabaseName("IX_RefreshTokens_UserId_IsRevoked");
+                    b.HasIndex("UserId", "IsRevoked");
+
+                    b.HasIndex("UserId", "UserAgent");
 
                     b.ToTable("RefreshTokens", "bytecode_auth");
                 });
@@ -223,6 +226,12 @@ namespace Services.AuthService.Infrastructure.Persistence.Migrations.postgre
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<string>("AvatarId")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasComment("Идентификатор аватара");
 
                     b.Property<Instant>("CreatedAt")
                         .HasColumnType("timestamp with time zone")

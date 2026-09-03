@@ -24,12 +24,12 @@
         </MudButton>
 
         /*TODO: Включить после доработки*/
-        <MudTooltip Text="В разработке"
+        @*<MudTooltip Text="В разработке"
                     Placement="Placement.Bottom">
             <MudButton Disabled="true" Color="Color.Info" Href="/project-news">
                 Новости
             </MudButton>
-        </MudTooltip>
+        </MudTooltip>*@
 
         <MudButton Color="Color.Info" Href="/donation-project">
             Поддержать
@@ -38,7 +38,6 @@
 
     <MudSpacer/>
 
-    @*TODO: добавить ThemeToggle в настройки*@
     @if (_showHeaderButtons)
     {
         <ThemeToggle/>

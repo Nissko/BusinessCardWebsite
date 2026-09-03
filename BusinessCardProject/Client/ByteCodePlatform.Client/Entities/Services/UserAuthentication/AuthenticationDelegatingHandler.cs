@@ -28,10 +28,15 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
 
             var tokenStore = _serviceProvider.GetRequiredService<TokenStore>();
             var navManager = _serviceProvider.GetRequiredService<NavigationManager>();
+            var clientAuthService = _serviceProvider.GetRequiredService<ClientAuthenticationService>();
 
             var token = tokenStore.GetAccessToken();
+            
             if (!string.IsNullOrEmpty(token))
             {
+                //проверка токена на преждевременное истечение
+                await clientAuthService.ValidateTokenRegular();
+                
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
 

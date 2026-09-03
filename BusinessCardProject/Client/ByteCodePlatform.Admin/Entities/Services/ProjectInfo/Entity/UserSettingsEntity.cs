@@ -11,19 +11,23 @@ namespace ByteCodePlatform.Admin.Entities.Services.ProjectInfo.Entity
 
         /// <summary>
         /// Открытие меню
-        /// TODO:Пересмотреть реализацию
-        /// <remarks>Можно не использовать?</remarks>
+        /// <remarks>Можно не использовать?</remarks>F
         /// </summary>
         public bool IsDrawerOpen { get; set; }
-
+        
         /// <summary>
-        /// Дата получения
-        /// TODO: Сделать реализацию. Что если Null, то должны делать Load(), а затем заполнять UpdateTime
+        /// 
         /// </summary>
         public DateTime? UpdateTime { get; set; } = null;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public UserSettingsList? VideoPlatform { get; set; } = null;
         
+        /// <summary>
+        /// 
+        /// </summary>
         public UserLanguagesList? ProgrammingLanguage { get; set; } = null;
     }
 }

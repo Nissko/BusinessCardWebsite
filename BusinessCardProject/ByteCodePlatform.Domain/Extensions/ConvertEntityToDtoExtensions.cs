@@ -32,12 +32,12 @@ namespace ByteCodePlatform.Domain.Extensions
 
         public static UserAuthorDto GetUserAuthorDto(this AuthorEntity e)
         {
-            return new UserAuthorDto(e.Id, e.User.GetUserCoreDto());
+            return new UserAuthorDto(e.Id, e.User.GetUserCoreDto(), e.Name, e.Surname, e.AboutUs, e.AvatarId);
         }
 
         public static List<UserAuthorDto> GetUserAuthorDto(this List<AuthorEntity> en)
         {
-            return en.Select(e => new UserAuthorDto(e.Id, e.User.GetUserCoreDto())).ToList();
+            return en.Select(e => new UserAuthorDto(e.Id, e.User.GetUserCoreDto(), e.Name, e.Surname, e.AboutUs, e.AvatarId)).ToList();
         }
 
         #endregion
@@ -110,7 +110,9 @@ namespace ByteCodePlatform.Domain.Extensions
                 e.OldPrice,
                 e.CreatedAt,
                 e.UpdatedAt ?? null,
-                new(e.AuthorId, e.Author.User.GetUserCoreDto()),
+                new(e.AuthorId, e.Author.User.GetUserCoreDto(),
+                    e.Author.Name, e.Author.Surname,
+                    e.Author.AboutUs, e.Author.AvatarId),
                 e.ProgrammingLanguageCategory.GetLightProgrammingLanguageDto())
             ).ToList();
         }

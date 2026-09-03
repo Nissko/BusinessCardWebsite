@@ -163,11 +163,11 @@ namespace BusinessCardProject.Client.Widgets.courses.course_list
         {
             return breakpoint switch
             {
-                Breakpoint.Xxl => 99,
-                Breakpoint.Xl or Breakpoint.Lg or Breakpoint.Md => 99,
-                Breakpoint.Sm => 99,
-                Breakpoint.Xs => 99,
-                _ => 99
+                Breakpoint.Xxl => 12,
+                Breakpoint.Xl or Breakpoint.Lg or Breakpoint.Md => 9,
+                Breakpoint.Sm => 6,
+                Breakpoint.Xs => 4,
+                _ => 9
             };
         }
 

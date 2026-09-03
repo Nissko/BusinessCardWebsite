@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using AuthorizationService.Proto;
-using BusinessCardProject.Client.Entities.Services.ProjectInfo.Entity;
+using BusinessCardProject.Client.Entities.Services.Mains.Entity;
 using BusinessCardProject.Client.Entities.Services.UserAuthentication;
 using Microsoft.JSInterop;
 
-namespace BusinessCardProject.Client.Entities.Services.ProjectInfo
+namespace BusinessCardProject.Client.Entities.Services.Mains
 {
     internal class UserSettingService : IDisposable
     {

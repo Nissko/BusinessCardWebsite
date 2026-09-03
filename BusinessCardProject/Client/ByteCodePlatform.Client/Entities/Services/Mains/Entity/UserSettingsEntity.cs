@@ -1,6 +1,6 @@
-﻿using BusinessCardProject.Client.Entities.Services.ProjectInfo.Options;
+﻿using BusinessCardProject.Client.Entities.Services.Mains.Options;
 
-namespace BusinessCardProject.Client.Entities.Services.ProjectInfo.Entity
+namespace BusinessCardProject.Client.Entities.Services.Mains.Entity
 {
     internal class UserSettingsEntity
     {
@@ -11,14 +11,12 @@ namespace BusinessCardProject.Client.Entities.Services.ProjectInfo.Entity
 
         /// <summary>
         /// Открытие меню
-        /// TODO:Пересмотреть реализацию
         /// <remarks>Можно не использовать?</remarks>
         /// </summary>
         public bool IsDrawerOpen { get; set; }
 
         /// <summary>
         /// Дата получения
-        /// TODO: Сделать реализацию. Что если Null, то должны делать Load(), а затем заполнять UpdateTime
         /// </summary>
         public DateTime? UpdateTime { get; set; } = null;
 

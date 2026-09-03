@@ -18,7 +18,7 @@ namespace Services.AuthService.Infrastructure.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task Save(string refreshToken, string userId, Instant expiresAt, CancellationToken ct = default)
+        public async Task Save(string refreshToken, string userId, Instant expiresAt, string? userAgent, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(refreshToken))
                 throw new ArgumentException("Refresh token cannot be empty", nameof(refreshToken));
@@ -27,25 +27,33 @@ namespace Services.AuthService.Infrastructure.Repositories
             if (expiresAt <= SystemClock.Instance.GetCurrentInstant())
                 throw new ArgumentException("Expiration date must be in the future", nameof(expiresAt));
 
-            /*TODO: Борьба с мульти-устройствами --> возможно надо убрать*/
-            var oldTokens = await _context.RefreshToken
-                .Where(x => x.UserId == Guid.Parse(userId)).ToListAsync(cancellationToken: ct);
-            
-            foreach (var oldToken in oldTokens) oldToken.ChangeIsRevoked(true);
+            var userIdGuid = Guid.Parse(userId);
+            if (!string.IsNullOrWhiteSpace(userAgent))
             {
-                _context.RefreshToken.UpdateRange(oldTokens);
+                // Ищем токены по UserAgent, если находим, то отменяем и создаем новый
+                var oldDeviceToken = await _context.RefreshToken
+                    .FirstOrDefaultAsync(x => x.UserId == userIdGuid 
+                        && x.UserAgent == userAgent 
+                        && !x.IsRevoked 
+                        && x.ExpiresAtUtc > SystemClock.Instance.GetCurrentInstant(), ct);
+                
+                if (oldDeviceToken != null)
+                {
+                    oldDeviceToken.ChangeIsRevoked(true);
+                    _context.RefreshToken.Update(oldDeviceToken);
+                }
             }
             
             var tokenHash = HashToken(refreshToken);
             var newRefreshToken = new RefreshTokenEntity(
                 tokenHash: tokenHash,
-                userId: Guid.Parse(userId),
+                userId: userIdGuid,
                 createdAtUtc: SystemClock.Instance.GetCurrentInstant(),
                 expiresAtUtc: expiresAt,
-                isRevoked: false
+                isRevoked: false,
+                userAgent: userAgent
             );
             
-            _context.RefreshToken.RemoveRange(oldTokens.Where(t => t.IsRevoked));
             await _context.RefreshToken.AddAsync(newRefreshToken, ct);
             await _context.SaveChangesAsync(ct);
         }
@@ -102,12 +110,11 @@ namespace Services.AuthService.Infrastructure.Repositories
         {
             if (string.IsNullOrWhiteSpace(refreshToken)) return;
 
-            var tokenHash = HashToken(refreshToken);
-            var refreshTokenEntity = await _context.RefreshToken.FindAsync([tokenHash], cancellationToken: ct);
-
-            if (refreshTokenEntity != null && !refreshTokenEntity.IsRevoked)
+            var refreshTokenDb = await _context.RefreshToken.FindAsync([refreshToken], cancellationToken: ct);
+            
+            if (refreshTokenDb != null && !refreshTokenDb.IsRevoked)
             {
-                refreshTokenEntity.ChangeIsRevoked(true);
+                refreshTokenDb.ChangeIsRevoked(true);
                 await _context.SaveChangesAsync(ct);
             }
         }
@@ -137,7 +144,7 @@ namespace Services.AuthService.Infrastructure.Repositories
                 .Where(t => t.UserId == user.Id && !t.IsRevoked && t.ExpiresAtUtc > dateTimeNow)
                 .OrderByDescending(t => t.CreatedAtUtc)
                 .Take(limit)
-                .Select(t => new SessionInfo(t.TokenHash, t.CreatedAtUtc, t.ExpiresAtUtc))
+                .Select(t => new SessionInfo(t.TokenHash, t.CreatedAtUtc, t.ExpiresAtUtc, t.UserAgent))
                 .ToListAsync(ct);
         }
 

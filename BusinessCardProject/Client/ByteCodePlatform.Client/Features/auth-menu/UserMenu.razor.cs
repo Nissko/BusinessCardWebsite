@@ -1,4 +1,5 @@
 ﻿using AuthorizationService.Proto;
+using BusinessCardProject.Client.Entities.Services.Mains;
 using BusinessCardProject.Client.Entities.Services.UserAuthentication;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -10,26 +11,49 @@ namespace BusinessCardProject.Client.Features.auth_menu
         [Inject] private ClientAuthenticationService ClientAuthentication { get; set; } = null!;
         [Inject] private NavigationManager NavManager { get; set; } = null!;
         [Inject] private AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient GrpcClient { get; set; } = null!;
+        [Inject] private GetLinksService GetLinksService { get; set; } = null!;
+        [Inject] private UserProfileService UserProfileService { get; set; } = null!;
 
         private bool IsAuthenticated { get; set; }
         private string UserName { get; set; } = string.Empty;
         private string UserEmail { get; set; } = string.Empty;
         private string UserAvatar { get; set; } = string.Empty;
-        
-        private MudMenu? _menu;
 
-        protected override void OnInitialized()
+        private MudMenu? _menu;
+        private int _cntLoadUserInfo;
+
+        protected override async Task OnInitializedAsync()
         {
-            IsAuthenticated = !string.IsNullOrEmpty(ClientAuthentication.GetToken());
+            IsAuthenticated = !string.IsNullOrEmpty(ClientAuthentication.GetAccessToken());
+            UserProfileService.OnUserProfileChanged += RefreshUserAvatarEvent;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender && IsAuthenticated)
             {
-                await LoadUserInfo();
+                if (UserProfileService.UserInCache != null)
+                {
+                    UpdateUserInfoFromResponse(UserProfileService.UserInCache);
+                }
+                else
+                {
+                    await LoadUserInfo();
+                }
+
                 StateHasChanged();
             }
+        }
+
+        private async Task RefreshUserAvatarEvent()
+        {
+            if (!IsAuthenticated) return;
+
+            var response = await GrpcClient.GetCurrentUserAsync(new GetCurrentUserRequest { });
+            UserProfileService.SetUserInCache(response);
+
+            UpdateUserInfoFromResponse(response);
+            StateHasChanged();
         }
 
         private async Task LoadUserInfo()
@@ -46,17 +70,29 @@ namespace BusinessCardProject.Client.Features.auth_menu
 
                 if (!string.IsNullOrEmpty(response.UserId))
                 {
-                    var hash = Convert.ToHexString(
-                        System.Security.Cryptography.SHA256.HashData(
-                            System.Text.Encoding.UTF8.GetBytes(response.UserId)));
-                    UserAvatar = $"https://www.gravatar.com/avatar/{hash}?d=identicon&s=40";
+                    UserAvatar = GetLinksService.GetUrlFromImageService(response.UserAvatar);
                 }
             }
             catch
             {
                 UserName = "Пользователь";
                 UserEmail = string.Empty;
+
+                // Пробуем подгрузить спустя время
+                if (_cntLoadUserInfo <= 5)
+                {
+                    _cntLoadUserInfo++;
+                    await Task.Delay(500);
+                    await LoadUserInfo();
+                }
             }
+        }
+
+        private void UpdateUserInfoFromResponse(UserInfoResponse response)
+        {
+            UserName = response.Name;
+            UserEmail = response.Email;
+            UserAvatar = GetLinksService.GetUrlFromImageService(response.UserAvatar);
         }
 
         private async Task GoToProfile()
@@ -65,10 +101,10 @@ namespace BusinessCardProject.Client.Features.auth_menu
             {
                 await _menu.CloseMenuAsync();
             }
-            
+
             NavManager.NavigateTo("/user-profile");
         }
-        
+
         private void OnLoginClick()
         {
             NavManager.NavigateTo("/login");
@@ -84,13 +120,23 @@ namespace BusinessCardProject.Client.Features.auth_menu
             StateHasChanged();
         }
 
-        public async ValueTask DisposeAsync()
+        public ValueTask DisposeAsync()
         {
-            UserName = string.Empty;
-            UserEmail = string.Empty;
-            UserAvatar = string.Empty;
-            IsAuthenticated = false;
-            GC.SuppressFinalize(this);
+            try
+            {
+                UserProfileService.OnUserProfileChanged -= RefreshUserAvatarEvent;
+                UserName = string.Empty;
+                UserEmail = string.Empty;
+                UserAvatar = string.Empty;
+                IsAuthenticated = false;
+                _cntLoadUserInfo = 0;
+                GC.SuppressFinalize(this);
+                return ValueTask.CompletedTask;
+            }
+            catch (Exception exception)
+            {
+                return ValueTask.FromException(exception);
+            }
         }
     }
 }

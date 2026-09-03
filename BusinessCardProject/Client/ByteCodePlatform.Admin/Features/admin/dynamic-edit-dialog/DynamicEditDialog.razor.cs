@@ -43,7 +43,7 @@ namespace ByteCodePlatform.Admin.Features.admin.dynamic_edit_dialog
                 case DynamicInputType.Image:
                     if (!string.IsNullOrEmpty(InputValueString))
                     {
-                        _previewUrl = $"https://localhost:5036/{InputValueString}";
+                        _previewUrl = $"https://localhost:5036/FilesServiceGrpcService/{InputValueString}";
                     }
                     break;
             }

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BusinessCardProject.Client.Entities.Services.ProjectInfo.Options
+namespace BusinessCardProject.Client.Entities.Services.Mains.Options
 {
     /// <summary>
     /// Разные пункты настроек пользователя из страницы "Настройки"

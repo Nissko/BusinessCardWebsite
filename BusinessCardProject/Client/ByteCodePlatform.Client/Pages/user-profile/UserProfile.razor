@@ -8,10 +8,12 @@
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="my-6">
     @*Информация о пользователе*@
-    <ProfileHeader/>
+    <ProfileHeader 
+        UserInfoResponse="_userInfo" 
+        OnAvatarUpload="@RefreshUserAvatarEvent" />
 
     @*Информация о активных сессиях*@
-    <ActiveSessions/>
+    <ActiveSessions AuthenticationService="AuthenticationService" NavManager="NavManager" Snackbar="Snackbar"/>
 
     @*Информация о купленных курсах*@
     <PurchasedCourses/>

@@ -24,30 +24,41 @@ namespace Services.AuthService.Infrastructure.Repositories
 
         public async Task<bool> CreateUser(CreateUserRequest request)
         {
-            if (_context.User.Any(x => x.Email == request.Email))
-                throw new("Электронная почта пользователя уже существует");
-            if (_context.User.Any(x => x.NickName == request.NickName))
-                throw new("Псевдоним пользователя уже существует");
+            var now = SystemClock.Instance.GetCurrentInstant();
 
-            var user = new UserEntity(request.Surname, request.Name, request.NickName, request.Email,
+            var emailExists = await _context.User
+                .AsNoTracking()
+                .AnyAsync(x => x.Email == request.Email, CancellationToken.None)
+                .ConfigureAwait(false);
+
+            if (emailExists)
+                throw new Exception("Электронная почта пользователя уже существует");
+
+            var nickNameExists = await _context.User
+                .AsNoTracking()
+                .AnyAsync(x => x.NickName == request.NickName, CancellationToken.None)
+                .ConfigureAwait(false);
+
+            if (nickNameExists)
+                throw new Exception("Псевдоним пользователя уже существует");
+
+            var user = new UserEntity(
+                request.Surname,
+                request.Name,
+                request.NickName,
+                request.Email,
                 BCrypt.Net.BCrypt.HashPassword(request.Password, workFactor: 12),
-                SystemClock.Instance.GetCurrentInstant());
+                now);
+
             user.UserRoles.Add(new UserRolesEntity(user.Id, UserRoleEnum.User.Id));
 
-            try
-            {
-                await coreGrpcServiceClient.CreateUser(user.Id);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
             _context.User.Add(user);
-            await _context.SaveChangesAsync(CancellationToken.None);
+            await _context.SaveChangesAsync(CancellationToken.None).ConfigureAwait(false);
 
-            //Для подтверждения аккаунта
-            await _accVerifRepository.CreateRecord(user.Id);
+            var addUserToCoreTask = coreGrpcServiceClient.CreateUser(user.Id);
+            var createRecordVerificationTask = _accVerifRepository.CreateRecord(user.Id);
+
+            await Task.WhenAll(addUserToCoreTask, createRecordVerificationTask).ConfigureAwait(false);
 
             return true;
         }
@@ -66,6 +77,17 @@ namespace Services.AuthService.Infrastructure.Repositories
             _context.User.Update(user);
             await _context.SaveChangesAsync(CancellationToken.None);
 
+            return true;
+        }
+
+        public async Task<bool> UpdateUserAvatar(Guid userId ,string avatarId)
+        {
+            var user = await _context.User.FindAsync(userId) ?? throw new Exception("Пользователь не найден");
+            user.UpdateAvatar(avatarId);
+            
+            _context.User.Update(user);
+            await _context.SaveChangesAsync(CancellationToken.None);
+            
             return true;
         }
 
@@ -168,7 +190,8 @@ namespace Services.AuthService.Infrastructure.Repositories
                     u.CreatedAt,
                     u.UpdatedAt,
                     u.DeletedAt,
-                    u.VerifyMail
+                    u.VerifyMail,
+                    u.AvatarId
                 ))
                 .ToListAsync();
 

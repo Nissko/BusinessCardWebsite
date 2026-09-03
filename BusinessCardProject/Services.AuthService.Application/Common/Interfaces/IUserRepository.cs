@@ -17,6 +17,11 @@ namespace Services.AuthService.Application.Common.Interfaces
         Task<bool> UpdateUser(UpdateUserRequest request);
 
         /// <summary>
+        /// Изменение аватара пользователя
+        /// </summary>
+        Task<bool> UpdateUserAvatar(Guid userId, string avatarId);
+
+        /// <summary>
         /// Получение пользователя
         /// </summary>
         Task<UserDto> GetUser(Guid userId);

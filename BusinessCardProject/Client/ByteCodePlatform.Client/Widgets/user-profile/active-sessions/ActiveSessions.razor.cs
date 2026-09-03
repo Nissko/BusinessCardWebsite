@@ -6,9 +6,9 @@ namespace BusinessCardProject.Client.Widgets.user_profile.active_sessions
 {
     public partial class ActiveSessions : ComponentBase
     {
-        [Inject] private ClientAuthenticationService AuthenticationService { get; set; } = null!;
-        [Inject] private NavigationManager NavManager { get; set; } = null!;
-        [Inject] private ISnackbar Snackbar { get; set; } = null!;
+        [Parameter] public ClientAuthenticationService AuthenticationService { get; set; } = null!;
+        [Parameter] public NavigationManager NavManager { get; set; } = null!;
+        [Parameter] public ISnackbar Snackbar { get; set; } = null!;
 
         private List<SessionInfo> _sessions = new();
         private bool _isLoadingSessions;
@@ -36,6 +36,23 @@ namespace BusinessCardProject.Client.Widgets.user_profile.active_sessions
                 _isLoadingSessions = false;
                 StateHasChanged();
             }
+        }
+
+        private static string GetSessionIcon(string userAgent)
+        {
+            return userAgent switch
+            {
+                _ when userAgent.Contains("Windows", StringComparison.OrdinalIgnoreCase) => Icons.Material.Rounded
+                    .DesktopWindows,
+                _ when userAgent.Contains("Ubuntu", StringComparison.OrdinalIgnoreCase) => Icons.Material.Rounded
+                    .DesktopWindows,
+                _ when userAgent.Contains("Android", StringComparison.OrdinalIgnoreCase) => Icons.Material.Rounded
+                    .PhoneAndroid,
+                _ when userAgent.Contains("iPhone", StringComparison.OrdinalIgnoreCase) => Icons.Material.Rounded
+                    .PhoneIphone,
+                _ when userAgent.Contains("iPad", StringComparison.OrdinalIgnoreCase) => Icons.Material.Rounded.Tablet,
+                _ => Icons.Material.Rounded.Laptop
+            };
         }
 
         private async Task RevokeSession(string tokenId)

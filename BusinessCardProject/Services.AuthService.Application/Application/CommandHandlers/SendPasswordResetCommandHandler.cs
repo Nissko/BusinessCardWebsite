@@ -37,7 +37,6 @@ namespace Services.AuthService.Application.Application.CommandHandlers
                             ?? "https://it-bytecode.splinterkeenetic.netcraze.club";
             var resetLink = $"{clientUrl}/reset-password/{userId}/{resetToken}";
 
-            /*TODO: сделать шаблон письма*/
             await _mailService.SendEmailMessageAsync(new EmailMessageRequest(
                 To: [request.Email],
                 Cc: [],

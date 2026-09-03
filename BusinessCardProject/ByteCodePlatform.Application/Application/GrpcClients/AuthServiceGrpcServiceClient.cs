@@ -37,19 +37,33 @@ namespace ByteCodePlatform.Application.Application.GrpcClients
         {
             try
             {
-                var usersInfoFromAuth = await _authorizationService.GetUsersFromSearchAsync(new GetUsersFromSearchRequest
-                {
-                    Page = request.Page,
-                    PageSize = request.PageSize,
-                    Search = request.Search,
-                    SortBy = request.SortBy,
-                    SortDirection = request.SortDirection
-                });
-                
+                var usersInfoFromAuth = await _authorizationService.GetUsersFromSearchAsync(
+                    new GetUsersFromSearchRequest
+                    {
+                        Page = request.Page,
+                        PageSize = request.PageSize,
+                        Search = request.Search,
+                        SortBy = request.SortBy,
+                        SortDirection = request.SortDirection
+                    });
+
                 return new PaginationDto<UserDto>(
-                    usersInfoFromAuth.Items.ToUserDtoFromProtoList(), 
+                    usersInfoFromAuth.Items.ToUserDtoFromProtoList(),
                     usersInfoFromAuth.TotalCount
                 );
+            }
+            catch (Exception ex)
+            {
+                throw new RpcException(new(StatusCode.Aborted, ex.Message));
+            }
+        }
+
+        public async Task<AuthorUserInfo> GetAuthorUserInfo(Guid userId)
+        {
+            try
+            {
+                var user = await _authorizationService.GetUserAsync(new GetUserRequest { UserId = userId.ToString() });
+                return new AuthorUserInfo(user.Name, user.Surname, user.UserAvatar);
             }
             catch (Exception ex)
             {

@@ -18,12 +18,8 @@
                 <MudListItem T="string" Class="rounded-lg mb-2" Style="background-color: var(--mud-palette-background-gray);">
                     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="w-100">
                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
-                            <MudIcon Icon="@Icons.Material.Rounded.Laptop" Color="Color.Info" Size="Size.Medium"/>
+                            <MudIcon Title="@session.UserAgent" Icon="@GetSessionIcon(session.UserAgent)" Color="Color.Info" Size="Size.Medium"/>
                             <div>
-                                @*TODO: Доработать и сделать информацию об устройстве из User-Agent*@
-                                @*<MudText Typo="Typo.body1" Class="font-weight-medium">
-                                    @session.Device
-                                </MudText>*@
                                 <MudText Typo="Typo.caption">
                                     Создана: @session.CreatedAt.ToString("dd.MM.yyyy HH:mm")
                                 </MudText>

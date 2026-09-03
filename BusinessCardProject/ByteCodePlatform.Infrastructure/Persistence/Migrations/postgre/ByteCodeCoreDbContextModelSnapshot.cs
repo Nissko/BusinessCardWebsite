@@ -33,6 +33,18 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("AboutUs")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasComment("Об авторе");
+
+                    b.Property<string>("AvatarId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasComment("Аватар");
+
                     b.Property<Instant>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasComment("Дата регистрации");
@@ -40,6 +52,18 @@ namespace ByteCodePlatform.Infrastructure.Persistence.Migrations.postgre
                     b.Property<Instant?>("DeletedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasComment("Дата удаления");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasComment("Имя");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasComment("Фамилия");
 
                     b.Property<Instant?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")

@@ -1,4 +1,4 @@
-﻿namespace BusinessCardProject.Client.Entities.Services.ProjectInfo.Entity
+﻿namespace BusinessCardProject.Client.Entities.Services.Mains.Entity
 {
     /// <summary>
     /// Класс для глобальных переменных

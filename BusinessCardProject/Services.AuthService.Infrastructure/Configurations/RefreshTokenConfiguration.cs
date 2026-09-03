@@ -32,15 +32,15 @@ namespace Services.AuthService.Infrastructure.Configurations
                 .IsRequired()
                 .HasDefaultValue(false);
 
-            builder.HasIndex(x => x.UserId)
-                .HasDatabaseName("IX_RefreshTokens_UserId");
+            builder.Property(x => x.UserAgent)
+                .IsRequired(false)
+                .HasMaxLength(512);
 
+            builder.HasIndex(x => x.UserId);
             builder.HasIndex(x => new { x.UserId, x.IsRevoked })
-                .HasDatabaseName("IX_RefreshTokens_UserId_IsRevoked")
                 .IsUnique(false);
-
-            builder.HasIndex(x => x.ExpiresAtUtc)
-                .HasDatabaseName("IX_RefreshTokens_ExpiresAtUtc");
+            builder.HasIndex(x => new { x.UserId, x.UserAgent });
+            builder.HasIndex(x => x.ExpiresAtUtc);
         }
     }
 }

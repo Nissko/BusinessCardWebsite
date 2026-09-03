@@ -2,7 +2,7 @@
 
 <div class="course-hero">
     <MudImage ObjectFit="ObjectFit.Cover"
-              Src="@PreviewUrl"
+              Src="@GetLinksService.GetUrlFromImageService(Course.AvatarUrl)"
               Alt="@Course.Name"
               Class="hero-image"/>
 
@@ -30,10 +30,6 @@
                 @*<span class="stat-pill">
                     <MudIcon Icon="@Icons.Material.Rounded.AccessTime" Size="Size.Small"/>
                     999 ч
-                </span>
-                <span class="stat-pill">
-                    <MudIcon Icon="@Icons.Material.Rounded.Star" Size="Size.Small"/>
-                    5.0
                 </span>*@
             </div>
         </MudContainer>

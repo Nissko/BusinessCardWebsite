@@ -30,6 +30,10 @@ namespace Services.AuthService.Infrastructure.Configurations
                 .HasMaxLength(50)
                 .IsRequired()
                 .HasComment("Почта");
+
+            builder.Property(x => x.AvatarId)
+                .HasMaxLength(150)
+                .HasComment("Идентификатор аватара");
         
             builder.Property(x=>x.PasswordHash)
                 .IsRequired()

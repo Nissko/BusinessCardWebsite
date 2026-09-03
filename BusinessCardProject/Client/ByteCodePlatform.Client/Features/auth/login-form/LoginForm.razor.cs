@@ -1,4 +1,4 @@
-﻿using BusinessCardProject.Client.Entities.Services.ProjectInfo;
+﻿using BusinessCardProject.Client.Entities.Services.Mains;
 using BusinessCardProject.Client.Entities.Services.UserAuthentication;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;

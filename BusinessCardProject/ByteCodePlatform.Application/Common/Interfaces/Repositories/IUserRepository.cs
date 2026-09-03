@@ -20,5 +20,10 @@ namespace ByteCodePlatform.Application.Common.Interfaces.Repositories
         /// Получение всех пользователей для админки
         /// </summary>
         Task<PaginationDto<UserDto>> GetUsersFromSearch(GetUsersSearchRequest request);
+
+        /// <summary>
+        /// Изменение аватара автора
+        /// </summary>
+        Task<bool> UpdateAuthorAvatar(Guid userId, string avatarId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using CourseService.Proto;
+﻿using BusinessCardProject.Client.Entities.Services.Mains;
+using CourseService.Proto;
 using Microsoft.AspNetCore.Components;
 
 namespace BusinessCardProject.Client.Widgets.courses.theme.course_video_item
@@ -7,15 +8,31 @@ namespace BusinessCardProject.Client.Widgets.courses.theme.course_video_item
     {
         [Parameter, EditorRequired]
         public CourseContentInfoResponse VideoCourse { get; set; } = null!;
-        private string PreviewUrl => $"https://localhost:5036/FilesServiceGrpcService/{VideoCourse.ImgUrl}";
-        //private string PreviewUrl => $"https://it-bytecode.splinterkeenetic.netcraze.club/FilesServiceGrpcService/{VideoCourse.ImgUrl}";
+        
+        [Inject] private UserSettingService UserSettingService { get; set; } = null!;
+        [Inject] private NavigationManager NavManager { get; set; } = null!;
+        [Inject] private GetLinksService GetLinksService { get; set; } = null!;
+        
+        /// <summary>
+        /// Ссылка для просмотра видео
+        /// </summary>
+        private string Link => OnWatchLink();
 
         [Parameter, EditorRequired]
         public int Index { get; set; }
 
-        private static void OnWatchClick()
+        private string OnWatchLink()
         {
-            // TODO: Реализовать переход к просмотру видео
+            var watchingPlatform = UserSettingService.Settings.VideoPlatform?.Platform ?? 0;
+            var link = watchingPlatform switch
+            {
+                0 => VideoCourse.LinkYoutube,
+                1 => VideoCourse.LinkRutube,
+                2 => VideoCourse.LinkVk,
+                _ => VideoCourse.LinkYoutube
+            };
+
+            return link;
         }
 
         private static void OnFavoriteClick()

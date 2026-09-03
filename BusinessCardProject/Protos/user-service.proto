@@ -12,6 +12,9 @@ service UserGrpcService {
   rpc CreateAuthorUser(CreateAuthorRequest) returns (UserAuthorInfoResponse);
   // 
   rpc GetUsersFromSearch(GetUsersFromSearchRequest) returns (GetUsersFromSearchResponse);
+  // Обновление аватара пользователя
+  /*TODO: вызывать при изменении аватарки пользователя в AuthService*/
+  rpc ChangeAuthorAvatar(ChangeAuthorAvatarRequest) returns (ChangeAuthorAvatarResponse);
 }
 
 message CreateUserRequest{
@@ -63,4 +66,13 @@ message GetUsersFromSearchRequest{
 message GetUsersFromSearchResponse{
   repeated UserInfoResponse Items = 1;
   int32 TotalCount = 2;
+}
+
+message ChangeAuthorAvatarRequest{
+  string avatar_id = 1;
+  string user_id = 2;
+}
+
+message ChangeAuthorAvatarResponse{
+  bool result = 1;
 }

@@ -1,19 +1,30 @@
 ﻿@namespace BusinessCardProject.Client.Widgets.courses.theme.course_author
 
 <MudPaper Elevation="2" Class="author-card pa-4 pa-sm-5 text-center">
-    <MudAvatar Size="Size.Large" Color="Color.Primary" Class="mx-auto mb-2"
-               Style="width:72px;height:72px;">
-        <MudIcon Icon="@Icons.Material.Rounded.Person" Size="Size.Large"/>
+    <MudAvatar Size="Size.Large" Color="Color.Primary" Class="rounded-circle"
+               Style="width: 96px; height: 96px; font-size: 2.5rem; 
+                           box-shadow: 0 4px 12px rgba(0,0,0,.5);">
+        @if (string.IsNullOrEmpty(Author.AvatarId))
+        {
+            <MudIcon Icon="@Icons.Material.Rounded.Person"/>
+        }
+        else
+        {
+            <img class="avatar-overlay-img"
+                 Src="@GetLinksService.GetUrlFromImageService(Author.AvatarId)"
+                 alt="Аватар"/>
+        }
     </MudAvatar>
 
-    <MudText Typo="Typo.subtitle1" Style="font-weight:700;">Никита С.</MudText>
+    <MudText Typo="Typo.subtitle1" Style="font-weight:700;">@Author.Surname @Author.Name</MudText>
     <MudText Typo="Typo.caption" Class="mb-3" Style="color:#95a5a6;">Преподаватель курса</MudText>
 
     <MudDivider Style="margin-top: .75rem; border-bottom: 1px solid white;" Class="mb-3"/>
 
     @*TODO: доработать*@
-    <MudText Typo="Typo.body2" Align="Align.Center" Style="line-height:1.6;">
-        Разработчик с 3+ годами практики в создании веб-приложений и обучении начинающих программистов.
+    <MudText Typo="Typo.body2" Align="Align.Left" Style="line-height:1.6;">
+        @*Разработчик с 3+ годами практики в создании веб-приложений и обучении начинающих программистов.*@
+        @Author.AboutUs
     </MudText>
 
     @*TODO: для доработки*@
@@ -45,6 +56,13 @@
     }
 
     .stat { text-align: center; }
+
+    .avatar-overlay-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
     
     @@media (min-width: 960px) {
         .author-card {

@@ -18,7 +18,8 @@ namespace ByteCodePlatform.Application.Common.ProtobufClientExtensions
                 CreatedAt: proto.CreatedAt.ToInstant(),
                 UpdatedAt: proto.UpdatedAt?.ToInstant(),
                 DeletedAt: proto.DeletedAt?.ToInstant(),
-                IsVerified: proto.IsVerified
+                IsVerified: proto.IsVerified,
+                UserAvatar: proto.UserAvatar
             );
         }
 

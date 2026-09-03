@@ -1,28 +1,101 @@
 ﻿<MudPaper Elevation="2" Class="rounded-xl mb-6 overflow-hidden">
     <div class="d-flex flex-column align-center pa-6">
-        <MudAvatar Size="Size.Large" Color="Color.Primary" Class="mb-3"
-                   Style="width: 96px; height: 96px; font-size: 2.5rem; border: 4px solid var(--mud-palette-surface); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-            <MudIcon Icon="@Icons.Material.Rounded.Person"/>
-        </MudAvatar>
+        @if (UserInfoResponse != null)
+        {
+            <div class="avatar-editable mb-3" @onclick="HandleAvatarClick">
+                <MudAvatar Size="Size.Large" Color="Color.Primary" Class="rounded-circle"
+                           Style="width: 96px; height: 96px; font-size: 2.5rem; 
+                           box-shadow: 0 4px 12px rgba(0,0,0,.5);">
+                    @if (string.IsNullOrEmpty(UserInfoResponse.UserAvatar))
+                    {
+                        <MudIcon Icon="@Icons.Material.Rounded.Person"/>
+                    }
+                    else
+                    {
+                        <img class="avatar-overlay-img"
+                             Src="@GetLinksService.GetUrlFromImageService(UserInfoResponse.UserAvatar)"
+                             alt="Аватар"/>
+                    }
+                </MudAvatar>
 
-        <MudText Typo="Typo.h5" Class="font-weight-bold mb-1">
-            Имя Фамилия
-        </MudText>
-        
-        <MudText Typo="Typo.body1" Class="mb-1">
-            nickname
-        </MudText>
+                <div class="avatar-overlay">
+                    <MudIcon Icon="@Icons.Material.Rounded.PhotoCamera" Size="Size.Medium" Style="color: white;"/>
+                </div>
+            </div>
 
-        <MudText Typo="Typo.body1" Class="mb-4">
-            user@example.com
-        </MudText>
+            <MudText Typo="Typo.h5" Class="font-weight-bold mb-1">
+                @UserInfoResponse.Name @UserInfoResponse.Surname
+            </MudText>
 
-        <MudButton Variant="Variant.Outlined"
-                   Color="Color.Primary"
-                   Size="Size.Small"
-                   StartIcon="@Icons.Material.Rounded.Edit"
-                   Style="border-radius: 8px; text-transform: none; font-weight: 600;">
-            Редактировать профиль
-        </MudButton>
+            <MudText Typo="Typo.body1" Class="mb-1">
+                @UserInfoResponse.Nickname
+            </MudText>
+
+            <MudText Typo="Typo.body1" Class="mb-4">
+                @UserInfoResponse.Email
+            </MudText>
+
+            @*<MudButton Variant="Variant.Outlined"
+                       Color="Color.Primary"
+                       Size="Size.Small"
+                       StartIcon="@Icons.Material.Rounded.Edit"
+                       Style="border-radius: 8px; text-transform: none; font-weight: 600;">
+                Редактировать профиль
+            </MudButton>*@
+        }
+        else
+        {
+            <MudSkeleton Style="min-width: 96px; min-height: 96px;" SkeletonType="SkeletonType.Circle"/>
+
+            <MudText Typo="Typo.h5" Class="font-weight-bold mb-1">
+                <MudSkeleton Style="min-width: 170px;" SkeletonType="SkeletonType.Text"/>
+            </MudText>
+
+            <MudText Typo="Typo.body1" Class="mb-1">
+                <MudSkeleton Style="min-width: 70px;" SkeletonType="SkeletonType.Text"/>
+            </MudText>
+
+            <MudText Typo="Typo.body1" Class="mb-4">
+                <MudSkeleton Style="min-width: 140px;" SkeletonType="SkeletonType.Text"/>
+            </MudText>
+        }
     </div>
 </MudPaper>
+
+<style>
+    .avatar-editable {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .avatar-editable:hover {
+        transform: scale(1.05);
+    }
+
+    .avatar-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.45);
+        border-radius: 50%;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+    }
+
+    .avatar-editable:hover .avatar-overlay {
+        opacity: 1;
+    }
+
+    .avatar-overlay-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+</style>

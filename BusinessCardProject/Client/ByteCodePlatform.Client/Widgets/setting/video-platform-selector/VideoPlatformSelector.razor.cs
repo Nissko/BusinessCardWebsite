@@ -1,4 +1,4 @@
-﻿using BusinessCardProject.Client.Entities.Services.ProjectInfo;
+﻿using BusinessCardProject.Client.Entities.Services.Mains;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -67,8 +67,6 @@ namespace BusinessCardProject.Client.Widgets.setting.video_platform_selector
 
             UserSettingService.Settings.VideoPlatform?.SetPlatform(platformIndex);
             await UserSettingService.Save();
-        
-            // TODO: Отправить запрос на изменение настроек в БД
         }
 
         private void UpdateSwitchesFromCache(int platformFromCache)

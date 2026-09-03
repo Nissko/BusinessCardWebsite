@@ -103,11 +103,25 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
                 return response.Sessions.Select(s => new SessionInfo(
                     s.TokenId,
                     s.CreatedAt.ToDateTimeOffset().ToLocalTime(),
-                    s.ExpiresAt.ToDateTimeOffset().ToLocalTime())).ToList();
+                    s.ExpiresAt.ToDateTimeOffset().ToLocalTime(),
+                    s.UserAgent)).ToList();
             }
             catch (RpcException)
             {
                 return new List<SessionInfo>();
+            }
+        }
+
+        public async Task<UserInfoResponse?> GetCurrentUser()
+        {
+            try
+            {
+                var userInfo = await _client.GetCurrentUserAsync(new GetCurrentUserRequest());
+                return userInfo;
+            }
+            catch (RpcException)
+            {
+                return new UserInfoResponse();
             }
         }
 
@@ -149,6 +163,13 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
                     UserId = userId.ToString(),
                     VerificationCode = verificationCode
                 });
+
+                if (!response.Success)
+                {
+                    throw new RpcException(new(StatusCode.Internal,
+                        "Произошла ошибка при верификации. Обратитесь в поддержку"));
+                }
+                
                 return response.Success;
             }
             catch (RpcException)
@@ -179,7 +200,11 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
             }
         }
 
-        public async Task<bool> ValidateAndClearAsync()
+        /// <summary>
+        /// Валидация токена
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> ValidateTokenOnLoad()
         {
             if (!_tokenStore.IsExpired)
             {
@@ -203,8 +228,8 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
 
                 var client = new AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient(channel);
                 var response = await client.ValidateRefreshTokenAsync(
-                    new RefreshTokenRequest { RefreshToken = refreshToken });
-
+                    new RefreshTokenRequest { RefreshToken = _tokenStore.GetRefreshToken() });
+                
                 if (!response.IsValid)
                 {
                     await _tokenStore.ClearAsync();
@@ -212,7 +237,7 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
                 }
 
                 var refreshResponse = await client.RefreshTokenAsync(
-                    new RefreshTokenRequest { RefreshToken = refreshToken });
+                    new RefreshTokenRequest { RefreshToken = _tokenStore.GetRefreshToken() });
 
                 if (!string.IsNullOrEmpty(refreshResponse.AccessToken))
                 {
@@ -233,8 +258,30 @@ namespace BusinessCardProject.Client.Entities.Services.UserAuthentication
             }
         }
 
-        public string? GetToken() => _tokenStore.GetAccessToken();
+        /// <summary>
+        /// Проверка токена перед запросами
+        /// </summary>
+        public async Task ValidateTokenRegular()
+        {
+            var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient("AuthRefreshClient");
+
+            var channel = Grpc.Net.Client.GrpcChannel.ForAddress(httpClient.BaseAddress!,
+                new Grpc.Net.Client.GrpcChannelOptions { HttpClient = httpClient });
+
+            var client = new AuthorizationService.Proto.AuthorizationService.AuthorizationServiceClient(channel);
+            var response = await client.ValidateRefreshTokenAsync(
+                new RefreshTokenRequest { RefreshToken = _tokenStore.GetRefreshToken() });
+
+            if (!response.IsValid || response.IsRevoked)
+            {
+                await _tokenStore.ClearAsync();
+                _navManager.NavigateTo("/login", forceLoad: true);
+            }
+        }
+
         public string? GetAccessToken() => _tokenStore.GetAccessToken();
+        public string? GetRefreshToken() => _tokenStore.GetRefreshToken();
 
         public void Dispose() { }
     }

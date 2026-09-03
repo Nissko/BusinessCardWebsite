@@ -10,7 +10,11 @@ service UserGrpcService {
   rpc CreateUser(CreateUserRequest) returns (UserBooleanResponse);
   // Выдача авторских прав
   rpc CreateAuthorUser(CreateAuthorRequest) returns (UserAuthorInfoResponse);
+  // 
   rpc GetUsersFromSearch(GetUsersFromSearchRequest) returns (GetUsersFromSearchResponse);
+  // Обновление аватара пользователя
+  /*TODO: вызывать при изменении аватарки пользователя в AuthService*/
+  rpc ChangeAuthorAvatar(ChangeAuthorAvatarRequest) returns (ChangeAuthorAvatarResponse);
 }
 
 message CreateUserRequest{
@@ -38,6 +42,7 @@ message UserInfoResponse{
   google.protobuf.Timestamp createdAt = 7;
   optional google.protobuf.Timestamp updatedAt = 8;
   optional google.protobuf.Timestamp deletedAt = 9;
+  bool isVerified = 10;
 }
 
 message UserBooleanResponse{
@@ -61,4 +66,13 @@ message GetUsersFromSearchRequest{
 message GetUsersFromSearchResponse{
   repeated UserInfoResponse Items = 1;
   int32 TotalCount = 2;
+}
+
+message ChangeAuthorAvatarRequest{
+  string avatar_id = 1;
+  string user_id = 2;
+}
+
+message ChangeAuthorAvatarResponse{
+  bool result = 1;
 }

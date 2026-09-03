@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace ByteCodePlatform.Admin.Entities.Services.ProjectInfo
 {
-    public class FileUploadService(FilesService.Proto.FilesService.FilesServiceClient grpcClient)
+    internal class FileUploadService(FilesService.Proto.FilesService.FilesServiceClient grpcClient)
     {
         private readonly FilesService.Proto.FilesService.FilesServiceClient _grpcClient =
             grpcClient ?? throw new ArgumentNullException(nameof(grpcClient));

@@ -256,4 +256,6 @@ message UserAuthorInfo {
   string surname = 3;
   string name = 4;
   string nick_name = 5;
+  string about_us = 6;
+  string avatar_id = 7;
 }

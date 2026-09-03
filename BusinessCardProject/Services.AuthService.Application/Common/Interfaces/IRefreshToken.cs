@@ -8,7 +8,7 @@ namespace Services.AuthService.Application.Common.Interfaces
         /// <summary>
         /// Сохранение нового refresh token для пользователя
         /// </summary>
-        Task Save(string refreshToken, string userId, Instant expiresAt, CancellationToken ct = default);
+        Task Save(string refreshToken, string userId, Instant expiresAt, string? userAgent, CancellationToken ct = default);
 
         /// <summary>
         /// Получение информации о токене обновления и немедленное аннулирование.
