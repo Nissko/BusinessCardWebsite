@@ -32,7 +32,14 @@ namespace BusinessCardProject.Client.Features.toggle_theme
             {
                 PaletteLight = Palettes.Light,
                 PaletteDark = Palettes.Dark,
-                LayoutProperties = new LayoutProperties()
+                LayoutProperties = new LayoutProperties(),
+                Typography = new Typography()
+                {
+                    Default = new DefaultTypography
+                    {
+                        FontFamily = new[] { "Ubuntu", "Arial", "Helvetica", "sans-serif" }
+                    }
+                }
             };
         }
 
