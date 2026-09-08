@@ -1,4 +1,4 @@
-﻿namespace Dtos.DTO
+﻿namespace DTOs.DTO
 {
     public record DynamicUpdateDto(
         Guid Id,

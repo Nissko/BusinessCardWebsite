@@ -1,4 +1,4 @@
-﻿namespace Requests.Email
+﻿namespace RequestModels.Email
 {
     public record EmailMessageRequest(
         // Список основных получателей

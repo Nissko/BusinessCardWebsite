@@ -1,4 +1,4 @@
-using Dtos.DTO.Auth;
+using DTOs.DTO.Auth;
 using NodaTime;
 
 namespace Services.AuthService.Application.Common.Interfaces

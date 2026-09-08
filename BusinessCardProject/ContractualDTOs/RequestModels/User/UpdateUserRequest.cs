@@ -1,4 +1,4 @@
-namespace Requests.User
+namespace RequestModels.User
 {
     public record UpdateUserRequest(
         Guid Id,

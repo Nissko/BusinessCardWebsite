@@ -1,5 +1,5 @@
 ﻿using AuthorizationService.Proto;
-using Dtos.DTO.User;
+using DTOs.DTO.User;
 using Services.AuthService.Application.Application.Extensions;
 
 namespace Services.AuthService.Presentation.ProtoMappers.Users

@@ -4,7 +4,7 @@ using ByteCodePlatform.Application.Common.Interfaces.Repositories;
 using ByteCodePlatform.Domain.Enums;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
-using Requests.User;
+using RequestModels.User;
 using UserService.Proto;
 using CreateAuthorRequest = UserService.Proto.CreateAuthorRequest;
 using CreateUserRequest = UserService.Proto.CreateUserRequest;

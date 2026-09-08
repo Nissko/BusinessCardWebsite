@@ -1,4 +1,4 @@
-namespace Dtos.DTO.Course.Content
+namespace DTOs.DTO.Course.Content
 {
     public record LightCourseModuleDto(Guid Id);
 }

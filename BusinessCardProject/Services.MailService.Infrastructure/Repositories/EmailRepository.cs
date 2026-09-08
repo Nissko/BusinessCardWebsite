@@ -2,7 +2,7 @@
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using Requests.Email;
+using RequestModels.Email;
 using Services.MailService.Application.Common.Interfaces;
 using Services.MailService.Infrastructure.Settings;
 

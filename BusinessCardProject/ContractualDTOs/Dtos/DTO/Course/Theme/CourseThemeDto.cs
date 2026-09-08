@@ -1,7 +1,7 @@
-using Dtos.DTO.User;
+using DTOs.DTO.User;
 using NodaTime;
 
-namespace Dtos.DTO.Course.Theme
+namespace DTOs.DTO.Course.Theme
 {
     public record CourseThemeDto(
         Guid Id,

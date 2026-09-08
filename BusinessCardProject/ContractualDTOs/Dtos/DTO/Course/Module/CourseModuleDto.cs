@@ -1,7 +1,7 @@
-using Dtos.DTO.Course.ProgramLanguage;
+using DTOs.DTO.Course.ProgramLanguage;
 using NodaTime;
 
-namespace Dtos.DTO.Course.Module
+namespace DTOs.DTO.Course.Module
 {
     public record CourseModuleDto(
         Guid Id,

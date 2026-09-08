@@ -1,6 +1,6 @@
 using NodaTime;
 
-namespace Dtos.DTO.User
+namespace DTOs.DTO.User
 {
     public record UserDto(
         Guid Id,

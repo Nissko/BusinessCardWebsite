@@ -1,5 +1,5 @@
 using Grpc.Core;
-using Requests.Email;
+using RequestModels.Email;
 using Services.MailService.Application.Common.Interfaces;
 using SmtpMailService.Proto;
 

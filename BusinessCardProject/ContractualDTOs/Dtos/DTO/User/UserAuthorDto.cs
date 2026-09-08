@@ -1,4 +1,4 @@
-namespace Dtos.DTO.User
+namespace DTOs.DTO.User
 {
     public record UserAuthorDto(
         Guid AuthorId,

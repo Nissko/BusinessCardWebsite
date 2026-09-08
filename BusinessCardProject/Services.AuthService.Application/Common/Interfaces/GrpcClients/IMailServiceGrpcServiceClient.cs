@@ -1,4 +1,4 @@
-﻿using Requests.Email;
+﻿using RequestModels.Email;
 
 namespace Services.AuthService.Application.Common.Interfaces.GrpcClients
 {

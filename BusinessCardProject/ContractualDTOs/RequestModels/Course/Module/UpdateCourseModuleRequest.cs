@@ -1,4 +1,4 @@
-namespace Requests.Course.Module
+namespace RequestModels.Course.Module
 {
     public record UpdateCourseModuleRequest(
         Guid Id,

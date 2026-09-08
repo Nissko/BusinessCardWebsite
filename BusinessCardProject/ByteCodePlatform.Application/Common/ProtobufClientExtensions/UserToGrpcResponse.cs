@@ -1,6 +1,6 @@
 ﻿using AuthorizationService.Proto;
 using ByteCodePlatform.Application.Application.Extensions;
-using Dtos.DTO.User;
+using DTOs.DTO.User;
 
 namespace ByteCodePlatform.Application.Common.ProtobufClientExtensions
 {

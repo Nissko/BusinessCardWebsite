@@ -1,10 +1,10 @@
 ﻿using AuthorizationService.Proto;
 using ByteCodePlatform.Application.Common.Interfaces.GrpcClients;
 using ByteCodePlatform.Application.Common.ProtobufClientExtensions;
-using Dtos.DTO.Pagination;
-using Dtos.DTO.User;
+using DTOs.DTO.Pagination;
+using DTOs.DTO.User;
 using Grpc.Core;
-using Requests.User;
+using RequestModels.User;
 
 namespace ByteCodePlatform.Application.Application.GrpcClients
 {

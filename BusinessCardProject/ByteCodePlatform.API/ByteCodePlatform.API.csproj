@@ -37,7 +37,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ByteCodePlatform.Application\ByteCodePlatform.Application.csproj" />
       <ProjectReference Include="..\ByteCodePlatform.Infrastructure\ByteCodePlatform.Infrastructure.csproj" />
-      <ProjectReference Include="..\Protos\Protos.csproj" />
+      <ProjectReference Include="..\Protobufs\Protobufs.csproj" />
     </ItemGroup>
 
     <ItemGroup>

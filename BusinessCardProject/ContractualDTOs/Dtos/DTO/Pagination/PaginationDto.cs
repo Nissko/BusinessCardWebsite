@@ -1,4 +1,4 @@
-﻿namespace Dtos.DTO.Pagination
+﻿namespace DTOs.DTO.Pagination
 {
     /// <summary>
     /// Для пагинации

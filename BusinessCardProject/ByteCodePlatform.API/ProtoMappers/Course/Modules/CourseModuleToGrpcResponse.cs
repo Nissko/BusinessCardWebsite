@@ -1,8 +1,8 @@
 using ByteCodePlatform.API.ProtoMappers.Course.Themes;
 using ByteCodePlatform.Application.Application.Extensions;
 using CourseService.Proto;
-using Dtos.DTO.Course.Content;
-using Dtos.DTO.Course.Module;
+using DTOs.DTO.Course.Content;
+using DTOs.DTO.Course.Module;
 
 namespace ByteCodePlatform.API.ProtoMappers.Course.Modules
 {

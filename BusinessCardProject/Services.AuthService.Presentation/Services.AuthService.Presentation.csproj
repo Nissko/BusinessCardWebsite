@@ -35,7 +35,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Protos\Protos.csproj" />
+      <ProjectReference Include="..\Protobufs\Protobufs.csproj" />
       <ProjectReference Include="..\Services.AuthService.Application\Services.AuthService.Application.csproj" />
       <ProjectReference Include="..\Services.AuthService.Infrastructure\Services.AuthService.Infrastructure.csproj" />
     </ItemGroup>

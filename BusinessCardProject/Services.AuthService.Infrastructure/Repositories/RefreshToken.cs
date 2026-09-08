@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using System.Text;
-using Dtos.DTO.Auth;
+using DTOs.DTO.Auth;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Services.AuthService.Application.Common.Interfaces;

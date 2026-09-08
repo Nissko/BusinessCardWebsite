@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ContractualDTOs\Dtos\Dtos.csproj" />
+    <ProjectReference Include="..\..\ContractualDTOs\DTOs\DTOs.csproj" />
   </ItemGroup>
 
   <ItemGroup>

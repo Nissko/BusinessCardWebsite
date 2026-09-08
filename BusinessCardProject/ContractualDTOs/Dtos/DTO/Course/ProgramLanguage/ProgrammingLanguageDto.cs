@@ -1,4 +1,4 @@
-namespace Dtos.DTO.Course.ProgramLanguage
+namespace DTOs.DTO.Course.ProgramLanguage
 {
     public record ProgrammingLanguageDto(
         Guid Id,

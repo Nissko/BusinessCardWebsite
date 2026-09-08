@@ -6,17 +6,17 @@ using ByteCodePlatform.Domain.Entities.Course.Theme;
 using ByteCodePlatform.Domain.Enums;
 using ByteCodePlatform.Domain.Extensions;
 using ByteCodePlatform.Domain.Extensions.Course;
-using Dtos.DTO.Course;
-using Dtos.DTO.Course.Content;
-using Dtos.DTO.Course.Module;
-using Dtos.DTO.Course.ProgramLanguage;
-using Dtos.DTO.Course.Theme;
+using DTOs.DTO.Course;
+using DTOs.DTO.Course.Content;
+using DTOs.DTO.Course.Module;
+using DTOs.DTO.Course.ProgramLanguage;
+using DTOs.DTO.Course.Theme;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
-using Requests.Course.Content;
-using Requests.Course.Module;
-using Requests.Course.Theme;
+using RequestModels.Course.Content;
+using RequestModels.Course.Module;
+using RequestModels.Course.Theme;
 
 namespace ByteCodePlatform.Infrastructure.Repositories
 {

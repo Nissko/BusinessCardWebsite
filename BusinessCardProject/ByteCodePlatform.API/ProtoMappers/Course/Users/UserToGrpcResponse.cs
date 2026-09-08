@@ -1,5 +1,5 @@
 ﻿using ByteCodePlatform.Application.Application.Extensions;
-using Dtos.DTO.User;
+using DTOs.DTO.User;
 using UserService.Proto;
 
 namespace ByteCodePlatform.API.ProtoMappers.Course.Users

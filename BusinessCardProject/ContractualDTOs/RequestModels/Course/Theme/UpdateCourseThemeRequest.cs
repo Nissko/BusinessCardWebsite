@@ -1,4 +1,4 @@
-namespace Requests.Course.Theme
+namespace RequestModels.Course.Theme
 {
     public record UpdateCourseThemeRequest(
         Guid Id,

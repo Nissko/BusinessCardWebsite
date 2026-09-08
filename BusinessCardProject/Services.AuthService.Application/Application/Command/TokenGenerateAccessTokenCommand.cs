@@ -1,4 +1,4 @@
-using Dtos.DTO.User;
+using DTOs.DTO.User;
 using MediatR;
 
 namespace Services.AuthService.Application.Application.Command

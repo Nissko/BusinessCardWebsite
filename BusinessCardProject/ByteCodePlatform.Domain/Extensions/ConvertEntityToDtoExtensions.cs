@@ -4,11 +4,11 @@ using ByteCodePlatform.Domain.Entities.Course.Content;
 using ByteCodePlatform.Domain.Entities.Course.Module;
 using ByteCodePlatform.Domain.Entities.Course.Theme;
 using ByteCodePlatform.Domain.Enums;
-using Dtos.DTO.Course.Content;
-using Dtos.DTO.Course.Module;
-using Dtos.DTO.Course.ProgramLanguage;
-using Dtos.DTO.Course.Theme;
-using Dtos.DTO.User;
+using DTOs.DTO.Course.Content;
+using DTOs.DTO.Course.Module;
+using DTOs.DTO.Course.ProgramLanguage;
+using DTOs.DTO.Course.Theme;
+using DTOs.DTO.User;
 
 namespace ByteCodePlatform.Domain.Extensions
 {

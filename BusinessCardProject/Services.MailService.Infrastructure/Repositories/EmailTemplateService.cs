@@ -1,6 +1,6 @@
 ﻿using GlobalEnums.EmailNotifications;
 using MediatR;
-using Requests.Email;
+using RequestModels.Email;
 using Services.MailService.Application.Application.Command;
 using Services.MailService.Application.Common.Interfaces;
 

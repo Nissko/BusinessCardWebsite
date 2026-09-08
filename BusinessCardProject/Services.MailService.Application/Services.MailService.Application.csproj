@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ContractualDTOs\Requests\Requests.csproj" />
-    <ProjectReference Include="..\Protos\Protos.csproj" />
+    <ProjectReference Include="..\ContractualDTOs\RequestModels\RequestModels.csproj" />
+    <ProjectReference Include="..\Protobufs\Protobufs.csproj" />
     <ProjectReference Include="..\Services.MailService.Domain\Services.MailService.Domain.csproj" />
   </ItemGroup>
 

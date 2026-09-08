@@ -20,9 +20,9 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ByteCodePlatform.Domain\ByteCodePlatform.Domain.csproj" />
-      <ProjectReference Include="..\ContractualDTOs\Dtos\Dtos.csproj" />
-      <ProjectReference Include="..\ContractualDTOs\Requests\Requests.csproj" />
-      <ProjectReference Include="..\Protos\Protos.csproj" />
+      <ProjectReference Include="..\ContractualDTOs\DTOs\DTOs.csproj" />
+      <ProjectReference Include="..\ContractualDTOs\RequestModels\RequestModels.csproj" />
+      <ProjectReference Include="..\Protobufs\Protobufs.csproj" />
     </ItemGroup>
 
     <ItemGroup>

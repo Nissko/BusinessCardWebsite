@@ -1,5 +1,5 @@
 using CourseService.Proto;
-using Dtos.DTO.Course.ProgramLanguage;
+using DTOs.DTO.Course.ProgramLanguage;
 
 namespace ByteCodePlatform.API.ProtoMappers.Course.ProgramLanguages
 {

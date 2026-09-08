@@ -1,4 +1,4 @@
-﻿namespace Dtos.DTO.Course.Theme
+﻿namespace DTOs.DTO.Course.Theme
 {
     public record CourseThemePropertiesDto(
         Guid CourseThemeId, 

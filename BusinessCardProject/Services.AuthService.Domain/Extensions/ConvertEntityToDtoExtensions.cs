@@ -1,4 +1,4 @@
-using Dtos.DTO.User;
+using DTOs.DTO.User;
 using Services.AuthService.Domain.Entities;
 
 namespace Services.AuthService.Domain.Extensions

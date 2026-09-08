@@ -1,6 +1,6 @@
-﻿using Dtos.DTO.Pagination;
-using Dtos.DTO.User;
-using Requests.User;
+﻿using DTOs.DTO.Pagination;
+using DTOs.DTO.User;
+using RequestModels.User;
 
 namespace ByteCodePlatform.Application.Common.Interfaces.GrpcClients
 {

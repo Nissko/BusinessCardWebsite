@@ -3,11 +3,11 @@ using ByteCodePlatform.Application.Common.Interfaces.GrpcClients;
 using ByteCodePlatform.Application.Common.Interfaces.Repositories;
 using ByteCodePlatform.Domain.Entities;
 using ByteCodePlatform.Domain.Extensions;
-using Dtos.DTO.Pagination;
-using Dtos.DTO.User;
+using DTOs.DTO.Pagination;
+using DTOs.DTO.User;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
-using Requests.User;
+using RequestModels.User;
 
 namespace ByteCodePlatform.Infrastructure.Repositories
 {

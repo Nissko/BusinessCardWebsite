@@ -1,8 +1,8 @@
-using Dtos.DTO.Pagination;
-using Dtos.DTO.User;
+using DTOs.DTO.Pagination;
+using DTOs.DTO.User;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
-using Requests.User;
+using RequestModels.User;
 using Services.AuthService.Application.Common.Interfaces;
 using Services.AuthService.Application.Common.Interfaces.GrpcClients;
 using Services.AuthService.Domain.Entities;

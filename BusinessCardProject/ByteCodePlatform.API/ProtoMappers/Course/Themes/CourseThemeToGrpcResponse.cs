@@ -1,7 +1,7 @@
 using ByteCodePlatform.Application.Application.Extensions;
 using CourseService.Proto;
-using Dtos.DTO.Course.ProgramLanguage;
-using Dtos.DTO.Course.Theme;
+using DTOs.DTO.Course.ProgramLanguage;
+using DTOs.DTO.Course.Theme;
 
 namespace ByteCodePlatform.API.ProtoMappers.Course.Themes
 {

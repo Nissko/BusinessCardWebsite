@@ -1,6 +1,6 @@
 using NodaTime;
 
-namespace Dtos.DTO.Course
+namespace DTOs.DTO.Course
 {
     public record CheckGrpcCourseTimingDto(Instant DateTime, bool Health, string GrpcServiceName);
 }

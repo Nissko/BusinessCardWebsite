@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Protos\Protos.csproj" />
+    <ProjectReference Include="..\Protobufs\Protobufs.csproj" />
     <ProjectReference Include="..\Services.MailService.Application\Services.MailService.Application.csproj" />
     <ProjectReference Include="..\Services.MailService.Infrastructure\Services.MailService.Infrastructure.csproj" />
   </ItemGroup>

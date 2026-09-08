@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Configuration;
-using Requests.Email;
+using RequestModels.Email;
 using Services.AuthService.Application.Application.Command;
 using Services.AuthService.Application.Common.Interfaces.GrpcClients;
 

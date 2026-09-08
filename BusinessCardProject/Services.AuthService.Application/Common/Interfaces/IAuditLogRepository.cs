@@ -1,4 +1,4 @@
-﻿using Dtos.DTO.Auth;
+﻿using DTOs.DTO.Auth;
 
 namespace Services.AuthService.Application.Common.Interfaces
 {

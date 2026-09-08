@@ -1,6 +1,6 @@
 ﻿using NodaTime;
 
-namespace Dtos.DTO.Auth
+namespace DTOs.DTO.Auth
 {
     public record AuditLogDto(
         Guid UserId,

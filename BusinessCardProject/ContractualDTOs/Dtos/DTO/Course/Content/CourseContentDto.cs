@@ -1,6 +1,6 @@
 using NodaTime;
 
-namespace Dtos.DTO.Course.Content
+namespace DTOs.DTO.Course.Content
 {
     public record CourseContentDto(
         Guid Id,

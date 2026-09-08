@@ -3,7 +3,7 @@ using Grpc.Core;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using NodaTime;
-using Requests.User;
+using RequestModels.User;
 using Services.AuthService.Application.Application.Command;
 using Services.AuthService.Application.Application.Extensions;
 using Services.AuthService.Application.Common.Interfaces;
